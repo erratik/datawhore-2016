@@ -1,6 +1,7 @@
 // load the setting model
 var defaultSettings = require('../../../config');
 var Settings = require('../models/Settings');
+var Profile = require('../models/Profile');
 var obj = require('../../../utils/objTools');
 var str = require('../../../utils/stringTools');
 var merge = require('merge'),
@@ -96,6 +97,7 @@ module.exports = function(app) {
     })
 
     app.post('/api/settings/network/:namespace', function(req, res) {
+        // TODO: routes/settings - finish updating network settings
 
         Settings.findOne({name: 'settings'}, function(err, settings) {
             var re = /(\s+'*)(\w+[-\w]+.\w+)([\/'])*/g; 
@@ -131,6 +133,69 @@ module.exports = function(app) {
         // var str = '\n            redirect_url: \'nu43242ll-if55465ied.com\',\n            count: 20';
         // var subst = '\"$2\"'; 
          
+    });
+
+
+    app.get('/api/profiles', function(req, res) {
+        // get settings with mongoose, return default settings if !settings.saved
+        Settings.findOne({
+            name: 'settings'
+        }, function(err, settings) {
+            var profiles = {};
+            var configs = settings.configs.toObject();
+            // for (var i = 0; i < settings.networks.length; i++) {
+            //     var network_config = configs[settings.networks[i].namespace];
+            //     if (typeof network_config != 'undefined' && typeof network_config.profile != 'undefined') {
+            //         profiles[settings.networks[i].namespace] = network_config.profile;
+            //     }
+               
+            // }
+            var data = {
+                configs: configs, 
+                profiles: profiles
+            };
+
+            res.json(data); // return settings in JSON format
+        });
+    });
+
+
+    app.post('/api/profiles/network/:namespace', function(req, res) {
+        // TODO: routes/profiles - create profiles if fin==ound noe
+
+        
+        Profile.find({}, function(err, profiles) {
+            if (!profiles.length) {
+
+                
+
+                // Profile.create({
+                //     name: 'settings',
+                //     last_modified: moment().unix(),
+                //     saved: true,
+                //     configs: {
+                //         virgin: false
+                //     },
+                //     networks: []
+                // }, function(err, profiles) {
+                //     if (!err) {
+                        console.log(' ');
+                        console.log('... creating profile for ' + req.params.namespace);
+                        console.log(' ');
+
+                        res.json(profiles);
+                //     }
+                // });
+            } else {
+                console.log(' ');
+                console.log('... saving profile for ' + req.params.namespace);
+                console.log(' ');
+                // profiles.last_modified = Date.now() / 1000 | 0;
+                // profiles.save(function(err) {
+                    res.json(profiles);
+                // });
+            }
+        });
     });
         
     // application -------------------------------------------------------------

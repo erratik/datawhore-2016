@@ -28,7 +28,7 @@ app.constant('angularMomentConfig', {
 
         .state('profiles', {
             url: '/profiles', 
-            controller: 'profilesController as profiles',
+            controller: 'settingsController as settings',
             templateUrl: 'templates/tpl--profiles.html'
         });
 }]);
@@ -126,7 +126,7 @@ app.controller('settingsController', ['$scope', '$http', function settingsContro
     };
 
 }])
-app.controller('profilesController', ['$scope', '$http', function profilesController($scope, $http) {
+app.controller('profilesController', ['$scope', '$http', function settingsController($scope, $http) {
 
     $scope.formData = {};
 
@@ -142,13 +142,13 @@ app.controller('profilesController', ['$scope', '$http', function profilesContro
         });
 
     // when submitting the add form, send the text to the node API
-    $scope.getProfile = function(namespace) {
-        $scope[namespace] = {};
-        $http.post('/api/profiles/network/'+namespace)
+    $scope.createSettings = function() {
+        $scope.settings.last_modified = Date.now() / 1000 | 0;
+
+        $http.post('/api/settings', $scope.settings)
             .success(function(data) {
-                $scope[namespace].profile = data;
-                $scope[namespace].last_modified = Date.now() / 1000 | 0;
-                console.log($scope[namespace]);
+                $scope.settings = data;
+                console.log(data);
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -166,5 +166,58 @@ app.controller('profilesController', ['$scope', '$http', function profilesContro
             });
     };
 
+
+    // Add networks that can be configured ----------------------------------*/
+    $scope.addNetworkNamespace = function() {
+        $http.post('/api/settings/network/', $scope.formData)
+            .success(function(data) {
+                $scope.formData = {}; // clear the form so our user is ready to enter another
+                $scope.settings = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
+    $scope.deleteNetworkNamespace = function(namespace) {
+        console.log(namespace);
+        $http.delete('/api/settings/network/'+namespace)
+            .success(function(data) {
+                $scope.settings = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
+
+
+    // Add/update or a network ----------------------------------*/
+    $scope.configureNetwork = function(namespace) {
+        console.log($scope.formData);
+        $http.post('/api/settings/network/'+namespace, $scope.formData)
+            .success(function(data) {
+                //$scope.formData = {}; // clear the form so our user is ready to enter another
+                $scope.settings = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
+
+
+    // Add networks that can be configured ----------------------------------*/
+    $scope.disconnectNamespace = function(namespace) {
+        $http.post('/dicsonnect/network/', $scope.formData)
+            .success(function(data) {
+                $scope.formData = {}; // clear the form so our user is ready to enter another
+                $scope.settings = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
 
 }])

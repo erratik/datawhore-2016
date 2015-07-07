@@ -1,5 +1,6 @@
-
 <div class="ui container" ng-controller="settingsController as settings">
-	<div class="ui grid" ng-include="'templates/partials/settings/timestamps.html'"></div>
-	<div class="ui grid" ng-include="'templates/partials/settings/network-config.html'"></div>
+    <div  class="ui grid" ng-include="'templates/partials/settings/timestamps.html'"></div>
+    <div class="ui grid">
+        <div class="sixteen wide column" ng-include="'templates/partials/settings/network-config.html'"></div>
+    </div>
 </div>
