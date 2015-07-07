@@ -1,0 +1,46 @@
+<!-- partial: settings-timestamps -->
+
+<div class="eight wide column">
+    <h4 class="ui header dividing" ng-show="settings.saved">Last Modified</h4>
+    <form>
+		  <p ng-show="settings.saved">{{settings.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</p>
+      <p class="ui red message small" ng-show="!settings.saved">No settings found. Gonna save {{settings.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}} instead!</p>
+      <input type="hidden" class="input" value="{{settings.last_modified}}" ng-model="formData.last_modified">
+
+      <div class="ui buttons small">
+          <button type="submit" class="ui button positive" ng-click="createSettings()">Save</button>
+        <div class="or"></div>
+          <button type="submit" class="ui button negative" ng-click="deleteSettings()">Delete</button>
+      </div>
+  </form>
+</div>
+
+<div class="eight wide column">
+  <h4 class="ui header dividing">Add a network namespace</h4>
+  <div class="compact ui button" ng-show="!namespace" ng-click="namespace=!namespace">Add</div>
+  <form class="ui form" ng-show="namespace">
+    <div class="two fields">
+      
+      <div class="field">
+        <label>Namespace</label>
+        <input type="text" placeholder="Add network namepsace" ng-model="formData.namespace">
+      </div>
+      <div class="field">
+        <label>Drop Type</label>
+        <input type="text" placeholder="Add drop type" ng-model="formData.type">
+      </div>
+    </div>
+    <!-- <div class="field"> -->
+      <div class="field">
+        <label>Filename</label>
+        <input type="text" placeholder="/images/[filename.*]" ng-model="formData.filename">
+      </div>
+    <!-- </div> -->
+
+      <div class="ui buttons small">
+          <button type="submit" class="ui button positive" ng-click="addNetworkNamespace()">Add</button>
+        <div class="or"></div>
+          <button type="submit" class="ui button" ng-click="namespace=!namespace">Cancel</button>
+      </div>
+  </form>
+</div>
