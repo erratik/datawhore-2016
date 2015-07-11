@@ -106,3 +106,37 @@ app.controller('settingsController', ['$scope', '$http', function settingsContro
     };
 
 }])
+
+
+app.controller('settingsMenu', ['$scope', '$http', function settingsController($scope, $http) {
+
+    $scope.formData = {};
+
+    // when landing on the page, get all profiles and show them
+    $http.get('/api/profiles')
+        .success(function(data) {
+            console.log(data);
+            $scope.configs = data.configs;
+            $scope.networks = data.networks;
+            $scope.profiles = data.profiles;
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
+
+    // when submitting the add form, send the text to the node API
+    // $scope.createSettings = function() {
+    //     $scope.settings.last_modified = Date.now() / 1000 | 0;
+
+    //     $http.post('/api/settings', $scope.settings)
+    //         .success(function(data) {
+    //             $scope.settings = data;
+    //             console.log(data);
+    //         })
+    //         .error(function(data) {
+    //             console.log('Error: ' + data);
+    //         });
+    // };
+
+
+}])

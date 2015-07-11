@@ -4,6 +4,7 @@ var app = angular.module('controllers.Profiles', [
         'angularMoment', 
 
         'directives.profileUpdated',
+        'directives.profileFetch',
         'directives.profileAvatar'
 
     ]);

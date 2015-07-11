@@ -1,24 +1,18 @@
 <!-- partial: settings-timestamps -->
 <div class="ui link cards">
     <div class="card" ng-repeat="(key, value) in configs">
-    <!-- 
-        <div class="image">
-            <img  class="ui mini image"  ng-src="/images/settings/{{key}}.png">
-        </div> -->
         <div class="content">
             <div class="header">
-            <profile-avatar namespace="{{key}}"></profile-avatar>
-            <img  class="ui avatar image"  ng-src="/images/settings/{{key}}.png">{{key}}</div>
+              <profile-avatar namespace="{{key}}"></profile-avatar>
+              <img  class="ui mini image" ng-src="/images/settings/{{key}}.png">@{{value.username}}
+            </div>
             <div class="meta">
                 <profile-updated namespace="{{key}}"></profile-updated>
             </div>
-            <div class="description">
-                This network has <span ng-show="!value.profile">no</span><span ng-show="value.profile">a</span> profile.
-            </div>
+            <!-- <div class="description"></div> -->
         </div>
         <div class="extra content">
-            <!-- <update-profile></update-profile> -->
-            <div class="right mini ui button trigger" ng-click="getProfile(key)"><i class="user icon"></i><span ng-show="!value.profile">Get</span><span ng-show="value.profile">Update</span>  profile</div>
+            <profile-fetch namespace="{{key}}"></profile-fetch>
         </div>
     </div>
 </div>

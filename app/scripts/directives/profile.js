@@ -8,11 +8,29 @@
             scope: "&",
             link: function (scope, element, attrs) {
                 var $parentScope = scope.$parent.$parent;
-            	if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
-					element.html('Last saved ' + moment.unix($parentScope.profiles[attrs.namespace].last_modified).fromNow());
-            	} else {
+                if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
+                    element.html('Last saved ' + moment.unix($parentScope.profiles[attrs.namespace].last_modified).fromNow());
+                } else {
                     element.html('No profile saved.');
-            	}
+                }
+            }
+        };
+    });    
+
+    angular.module('directives.profileFetch', ['angularMoment'])
+        .directive('profileFetch', function () {
+        return {
+            restrict: 'EA',
+            scope: "&",
+            link: function (scope, element, attrs) {
+                var $parentScope = scope.$parent.$parent;
+                var markup = '<div class="right mini ui button trigger" ng-click="getProfile(attrs.namespace)"><i class="user icon"></i>';
+            	
+                markup += (typeof $parentScope.profiles[attrs.namespace] != 'undefined') ? 'Update' : 'Get';
+
+                markup += ' profile</div>';
+
+                element.html(markup);
             }
         };
     });    
@@ -31,8 +49,7 @@
                 var $parentScope = scope.$parent.$parent;
                 // console.log($parentScope);
                 if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
-                    console.log($parentScope.profiles[attrs.namespace]);
-                    console.log(element);
+                    element.find('img').attr('src', $parentScope.profiles[attrs.namespace].avatar);
                     // element.html('Last saved ' + moment.unix($parentScope.profiles[attrs.namespace].last_modified).fromNow());
                 } else {
                     // element.html('No profile saved.');
