@@ -3,8 +3,7 @@
     <div class="card" ng-repeat="(key, value) in configs">
         <div class="content">
             <div class="header">
-              <profile-avatar namespace="{{key}}"></profile-avatar>
-              <img  class="ui mini image" ng-src="/images/settings/{{key}}.png">@{{value.username}}
+              <profile-avatar namespace="{{key}}"></profile-avatar> @{{value.username}}
             </div>
             <div class="meta">
                 <profile-updated namespace="{{key}}"></profile-updated>
@@ -12,7 +11,7 @@
             <!-- <div class="description"></div> -->
         </div>
         <div class="extra content">
-            <profile-fetch namespace="{{key}}"></profile-fetch>
+            <profile-fetch namespace="{{key}}" ng-click="getProfile(key)"></profile-fetch>
         </div>
     </div>
 </div>

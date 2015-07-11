@@ -13,7 +13,7 @@ app.controller('profilesController', ['$scope', '$http', function profilesContro
 
     $scope.formData = {};
 
-    // when landing on the page, get all settings and show them
+    // when landing on the page, get all profiles and show them
     $http.get('/api/profiles')
         .success(function(data) {
             console.log(data);
@@ -27,6 +27,7 @@ app.controller('profilesController', ['$scope', '$http', function profilesContro
 
     // when submitting the add form, send the text to the node API
     $scope.getProfile = function(namespace) {
+        console.log('getProfile');
         // post goes to each network's api routes js
         $scope[namespace] = {};
         $http.post('/api/profiles/'+namespace)

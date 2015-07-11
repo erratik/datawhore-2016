@@ -24,7 +24,7 @@
             scope: "&",
             link: function (scope, element, attrs) {
                 var $parentScope = scope.$parent.$parent;
-                var markup = '<div class="right mini ui button trigger" ng-click="getProfile(attrs.namespace)"><i class="user icon"></i>';
+                var markup = '<div class="right mini ui button trigger"><img src="/images/settings/'+attrs.namespace+'.png" class="ui avatar micro">';
             	
                 markup += (typeof $parentScope.profiles[attrs.namespace] != 'undefined') ? 'Update' : 'Get';
 
@@ -44,15 +44,15 @@
             controller: function ($scope) {
                 // console.log($scope);
             },
-            templateUrl: tpl_folder+'/profile-avatar.html',
+            // templateUrl: tpl_folder+'/profile-avatar.html',
+            template: '',
             link: function (scope, element, attrs) {
                 var $parentScope = scope.$parent.$parent;
                 // console.log($parentScope);
                 if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
-                    element.find('img').attr('src', $parentScope.profiles[attrs.namespace].avatar);
-                    // element.html('Last saved ' + moment.unix($parentScope.profiles[attrs.namespace].last_modified).fromNow());
+                    element.html('<img src="'+$parentScope.profiles[attrs.namespace].avatar+'" class="ui avatar">');
                 } else {
-                    // element.html('No profile saved.');
+                    element.html('<img src="/images/settings/'+attrs.namespace+'.png" class="ui avatar">');
                 }
             }
         };
