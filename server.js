@@ -29,7 +29,10 @@
 
     // routes ======================================================================
     // require('./app/routes/todos')(app);
+
+    require('./app/scripts/routes/api/twitter')(app);
     require('./app/scripts/routes/settings')(app);
+
     require('./app/scripts/routes/connect')(app);
 
     // listen (start app with node server.js) ======================================
