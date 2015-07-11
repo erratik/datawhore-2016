@@ -6,9 +6,6 @@
         return {
             restrict: 'EA',
             scope: "&",
-            controller: function ($scope) {
-            },
-            template: '',
             link: function (scope, element, attrs) {
                 var $parentScope = scope.$parent.$parent;
             	if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
@@ -25,15 +22,21 @@
         .directive('profileAvatar', function () {
         return {
             restrict: 'E',
-            scope:  "&",
-
-            templateUrl: tpl_folder+'profile-avatar.html',
-            controller: function($scope, $compile){
-                
-                console.log($scope);
+            scope:  "=",
+            controller: function ($scope) {
+                // console.log($scope);
             },
+            templateUrl: tpl_folder+'/profile-avatar.html',
             link: function (scope, element, attrs) {
+                var $parentScope = scope.$parent.$parent;
+                // console.log($parentScope);
+                if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
+                    console.log($parentScope.profiles[attrs.namespace]);
                     console.log(element);
+                    // element.html('Last saved ' + moment.unix($parentScope.profiles[attrs.namespace].last_modified).fromNow());
+                } else {
+                    // element.html('No profile saved.');
+                }
             }
         };
     });
