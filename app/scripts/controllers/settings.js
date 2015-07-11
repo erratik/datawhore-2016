@@ -1,7 +1,6 @@
 // public/core.js
 
-var app = angular.module('app', [
-        'ui.router',
+var app = angular.module('controllers.Settings', [
         'angularMoment', 
 
         'directives.removeNamespace',
@@ -12,26 +11,6 @@ var app = angular.module('app', [
 
     ]);
 
-// use unix timestamps in angular views
-app.constant('angularMomentConfig', {
-        preprocess: 'unix', // optional
-})
-.config(['$urlRouterProvider','$stateProvider', function ($urlRouterProvider, $stateProvider){
-    $urlRouterProvider.otherwise('/');
-
-    $stateProvider
-        .state('settings', {
-            url: '/', 
-            controller: 'settingsController as settings',
-            templateUrl: 'templates/tpl--settings.html'
-        })
-
-        .state('profiles', {
-            url: '/profiles', 
-            controller: 'profilesController as profiles',
-            templateUrl: 'templates/tpl--profiles.html'
-        });
-}]);
 
 app.controller('settingsController', ['$scope', '$http', function settingsController($scope, $http) {
 
@@ -41,6 +20,7 @@ app.controller('settingsController', ['$scope', '$http', function settingsContro
     $http.get('/api/settings')
         .success(function(data) {
             $scope.settings = data;
+            console.log(data);
         })
         .error(function(data) {
             console.log('Error: ' + data);
@@ -97,6 +77,20 @@ app.controller('settingsController', ['$scope', '$http', function settingsContro
     };
 
 
+    // Add networks that can be configured ----------------------------------*/
+    $scope.disconnectNamespace = function(namespace) {
+        $http.post('/disconnect/network/', $scope.formData)
+            .success(function(data) {
+                $scope.formData = {}; // clear the form so our user is ready to enter another
+                $scope.settings = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
+
+
     // Add/update or a network ----------------------------------*/
     $scope.configureNetwork = function(namespace) {
         console.log($scope.formData);
@@ -110,61 +104,5 @@ app.controller('settingsController', ['$scope', '$http', function settingsContro
                 console.log('Error: ' + data);
             });
     };
-
-
-    // Add networks that can be configured ----------------------------------*/
-    $scope.disconnectNamespace = function(namespace) {
-        $http.post('/dicsonnect/network/', $scope.formData)
-            .success(function(data) {
-                $scope.formData = {}; // clear the form so our user is ready to enter another
-                $scope.settings = data;
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-    };
-
-}])
-app.controller('profilesController', ['$scope', '$http', function profilesController($scope, $http) {
-
-    $scope.formData = {};
-
-    // when landing on the page, get all settings and show them
-    $http.get('/api/profiles')
-        .success(function(data) {
-            console.log(data);
-            $scope.configs = data.configs;
-            $scope.profiles = data.profiles;
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
-
-    // when submitting the add form, send the text to the node API
-    $scope.getProfile = function(namespace) {
-        $scope[namespace] = {};
-        $http.post('/api/profiles/network/'+namespace)
-            .success(function(data) {
-                $scope[namespace].profile = data;
-                $scope[namespace].last_modified = Date.now() / 1000 | 0;
-                console.log($scope[namespace]);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-    };
-
-    // delete a setting after checking it
-    $scope.deleteSettings = function() {
-        $http.delete('/api/settings/', $scope.settings)
-            .success(function(data) {
-                $scope.settings = data;
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-    };
-
 
 }])

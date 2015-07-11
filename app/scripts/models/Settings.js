@@ -4,8 +4,9 @@ var Settings = mongoose.model('Settings', {
        name : String,
        last_modified: Number,
        saved: Boolean,
-       configs: {virgin: Boolean},
-       networks: Array
+       virgin: Number,
+       configs: {},
+       networks: {}
 });
 
 // Return a Drop model based upon the defined schema
