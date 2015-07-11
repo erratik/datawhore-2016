@@ -181,7 +181,7 @@ gulp.task('nodemon', function (cb) {
     });
 });
 
-gulp.task('browser-sync', ['nodemon'], function () {
+gulp.task('browser-sync', ['styles', 'fonts','nodemon'], function () {
 
   // for more browser-sync config options: http://www.browsersync.io/docs/options/
   browserSync.init({
