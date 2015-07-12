@@ -6,6 +6,7 @@ var schema = new mongoose.Schema({
        last_modified: Number,
        saved: Boolean,
        avatar: String,
+       username: String,
        profile: {}
 });
 
@@ -24,6 +25,7 @@ schema.statics = {
 	                last_modified: Date.now() / 1000 | 0,
 	                profile: params.profile,
 	                avatar: params.avatar,
+	                username: params.username,
 	                saved: true
 	            };
 
@@ -33,7 +35,16 @@ schema.statics = {
 	                    console.log('Profile Model > ... creating profile for ' + params.namespace);
 	                    console.log(' ');
 
-	                    callback(profile);
+                        var data = {
+                            configs: params.configs, 
+                            profiles: params.profiles
+                        };
+                        data.profiles[params.namespace] = profile;
+                        params.configs[params.namespace]['profile'] = true;
+                        Settings.updateConfig(params.configs);
+                        console.log('API > '+params.namespace+' > saved profile...');
+
+	                    callback(data);
 	                }
 	            });
 	        } else {
@@ -43,11 +54,20 @@ schema.statics = {
 	            profile.profile = params.profile;
 	            profile.saved = true;
 	            profile.avatar = params.avatar;
+	            profile.username = params.username;
 	            profile.last_modified = Date.now() / 1000 | 0;
 	            profile.save(function(err) {
 	            	if (!err) {
-	            		console.log(profile);
-						callback(profile);
+
+                        var data = {
+                            configs: params.configs, 
+                            profiles: params.profiles
+                        };
+                        data.profiles[params.namespace] = profile;
+                        params.configs[params.namespace]['profile'] = true;
+                        Settings.updateConfig(params.configs);
+                        console.log('API > '+params.namespace+' > saved profile...');
+                        callback(data);
 					} else {
 						console.log(err);
 					}

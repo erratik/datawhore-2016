@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'); 
 ;
-var Settings = mongoose.model('Settings', {
+var schema = new mongoose.Schema({
        name : String,
        last_modified: Number,
        saved: Boolean,
@@ -9,5 +9,23 @@ var Settings = mongoose.model('Settings', {
        networks: {}
 });
 
-// Return a Drop model based upon the defined schema
-module.exports = Settings;
+schema.statics = {
+	updateConfig : function (configs, callback) {
+
+
+        Settings.update({
+            configs: configs,
+            last_modified: Date.now() / 1000 | 0
+        }, function(err, settings) {
+            Settings.findOne({
+                name: 'settings'
+            }, function(err, settings) {
+                if (err) console.log(err)
+                	console.log('>>> updated config');
+            });
+        });
+
+    }
+}
+
+module.exports = Settings = mongoose.model('Settings', schema);

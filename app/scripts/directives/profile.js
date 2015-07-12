@@ -1,5 +1,6 @@
 ;(function (angular) {
     'use strict';
+    var tpl_folder = 'templates/directives';
 
     angular.module('directives.profileUpdated', ['angularMoment'])
         .directive('profileUpdated', function () {
@@ -24,8 +25,8 @@
             scope: "&",
             link: function (scope, element, attrs) {
                 var $parentScope = scope.$parent.$parent;
-                var markup = '<div class="right mini ui button trigger"><img src="/images/settings/'+attrs.namespace+'.png" class="ui avatar micro">';
-            	
+                var markup = '<div class="right mini ui button trigger"><img src="/images/settings/'+attrs.namespace+'.png" class="micro">';
+                
                 markup += (typeof $parentScope.profiles[attrs.namespace] != 'undefined') ? 'Update' : 'Get';
 
                 markup += ' profile</div>';
@@ -35,7 +36,30 @@
         };
     });    
 
-    var tpl_folder = 'templates/directives';
+    angular.module('directives.profileRemove', ['angularMoment'])
+        .directive('profileRemove', function () {
+        return {
+            restrict: 'EA',
+            scope: "=",
+            link: function (scope, element, attrs) {
+                
+                var $parentScope = scope.$parent.$parent;
+
+                if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
+
+                    var markup = '<div class="right mini ui button trigger">';
+                    
+                        markup +=  '<i class="trash icon"></i>Wipe';
+
+                        markup += '</div>';
+
+                    element.html(markup);
+                }
+
+            }
+        };
+    });    
+
     angular.module('directives.profileAvatar', [])
         .directive('profileAvatar', function () {
         return {

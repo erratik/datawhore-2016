@@ -48,32 +48,6 @@ module.exports = function(app) {
             var params = {
                 screen_name: settings.configs.twitter.username
             };
-            client.get('users/show', params, function(error, docs, response) {
-                if (!error) {
-                    //res.json(docs);
-                    settings.configs.twitter.profile = docs;
-                    for (var i = 0; i < settings.networks.length; i++) {
-                        // console.log(req.params.namespace);
-                        if (settings.networks[i].namespace == 'twitter') {
-                            settings.networks[i].connected = true;
-                        }
-                    }
-                    Settings.update({
-                        networks: settings.networks,
-                        configs: settings.configs
-                    }, function(err, settings) {
-                        Settings.findOne({
-                            name: 'settings'
-                        }, function(err, settings) {
-                            if (err) console.log(err)
-                                // console.log(settings);
-                            res.redirect('/');
-                        });
-                    });
-                } else {
-                    console.log(error)
-                }
-            });
         });
     });
     //*****************************************************************/  
@@ -105,18 +79,6 @@ module.exports = function(app) {
                                 settings.networks[i].connected = true;
                             }
                         }
-                        var profile = lastfm.request("user.getInfo", {
-                            handlers: {
-                                success: function(data) {
-                                    console.log("Success: " + data);
-
-                                    console.log(data)
-                                },
-                                error: function(error) {
-                                    console.log("Error: " + error.message);
-                                }
-                            }
-                        });
 
                         Settings.update({
                             networks: settings.networks,
@@ -163,7 +125,7 @@ module.exports = function(app) {
                     var result = JSON.parse(body);
 
                     settings.configs.instagram.access_token = result.access_token;
-                    settings.configs.instagram.profile = result.user;
+                    // settings.configs.instagram.profile = result.user;
                     for (var i = 0; i < settings.networks.length; i++) {
                         // console.log(req.params.namespace);
                         if (settings.networks[i].namespace == 'instagram') {

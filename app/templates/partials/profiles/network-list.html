@@ -1,9 +1,28 @@
 <!-- partial: settings-timestamps -->
 <div class="ui link cards">
-    <div class="card" ng-repeat="(key, value) in configs">
+
+    <div class="card" ng-repeat="profile in profiles">
+    
         <div class="content">
             <div class="header">
-              <profile-avatar namespace="{{key}}"></profile-avatar> @{{value.username}}
+                <profile-avatar namespace="{{profile.name}}"></profile-avatar> @{{profile.username}}
+            </div>
+            <div class="meta">
+                <profile-updated namespace="{{profile.name}}"></profile-updated>
+            </div>
+            <!-- <div class="description"></div> -->
+        </div>
+        <div class="extra content">
+            <profile-fetch namespace="{{profile.name}}" ng-click="getProfile(profile.name)"></profile-fetch>
+            <profile-remove namespace="{{profile.name}}" ng-click="deleteProfile(profile.name)"></profile-remove>
+        </div>
+    </div>
+
+    <div class="card" ng-repeat="(key, value) in configs" ng-show="!value.profile">
+
+        <div class="content">
+            <div class="header">
+                <profile-avatar namespace="{{key}}"></profile-avatar> @{{value.username}}
             </div>
             <div class="meta">
                 <profile-updated namespace="{{key}}"></profile-updated>
@@ -12,6 +31,7 @@
         </div>
         <div class="extra content">
             <profile-fetch namespace="{{key}}" ng-click="getProfile(key)"></profile-fetch>
+            <profile-remove namespace="{{key}}" ng-click="deleteProfile(key)"></profile-remove>
         </div>
     </div>
 </div>

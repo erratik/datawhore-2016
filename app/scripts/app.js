@@ -16,7 +16,7 @@ app.constant('angularMomentConfig', {
         templateUrl: 'templates/tpl--settings.html'
     }).state('profiles', {
         url: '/profiles',
-        controller: 'settingsController as settings',
+        controller: 'profilesController',
         templateUrl: 'templates/tpl--profiles.html'
     });
 }]);

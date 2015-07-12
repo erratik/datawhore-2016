@@ -1,4 +1,6 @@
 .micro {
   height: 15px;
   width: 15px;
+  margin-right: 5px;
+  border-radius: 500rem;
 }

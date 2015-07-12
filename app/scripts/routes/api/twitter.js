@@ -7,6 +7,7 @@ var Profile = require('../../models/Profile');
 var merge = require('merge'),original, cloned;
 var mongoose = require('mongoose');
 
+var namespace = 'twitter';
 var Twitter = require('twitter');
 var client = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY,
@@ -14,27 +15,32 @@ var client = new Twitter({
     access_token_key: process.env.TWITTER_ACCESS_TOKEN,
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
+
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    app.post('/api/profiles/twitter', function(req, res) {
+    app.post('/api/profiles/'+namespace, function(req, res) {
         Settings.findOne({
             name: 'settings'
         }, function(err, settings) {
 
             if (err) res.send(err)
             var params = {
-                screen_name: settings.configs.twitter.username
+                screen_name: req.body.configs[namespace].username
             };
             client.get('users/show', params, function(error, docs, response) {
                 if (!error) {
                     
                     Profile.updateProfile({
-                        namespace: 'twitter', 
+                        namespace: namespace, 
                         avatar: docs.profile_image_url, 
-                        profile: docs
-                    }, function(profile){
-                    console.log('API > twitter > saved profile...');
-                        res.json(profile);
+                        username: params.screen_name,
+                        profile: docs,
+                        configs: settings.configs, 
+                        profiles: req.body.profiles
+                    }, function(data){
+                        
+                        // console.log(data);
+                        res.json(data);
                     });
                 } else {
                     console.log(error)
@@ -42,7 +48,5 @@ module.exports = function(app) {
             });
         });
     });
-    
-
 
 };
