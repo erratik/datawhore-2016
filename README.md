@@ -6,6 +6,8 @@ Working on making erratik.ca a sweet ass data aggregator again. Release 1 will h
 (not that box. pervert.)
 
 Tracking all my social network data in one place, with node.js, express, angular and mongoose (hosted on mongolabs).
+
 Running with gulp and bower
+
 CSS framework: Semantic UI using LESS
 
