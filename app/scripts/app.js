@@ -1,7 +1,7 @@
 var app = angular.module('app', [
     'ui.router', 
     'angularMoment', 
-    
+
     'controllers.Settings',
     'controllers.Profiles'
 ]);
@@ -24,8 +24,8 @@ app.constant('angularMomentConfig', {
         controller: 'profilesController',
         templateUrl: 'templates/tpl--profiles.html'
     }).state('profile', {
-        url: '/profiles/:namespace',
-        controller: 'settingsController as settings',
-        templateUrl: 'templates/tpl--settings.html'
+        url: '/networks/:namespace',
+        controller: 'networkController',
+        templateUrl: 'templates/tpl--networks.html'
     });
 }]);

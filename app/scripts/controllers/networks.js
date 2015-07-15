@@ -10,8 +10,8 @@ var app = angular.module('controllers.Profiles', [
 
     ]);
 
-app.controller('profilesController', ['$scope', '$http', function profilesController($scope, $http) {
-
+app.controller('networkController', ['$scope', '$http',  function profilesController($scope, $http, $route) {
+    console.log($http);
 
     // when landing on the page, get all profiles and show them
     $http.get('/api/profiles')
