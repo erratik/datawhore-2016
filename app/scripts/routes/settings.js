@@ -84,22 +84,42 @@ module.exports = function(app) {
         // TODO: routes/settings - delete networks from the array
     })
     app.post('/api/settings/network/:namespace', function(req, res) {
-        Settings.findOne({
+        Settings.findOne({  
             name: 'settings'
         }, function(err, settings) {
-            var re = /(\s+["'])([\w.:\/&=?]+)(["'])/gm;
-            var customProps = JSON.parse("{" + req.body.customProperties.replace(re, '\"$2\"') + "}");
-            if (typeof settings.configs == 'undefined') settings.configs = {};
-            delete req.body.customProperties;
+
+            if (typeof settings.configs[req.params.namespace] == 'undefined') settings.configs[req.params.namespace] = {};
             settings.configs[req.params.namespace] = req.body;
-            var newProps = Object.keys(customProps);
-            for (var i = 0; i < newProps.length; i++) {
-                if (typeof settings.configs[req.params.namespace] == 'undefined') settings.configs[req.params.namespace] = {};
-                settings.configs[req.params.namespace][newProps[i]] = customProps[newProps[i]];
-                settings.networks[req.params.namespace].configured = true;
+            
+            if (req.body.customProperties) {
+                var re = /(\s+["'])([\w.:\/&=?]+)(["'])/gm;
+                var customProps = JSON.parse("{" + req.body.customProperties.replace(re, '\"$2\"') + "}");
+                if (typeof settings.configs == 'undefined') settings.configs = {};
+                delete req.body.customProperties;
+                var newProps = Object.keys(customProps);
+                for (var i = 0; i < newProps.length; i++) {
+                    settings.configs[req.params.namespace][newProps[i]] = customProps[newProps[i]];
+                }
             }
-            settings.save(function(err, settings) {
-                res.json(settings);
+
+
+            settings.networks[req.params.namespace].configured = true;
+
+            // settings.save(function(err, settings) {
+            //     res.json(settings);
+            // });
+            console.log(settings.configs);
+            Settings.update({
+                configs: settings.configs,
+                networks: settings.networks,
+                last_modified: Date.now() / 1000 | 0
+            }, function(err, settings) {
+                Settings.findOne({
+                    name: 'settings'
+                }, function(err, settings) {
+                    if (err) console.log(err)
+                    res.json(settings);
+                });
             });
         });
     });

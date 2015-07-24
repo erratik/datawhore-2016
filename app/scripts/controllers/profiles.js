@@ -31,9 +31,10 @@ app.controller('profilesController', ['$scope', '$http', function profilesContro
 
         $http.post('/api/profiles/'+namespace, {configs: $scope.configs, profiles: $scope.profiles})
             .success(function(data) {
-                console.log(data);
+                // TODO: Tay - make sure there's a reason im sending all this data back and forth?!
                 $scope.configs = data.configs;
                 $scope.profiles = data.profiles;
+                console.log($scope);
             })
             .error(function(data) {
                 console.log('Error: ' + data);

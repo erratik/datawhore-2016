@@ -22,6 +22,7 @@ schema.statics = {
             }, function(err, settings) {
                 if (err) console.log(err)
                 console.log('Settings Model > saved profile...');
+                if (typeof callback == 'function') callback(settings);
             });
         });
 
