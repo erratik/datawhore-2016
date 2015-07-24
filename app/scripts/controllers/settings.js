@@ -93,12 +93,12 @@ app.controller('settingsController', ['$scope', '$http', function settingsContro
 
     // Add/update or a network ----------------------------------*/
     $scope.configureNetwork = function(namespace) {
-        console.log($scope.formData);
+        
         $http.post('/api/settings/network/'+namespace, $scope.formData)
             .success(function(data) {
                 //$scope.formData = {}; // clear the form so our user is ready to enter another
                 $scope.settings = data;
-                console.log(data);
+                // console.log(data);
             })
             .error(function(data) {
                 console.log('Error: ' + data);
