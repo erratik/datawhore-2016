@@ -21,7 +21,7 @@ schema.statics = {
                 name: 'settings'
             }, function(err, settings) {
                 if (err) console.log(err)
-                	console.log('>>> updated config');
+                console.log('Settings Model > saved profile...');
             });
         });
 

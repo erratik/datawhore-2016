@@ -126,6 +126,17 @@ module.exports = function(app) {
             });
         });
     });
+    app.get('/api/profiles/:namespace', function(req, res) {
+        // get settings with mongoose, return default settings if !settings.saved
+        Settings.findOne({
+            name: 'settings'
+        }, function(err, settings) {
+            if (err) console.log(err);
+
+                
+
+        });
+    });
     app.delete('/api/profiles/:namespace', function(req, res) {
         // get settings with mongoose, return default settings if !settings.saved
         Settings.findOne({
@@ -155,8 +166,25 @@ module.exports = function(app) {
 
         });
     });
-    // application -------------------------------------------------------------
-    app.get('*', function(req, res) {
-        res.sendfile('./app/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+
+    app.post('/api/profile/props/:namespace', function(req, res) {
+        // console.log(req.body);
+        console.log('test');
+        Profile.nominateProfileProperties({
+            namespace: req.params.namespace, 
+            data: req.body
+        }, function(data){
+            console.log('Settings Route > nominateProfileProperties');
+            res.json(data);
+        });
+
     });
+
+    // application -------------------------------------------------------------
+    app.get('/', function(req, res) {
+        res.sendfile('./app/settings.html'); // load the single view file (angular will handle the page changes on the front-end)
+    });
+    // app.get('/profiles', function(req, res) {
+    //     res.sendfile('./app/profiles.html'); // load the single view file (angular will handle the page changes on the front-end)
+    // });
 };

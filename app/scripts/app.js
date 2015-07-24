@@ -3,18 +3,16 @@ var app = angular.module('app', [
     'angularMoment', 
 
     'controllers.Settings',
-    'controllers.Profiles'
+    'controllers.Profiles',
+    'controllers.Profile',
+    'controllers.Networks'
 ]);
 // use unix timestamps in angular views
 app.constant('angularMomentConfig', {
     preprocess: 'unix', // optional
 }).config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
-    $urlRouterProvider
-        // when('/settings', {
-        //     controller: 'settingsController as settings',
-        //     templateUrl: 'templates/tpl--settings.html'
-        // })
-        .otherwise('/');
+    $urlRouterProvider.otherwise('/');
+
     $stateProvider.state('settings', {
         url: '/settings',
         controller: 'settingsController as settings',
@@ -24,8 +22,8 @@ app.constant('angularMomentConfig', {
         controller: 'profilesController',
         templateUrl: 'templates/tpl--profiles.html'
     }).state('profile', {
-        url: '/networks/:namespace',
-        controller: 'networkController',
-        templateUrl: 'templates/tpl--networks.html'
+        url: '/profile/:namespace',
+        controller: 'profileController',
+        templateUrl: 'templates/tpl--profile.html'
     });
 }]);

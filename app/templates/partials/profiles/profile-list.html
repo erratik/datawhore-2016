@@ -1,8 +1,7 @@
 <!-- partial: settings-timestamps -->
+<h3 class="ui header dividing">Saved profiles</h3>
 <div class="ui link cards">
-
     <div class="card" ng-repeat="profile in profiles">
-    
         <div class="content">
             <div class="header">
                 <profile-avatar namespace="{{profile.name}}"></profile-avatar> @{{profile.username}}
@@ -17,9 +16,10 @@
             <profile-remove namespace="{{profile.name}}" ng-click="deleteProfile(profile.name)"></profile-remove>
         </div>
     </div>
-
+</div>
+<div class="ui divider"></div>
+<div class="ui link cards">
     <div class="card" ng-repeat="(key, value) in configs" ng-show="!value.profile">
-
         <div class="content">
             <div class="header">
                 <profile-avatar namespace="{{key}}"></profile-avatar> @{{value.username}}

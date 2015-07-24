@@ -38,7 +38,7 @@ module.exports = function(app) {
                         namespace: namespace,
                         avatar: data.user.photo.prefix+'400x400'+data.user.photo.suffix,
                         username: settings.configs[namespace].username,
-                        profile: data,
+                        profile: data.user,
                         configs: settings.configs,
                         profiles: req.body.profiles
                     }, function(data) {

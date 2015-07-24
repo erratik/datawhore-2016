@@ -38,7 +38,6 @@ module.exports = function(app) {
                         configs: settings.configs, 
                         profiles: req.body.profiles
                     }, function(data){
-                        
                         // console.log(data);
                         res.json(data);
                     });
@@ -48,5 +47,6 @@ module.exports = function(app) {
             });
         });
     });
+
 
 };
