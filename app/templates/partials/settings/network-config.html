@@ -4,41 +4,45 @@
         <img class="ui avatar image" ng-src="/images/settings/{{network.namespace}}.png">
         <div class="content">
             <!-- <div class="header">{{network.namespace}}</div> -->
-            <div class="right mini ui button trigger" ng-click="details=!details" ng-show="network.configured">Details</div>
-            <a class="right mini ui button trigger purple" ng-href="/connect/{{network.namespace}}" ng-show="!network.connected && network.configured"><i class="exchange icon"></i>Connect</a>
+            <div class="right mini ui button trigger" ng-click="details=!details" ng-show="settings.configs[network.namespace]">Details</div>
+            <div class="right mini ui button trigger" ng-click="edit=true" ng-show="!settings.configs[network.namespace]">Configure</div>
             <disconnect-namespace></disconnect-namespace>
-            <div class="right mini ui button trigger" ng-click="edit=!edit" ng-show="details||!network.connected">Edit</div>
-
+            <a class="right mini ui button trigger positive" ng-href="/connect/{{network.namespace}}" ng-show="!network.connected && network.configured"><i class="exchange icon"></i></a>
+            <remove-namespace></remove-namespace>
         </div>
         <div class="">
-            <div class="eight column wide" ng-show="details">
+            <div class="eight column wide" ng-show="details&&!edit">
                 <div class="list">
-                    <div class="item" ng-repeat="(key, value) in settings.configs[network.namespace]">
+                    <div class="item" ng-if="value&&settings.configs[network.namespace]" ng-repeat="(key, value) in settings.configs[network.namespace]">
                         <div class="header">{{key}}</div>
                         {{value}}
                     </div>
+                    <div class="item" ng-show="!settings.configs[network.namespace]">
+                        <div class="header">{{key}}</div>
+                        {{value}}
+                    </div>
+                    <div class="right mini ui button trigger" ng-click="edit=!edit">Edit</div>
                 </div>
             </div>
-            <div class="eight column wide" ng-show="edit||details">
+            <div class="eight column wide" ng-show="edit">
                 <form class="ui form">
                     <!-- <namespace-toggle></namespace-toggle> -->
                     <div class=" fields">
-                        
-                    <div class="field four wide ">
-                        <label>Username</label>
-                        <input type="text" value="settings.configs[network.namespace].username" ng-model="formData.username">
-                    </div>
-                    <div class="field twelve wide ">
-                        <label>Redirect URL</label>
-                        <input type="text" value="settings.configs[network.namespace].redirect_url" ng-model="formData.redirect_url">
-                    </div>
+                        <div class="field four wide ">
+                            <label>Username</label>
+                            <input type="text" value="settings.configs[network.namespace].username" ng-model="formData.username">
+                        </div>
+                        <div class="field twelve wide ">
+                            <label>Redirect URL</label>
+                            <input type="text" value="settings.configs[network.namespace].redirect_url" ng-model="formData.redirect_url">
+                        </div>
                     </div>
                     <div class="field">
                         <label>Add custom properties</label>
                         <custom-properties></custom-properties>
                     </div>
                     <div class="ui buttons">
-                        <remove-namespace></remove-namespace>
+                        <div class="ui mini button" ng-click="edit=!edit">Cancel</div>
                         <div class="or"></div>
                         <configure-namespace></configure-namespace>
                     </div>

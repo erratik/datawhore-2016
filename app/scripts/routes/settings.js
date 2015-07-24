@@ -74,15 +74,16 @@ module.exports = function(app) {
             };
             if (typeof settings.networks == 'undefined') settings.networks = {};
             settings.networks[req.body.namespace] = data;
-            settings.virgin = Object.keys(settings.networks).length;
-            settings.save(function(err, settings) {
+            
+            Settings.updating({
+                networks: settings.networks
+            }, function(settings) {
                 res.json(settings);
             });
+
         });
     });
-    app.delete('/api/settings/network/', function(req, res) {
-        // TODO: routes/settings - delete networks from the array
-    })
+
     app.post('/api/settings/network/:namespace', function(req, res) {
         Settings.findOne({  
             name: 'settings'
@@ -102,24 +103,42 @@ module.exports = function(app) {
                 }
             }
 
-
             settings.networks[req.params.namespace].configured = true;
 
-            // settings.save(function(err, settings) {
-            //     res.json(settings);
-            // });
-            console.log(settings.configs);
-            Settings.update({
+            Settings.updating({
                 configs: settings.configs,
-                networks: settings.networks,
-                last_modified: Date.now() / 1000 | 0
-            }, function(err, settings) {
-                Settings.findOne({
-                    name: 'settings'
-                }, function(err, settings) {
-                    if (err) console.log(err)
-                    res.json(settings);
-                });
+                networks: settings.networks
+            }, function(settings) {
+                res.json(settings);
+            });
+        });
+    });
+
+    app.delete('/api/settings/network/:namespace', function(req, res) {
+        Settings.findOne({
+            name: 'settings'
+        }, function(err, settings) {
+            if (err) console.log(err);
+            delete settings.networks[req.params.namespace];
+            Settings.updating({
+                networks: settings.networks
+            }, function(settings) {
+                res.json(settings);
+            });
+        });
+    })
+    app.delete('/disconnect/network/:namespace', function(req, res) {
+        Settings.findOne({
+            name: 'settings'
+        }, function(err, settings) {
+            delete settings.configs[req.params.namespace];
+            settings.networks[req.params.namespace].connected = false;
+
+            Settings.updating({
+                configs: settings.configs,
+                networks: settings.networks
+            }, function(settings) {
+                res.json(settings);
             });
         });
     });

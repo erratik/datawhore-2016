@@ -25,10 +25,10 @@
         .directive('disconnectNamespace', function () {
         return {
             restrict: 'E',
-            template: '<div class="ui negative mini button" ng-show="network.connected">Disconnect</div>',
+            template: '<div class="ui negative mini button negative" ng-show="network.connected"><i class="exchange icon"></i></div>',
             link: function (scope, element, attrs) {
                 element.on('click', function(){
-                    scope.disconnectNamespace(scope.network.namespace);
+                    scope.disconnectNetwork(scope.network.namespace);
                 });
             }
         };
@@ -38,7 +38,7 @@
         .directive('removeNamespace', function () {
         return {
             restrict: 'E',
-            template: '<div class="ui negative button">Remove</div>',
+            template: '<div class="ui negative mini button">Remove</div>',
             link: function (scope, element, attrs) {
                 element.on('click', function(){
                     scope.deleteNetworkNamespace(scope.network.namespace);
@@ -51,7 +51,7 @@
         .directive('configureNamespace', function () {
         return {
             restrict: 'E',
-            template: '<div class="ui positive button">Save</div>',
+            template: '<div class="ui positive button">Configure</div>',
             link: function (scope, element, attrs) {
                 element.on('click', function(){
                     scope.configureNetwork(scope.network.namespace);

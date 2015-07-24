@@ -45,7 +45,7 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
             } 
             // console.log(profileValues)
 
-            console.log($scope.model.profiles[$stateParams.namespace].props);
+            console.log($scope);
         })
         .error(function(data) {
             console.log('Error: ' + data);

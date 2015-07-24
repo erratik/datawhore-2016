@@ -261,7 +261,6 @@ module.exports = function(app) {
 
     var cookieParser = require('cookie-parser');    // 
     var session = require('express-session'); // 
-    app.get('/connect/facebook', function(req, res) {
         // // app.use(cookieParser());
         app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }))
         app.use(fbgraph.auth( {
@@ -271,6 +270,7 @@ module.exports = function(app) {
                 scope: 'public_profile, email, user_about_me, user_actions.news, user_photos, user_posts, user_status, user_tagged_places, user_likes, user_location, user_hometown, user_events, user_birthday, user_friends',
                 apiVersion: "v2.2"
             }));
+    app.get('/connect/facebook', function(req, res) {
         fbgraph.redirectLoginForm(req, res);
     });
     app.get('/facebook', function(req, res) {
@@ -305,85 +305,6 @@ module.exports = function(app) {
                 res.redirect('/#/settings');
 
         });
-
-        /* See http://developers.facebook.com/docs/reference/api/ for more */
-        // req.facebook.graph('/me', function(err, me) {
-        //     console.log(me);
-        // });
-        // req.facebook.graph('/me?fields=id,name,location,birthday,friends,picture,cover', function(err, me) {
-        //     console.log(me);
-        // });
-        // req.facebook.me(function(err, me) {
-        //     console.log(me);
-        // });
-        // /me/likes
-        // req.facebook.my.likes(function(err, likes) {
-        //     // console.log(likes);
-        // });
-        // res.end("Check console output");
         
-        // res.json(req.query)
-        /*        Settings.findOne({
-                    name: 'settings'
-                }, function(err, settings) {
-                    if (err) res.send(err)
-                    // moves.token(req.query.code, function(error, response, body) {
-                    //   var body = JSON.parse(body)
-                    //     , access_token = body.access_token
-                    //     , refresh_token = body.refresh_token
-                    //     , user_id = body.user_id
-                    //     , expires_in = body.expires_in;
-                             
-                    //     settings.configs.moves.access_token = access_token;
-                    //     settings.configs.moves.refresh_token = refresh_token;
-                    //     settings.configs.moves.user_id = user_id;
-                    //     settings.configs.moves.expires_in = expires_in;
-
-                    //     for (var i = 0; i < settings.networks.length; i++) {
-                    //         // console.log(req.params.namespace);
-                    //         if (settings.networks[i].namespace == 'facebook') {
-                    //             settings.networks[i].connected = true;
-                    //         }
-                    //     }
-
-                    //     Settings.update({
-                    //         networks: settings.networks,
-                    //         configs: settings.configs
-                    //     }, function(err, settings) {
-                    //         Settings.findOne({
-                    //             name: 'settings'
-                    //         }, function(err, settings) {
-                    //             if (err) console.log(err)
-                    //             console.log(settings);
-                    //         });
-                    //     });
-
-                    //     res.redirect('/');
-                    // });
-
-                });*/
-    });
-    app.post('/disconnect/network/:namespace', function(req, res) {
-        Settings.findOne({
-            name: 'settings'
-        }, function(err, settings) {
-            if (err) res.send(err);
-            for (var i = 0; i < settings.networks.length; i++) {
-                if (settings.networks[i].namespace == req.params.namespace) {
-                    settings.networks[i].connected = false;
-                }
-            }
-            Settings.update({
-                networks: settings.networks
-            }, function(err, settings) {
-                console.log('DISCONNECTED NAMESPACE: ' + req.params.namespace);
-                Settings.findOne({
-                    name: 'settings'
-                }, function(err, settings) {
-                    if (err) res.send(err)
-                    res.json(settings);
-                });
-            })
-        });
     });
 };
