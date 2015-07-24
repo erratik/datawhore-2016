@@ -11,6 +11,7 @@
     "method-override": "~2.1.2",
     "mongoose": "~3.6.2",
     "morgan": "~1.2.2",
+    "require-directory": "^2.1.1",
     "socket.io": "^1.1.0"
   },
   "devDependencies": {

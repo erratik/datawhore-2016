@@ -1,10 +1,20 @@
 <!-- partial: settings-timestamps -->
 
-<div class="eight wide column">
-    <h4 class="ui header dividing" ng-show="settings.saved">Last Modified</h4>
+<div class="sixteen wide column" ng-show="!settings.saved">
+    <form>
+      <p class="ui red message small">No settings found. Gonna save {{settings.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}} instead!</p>
+      <input type="hidden" class="input" value="{{settings.last_modified}}" ng-model="formData.last_modified">
+
+      <div class="ui buttons small">
+          <button type="submit" class="ui button positive" ng-click="createSettings()">Save</button>
+      </div>
+  </form>
+
+</div>
+<div class="eight wide column" ng-show="settings.saved">
+    <h4 class="ui header dividing">Last Modified</h4>
     <form>
 		  <p ng-show="settings.saved">{{settings.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</p>
-      <p class="ui red message small" ng-show="!settings.saved">No settings found. Gonna save {{settings.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}} instead!</p>
       <input type="hidden" class="input" value="{{settings.last_modified}}" ng-model="formData.last_modified">
 
       <div class="ui buttons small">
@@ -15,7 +25,7 @@
   </form>
 </div>
 
-<div class="eight wide column">
+<div class="eight wide column" ng-show="settings.saved">
   <h4 class="ui header dividing">Add a network namespace</h4>
   <div class="compact ui button" ng-show="!namespace" ng-click="namespace=!namespace">Add</div>
   <form class="ui form" ng-show="namespace">

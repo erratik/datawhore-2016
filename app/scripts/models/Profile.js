@@ -1,13 +1,11 @@
 var mongoose = require('mongoose'); 
-;
-var Settings = mongoose.model('Settings', {
+
+var Profiles = mongoose.model('Profiles', {
        name : String,
        last_modified: Number,
        saved: Boolean,
-       virgin: Number,
-       configs: {},
-       networks: {}
+       profile: Array
 });
 
 // Return a Drop model based upon the defined schema
-module.exports = Settings;
+module.exports = Profiles;
