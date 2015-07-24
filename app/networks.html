@@ -51,7 +51,7 @@
                                     <div class="item" ng-repeat="network in profiles">
                                         <i class="right triangle icon"></i>
                                         <div class="content">
-                                            <a class="item" ng-href="/#/profile/{{network.name}}">{{network.name}}</a>
+                                            <a class="item" ng-href="#/profiles/{{network.name}}">{{network.name}}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -78,12 +78,8 @@
         <script src="../bower_components/moment/moment.js"></script>
         <script src="../bower_components/angular-moment/angular-moment.js"></script>
         <!-- endbower -->
-        <script src="scripts/controllers/profiles.js"></script>
-        <script src="scripts/controllers/profile.js"></script>
-        <script src="scripts/controllers/settings.js"></script>
         <script src="scripts/controllers/networks.js"></script>
-        <script src="scripts/directives/profile.js"></script>
-        <script src="scripts/directives/namespace.js"></script>
+        <script src="scripts/directives/network.js"></script>
         <script src="scripts/app.js"></script>
         <!-- endbuild -->
     </body>

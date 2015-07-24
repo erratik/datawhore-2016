@@ -3,9 +3,10 @@ var defaultSettings = require('../../../config');
 var Settings = require('../models/Settings');
 var obj = require('../../../utils/objTools');
 var str = require('../../../utils/stringTools');
-var merge = require('merge'),original, cloned;
+var merge = require('merge'),
+    original, cloned;
 var mongoose = require('mongoose');
-
+            var fs = require('fs');
 var Twitter = require('twitter');
 var client = new Twitter({
     consumer_key: process.env.TWITTER_API_KEY,
@@ -48,32 +49,6 @@ module.exports = function(app) {
             var params = {
                 screen_name: settings.configs.twitter.username
             };
-            client.get('users/show', params, function(error, docs, response) {
-                if (!error) {
-                    //res.json(docs);
-                    settings.configs.twitter.profile = docs;
-                    for (var i = 0; i < settings.networks.length; i++) {
-                        // console.log(req.params.namespace);
-                        if (settings.networks[i].namespace == 'twitter') {
-                            settings.networks[i].connected = true;
-                        }
-                    }
-                    Settings.update({
-                        networks: settings.networks,
-                        configs: settings.configs
-                    }, function(err, settings) {
-                        Settings.findOne({
-                            name: 'settings'
-                        }, function(err, settings) {
-                            if (err) console.log(err)
-                                // console.log(settings);
-                            res.redirect('/');
-                        });
-                    });
-                } else {
-                    console.log(error)
-                }
-            });
         });
     });
     //*****************************************************************/  
@@ -105,19 +80,6 @@ module.exports = function(app) {
                                 settings.networks[i].connected = true;
                             }
                         }
-                        var profile = lastfm.request("user.getInfo", {
-                            handlers: {
-                                success: function(data) {
-                                    console.log("Success: " + data);
-
-                                    console.log(data)
-                                },
-                                error: function(error) {
-                                    console.log("Error: " + error.message);
-                                }
-                            }
-                        });
-
                         Settings.update({
                             networks: settings.networks,
                             configs: settings.configs
@@ -127,7 +89,7 @@ module.exports = function(app) {
                             }, function(err, settings) {
                                 if (err) console.log(err)
                                 console.log(settings);
-                               // res.redirect('/');
+                                // res.redirect('/');
                             });
                         });
                     });
@@ -161,9 +123,8 @@ module.exports = function(app) {
             }, function(error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var result = JSON.parse(body);
-
                     settings.configs.instagram.access_token = result.access_token;
-                    settings.configs.instagram.profile = result.user;
+                    // settings.configs.instagram.profile = result.user;
                     for (var i = 0; i < settings.networks.length; i++) {
                         // console.log(req.params.namespace);
                         if (settings.networks[i].namespace == 'instagram') {
@@ -189,7 +150,6 @@ module.exports = function(app) {
             });
         });
     });
-
     //*****************************************************************/  
     //    SWARM
     //*****************************************************************/
@@ -198,7 +158,6 @@ module.exports = function(app) {
     });
     app.get('/connect/swarm/callback', function(req, res) {
         //console.log(req);
-
         Settings.findOne({
             name: 'settings'
         }, function(err, settings) {
@@ -217,9 +176,7 @@ module.exports = function(app) {
             }, function(error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var result = JSON.parse(body);
-
                     settings.configs.swarm.access_token = result.access_token;
-                    
                     for (var i = 0; i < settings.networks.length; i++) {
                         // console.log(req.params.namespace);
                         if (settings.networks[i].namespace == 'swarm') {
@@ -239,57 +196,49 @@ module.exports = function(app) {
                     });
                 } else {
                     console.log(body);
-                    console.log(response );
+                    console.log(response);
                 }
                 //res.redirect('/');
             });
         });
-
     });
     //*****************************************************************/  
     //    MOVES
     //*****************************************************************/
-
     var Moves = require('moves');
     var moves = new Moves({
-      client_id: process.env.MOVES_API_KEY,
-      client_secret: process.env.MOVES_API_SECRET,
-      redirect_uri: process.env.BASE_URI+'/connect/moves/callback'
+        client_id: process.env.MOVES_API_KEY,
+        client_secret: process.env.MOVES_API_SECRET,
+        redirect_uri: process.env.BASE_URI + '/connect/moves/callback'
     });
     app.get('/connect/moves', function(req, res) {
-
         moves.authorize({
-            scope: ['activity', 'location'],  //can contain either activity, location or both
+            scope: ['activity', 'location'], //can contain either activity, location or both
             state: 'moves_state' //optional state as per oauth
-          }, res);
-
+        }, res);
     });
     app.get('/connect/moves/callback', function(req, res) {
         // res.json(req.query)
-
         Settings.findOne({
             name: 'settings'
         }, function(err, settings) {
             if (err) res.send(err)
             moves.token(req.query.code, function(error, response, body) {
-              var body = JSON.parse(body)
-                , access_token = body.access_token
-                , refresh_token = body.refresh_token
-                , user_id = body.user_id
-                , expires_in = body.expires_in;
-                     
+                var body = JSON.parse(body),
+                    access_token = body.access_token,
+                    refresh_token = body.refresh_token,
+                    user_id = body.user_id,
+                    expires_in = body.expires_in;
                 settings.configs.moves.access_token = access_token;
                 settings.configs.moves.refresh_token = refresh_token;
                 settings.configs.moves.user_id = user_id;
                 settings.configs.moves.expires_in = expires_in;
-
                 for (var i = 0; i < settings.networks.length; i++) {
                     // console.log(req.params.namespace);
                     if (settings.networks[i].namespace == 'moves') {
                         settings.networks[i].connected = true;
                     }
                 }
-
                 Settings.update({
                     networks: settings.networks,
                     configs: settings.configs
@@ -301,12 +250,119 @@ module.exports = function(app) {
                         console.log(settings);
                     });
                 });
-
                 res.redirect('/');
             });
         });
     });
+    //*****************************************************************/  
+    //    FACEBOOK
+    //*****************************************************************/
+    var fbgraph = require('fbgraphapi');
 
+    var cookieParser = require('cookie-parser');    // 
+    var session = require('express-session'); // 
+    app.get('/connect/facebook', function(req, res) {
+        // // app.use(cookieParser());
+        app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }))
+        app.use(fbgraph.auth( {
+                appId : process.env.FACEBOOK_API_KEY,
+                appSecret : process.env.FACEBOOK_API_SECRET,
+                redirectUri : "http://datawhore.erratik.ca:3000/facebook",
+                scope: 'public_profile, email, user_about_me, user_actions.news, user_photos, user_posts, user_status, user_tagged_places, user_likes, user_location, user_hometown, user_events, user_birthday, user_friends',
+                apiVersion: "v2.2"
+            }));
+        fbgraph.redirectLoginForm(req, res);
+    });
+    app.get('/facebook', function(req, res) {
+        if (!req.hasOwnProperty('facebook')) {
+            console.log('You are not logged in');
+            return res.redirect('/');
+        }
+
+
+        fs.appendFile('.env', 'FACEBOOK_ACCESS_TOKEN='+req.facebook._accessToken+' \n', encoding='utf8', function (err) {
+            if (err) throw err;
+        });
+
+
+        Settings.findOne({
+            name: 'settings'
+        }, function(err, settings) {
+            if (err) res.send(err)
+
+                settings.networks.facebook.connected = true;
+                Settings.update({
+                    networks: settings.networks,
+                    last_modified: Date.now() / 1000 | 0
+                }, function(err, settings) {
+                    Settings.findOne({
+                        name: 'settings'
+                    }, function(err, settings) {
+                        if (err) console.log(err)
+                        console.log(settings.networks.facebook);
+                    });
+                });
+                res.redirect('/#/settings');
+
+        });
+
+        /* See http://developers.facebook.com/docs/reference/api/ for more */
+        // req.facebook.graph('/me', function(err, me) {
+        //     console.log(me);
+        // });
+        // req.facebook.graph('/me?fields=id,name,location,birthday,friends,picture,cover', function(err, me) {
+        //     console.log(me);
+        // });
+        // req.facebook.me(function(err, me) {
+        //     console.log(me);
+        // });
+        // /me/likes
+        // req.facebook.my.likes(function(err, likes) {
+        //     // console.log(likes);
+        // });
+        // res.end("Check console output");
+        
+        // res.json(req.query)
+        /*        Settings.findOne({
+                    name: 'settings'
+                }, function(err, settings) {
+                    if (err) res.send(err)
+                    // moves.token(req.query.code, function(error, response, body) {
+                    //   var body = JSON.parse(body)
+                    //     , access_token = body.access_token
+                    //     , refresh_token = body.refresh_token
+                    //     , user_id = body.user_id
+                    //     , expires_in = body.expires_in;
+                             
+                    //     settings.configs.moves.access_token = access_token;
+                    //     settings.configs.moves.refresh_token = refresh_token;
+                    //     settings.configs.moves.user_id = user_id;
+                    //     settings.configs.moves.expires_in = expires_in;
+
+                    //     for (var i = 0; i < settings.networks.length; i++) {
+                    //         // console.log(req.params.namespace);
+                    //         if (settings.networks[i].namespace == 'facebook') {
+                    //             settings.networks[i].connected = true;
+                    //         }
+                    //     }
+
+                    //     Settings.update({
+                    //         networks: settings.networks,
+                    //         configs: settings.configs
+                    //     }, function(err, settings) {
+                    //         Settings.findOne({
+                    //             name: 'settings'
+                    //         }, function(err, settings) {
+                    //             if (err) console.log(err)
+                    //             console.log(settings);
+                    //         });
+                    //     });
+
+                    //     res.redirect('/');
+                    // });
+
+                });*/
+    });
     app.post('/disconnect/network/:namespace', function(req, res) {
         Settings.findOne({
             name: 'settings'
@@ -330,6 +386,4 @@ module.exports = function(app) {
             })
         });
     });
-
-
 };

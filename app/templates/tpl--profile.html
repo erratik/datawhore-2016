@@ -1,0 +1,48 @@
+<!-- template: settings-network-profiles -->
+<h3 class="ui header dividing">{{model.network}}</h3>
+<cite>{{model.profiles[model.network].last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</cite>
+<div class="ui container">
+        <div class="ui right floated small primary labeled icon button">
+          <i class="user icon"></i> Add User
+        </div>
+        <div class="ui small  button" ng-click="updateProfileProps(model.network)">
+          Approve
+        </div>
+        <div class="ui small  disabled button">
+          Approve All
+        </div>
+    <table class="ui compact celled definition table">
+  <thead class="full-width">
+    <tr>
+      <th>on card?</th>
+      <th>Name</th>
+      <th>Display Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th></th>
+      <th colspan="4">
+      </th>
+    </tr>
+    <tr ng-repeat="(key, value) in model.profiles[model.network].profile">
+      <td class="">
+        <div class="ui fitted slider checkbox">
+          <input type="checkbox" ng-model="formData[key].enabled"> <label></label>
+        </div>
+      </td>
+      <td>{{key}}</td>
+      <td>
+      <input type="text" value="" placeholder="{{ model.profiles[model.network].props[key].displayName }}" ng-model="formData[key].displayName">
+      </td>
+      <td>
+      {{value}}
+      <input type="hidden" ng-model="formData[key].value">
+      </td>
+    </tr>
+  </tbody>
+  <tfoot class="full-width">
+  </tfoot>
+</table>
+</div>

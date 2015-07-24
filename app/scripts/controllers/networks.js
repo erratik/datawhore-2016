@@ -1,24 +1,26 @@
 // public/core.js
 
-var app = angular.module('controllers.Profiles', [
-        'angularMoment', 
+var app = angular.module('controllers.Networks', [
+        'angularMoment',
+        'ui.router'
 
-        'directives.profileUpdated',
-        'directives.profileRemove',
-        'directives.profileFetch',
-        'directives.profileAvatar'
+        // 'directives.profileUpdated',
+        // 'directives.profileRemove',
+        // 'directives.profileFetch',
+        // 'directives.profileAvatar'
 
     ]);
 
-app.controller('profilesController', ['$scope', '$http', function profilesController($scope, $http) {
-
-
+app.controller('networksController', ['$scope', '$http', '$state', '$stateParams', function networkssController($scope, $http, $route) {
+    console.log($state);
     // when landing on the page, get all profiles and show them
-    $http.get('/api/profiles')
+    $http.get('/api/networks')
         .success(function(data) {
-            console.log(data);
-            $scope.configs = data.configs;
-            $scope.profiles = data.profiles;
+            // console.log(data);
+            $scope.network = {
+                config: data.config,
+                profile: data.profile
+            }
         })
         .error(function(data) {
             console.log('Error: ' + data);
@@ -31,10 +33,9 @@ app.controller('profilesController', ['$scope', '$http', function profilesContro
 
         $http.post('/api/profiles/'+namespace, {configs: $scope.configs, profiles: $scope.profiles})
             .success(function(data) {
-                // TODO: Tay - make sure there's a reason im sending all this data back and forth?!
+                console.log(data);
                 $scope.configs = data.configs;
                 $scope.profiles = data.profiles;
-                console.log($scope);
             })
             .error(function(data) {
                 console.log('Error: ' + data);
