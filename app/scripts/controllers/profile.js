@@ -6,7 +6,8 @@ var app = angular.module('controllers.Profile', [
         'directives.profileUpdated',
         'directives.profileRemove',
         'directives.profileFetch',
-        'directives.profileAvatar'
+        'directives.profileAvatar',
+        'directives.propertyValues'
 
     ]);
 
@@ -23,14 +24,20 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
     $http.get('/api/profiles', $scope.model.network)
         .success(function(data) {
             $scope.model.configs = data.configs;
-            $scope.model.profiles = data.profiles;
             $scope.formData[$stateParams.namespace] = {};
             var profileValues = Object.keys(data.profiles[$stateParams.namespace].profile);
 
             for (var i = 0; i < profileValues.length; i++) {
+
+                var savedValue = data.profiles[$stateParams.namespace].profile[profileValues[i]];
+
                 $scope.formData[profileValues[i]] = {
-                    value: data.profiles[$stateParams.namespace].profile[profileValues[i]]
+                    // value: (typeof savedValue == 'object') ? JSON.stringify(savedValue): savedValue,
+                    // type: typeof savedValue
+                    value: savedValue
                 };
+
+
                 // $scope.formData[profileProps[i]].value = data.profiles[$stateParams.namespace].profile[profileProps[i]];
             };
             if (typeof data.profiles[$stateParams.namespace].props != 'undefined') {
@@ -45,6 +52,7 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
             } 
             // console.log(profileValues)
 
+            $scope.model.profiles = data.profiles;
             console.log($scope);
         })
         .error(function(data) {
@@ -71,4 +79,5 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
 
 
 }]);
+
 

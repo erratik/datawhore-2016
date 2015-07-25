@@ -7,6 +7,13 @@ var app = angular.module('app', [
     'controllers.Profile',
     'controllers.Networks'
 ]);
+
+app.filter('typeof', function(){
+    return function(context){
+        return typeof context;
+    }
+});
+
 // use unix timestamps in angular views
 app.constant('angularMomentConfig', {
     preprocess: 'unix', // optional

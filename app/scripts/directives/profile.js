@@ -82,6 +82,29 @@
         };
     });
 
+    angular.module('directives.propertyValues', [])
+        .directive('propertyValues', function () {
+        return {
+            restrict: 'E',
+            scope:  "=",
+            controller: function ($scope) {
+                // console.log($scope);
+            },
+            templateUrl: tpl_folder+'/profile--property-values.html',
+            link: function (scope, element, attrs) {
+                scope.type = typeof scope.value;
+                
+                // var $parentScope = scope.$parent.$parent;
+                // // console.log($parentScope);
+                // if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
+                //     element.html('<img src="'+$parentScope.profiles[attrs.namespace].avatar+'" class="ui avatar">');
+                // } else {
+                //     element.html('<img src="/images/settings/'+attrs.namespace+'.png" class="ui avatar">');
+                // }
+            }
+        };
+    });
+
     // angular.module('directives.disconnectNamespace', [])
     //     .directive('disconnectNamespace', function () {
     //     return {

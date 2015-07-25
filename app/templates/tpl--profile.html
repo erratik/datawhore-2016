@@ -28,7 +28,7 @@
                     <input type="text" value="" placeholder="{{ model.profiles[model.network].props[key].displayName }}" ng-model="formData[key].displayName">
                 </td>
                 <td>
-                    {{value}}
+                    <property-values content="{{value}}"></property-values>
                     <input type="hidden" ng-model="formData[key].value">
                 </td>
             </tr>
