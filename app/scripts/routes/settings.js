@@ -8,6 +8,7 @@ var merge = require('merge'),
     original, cloned;
 var mongoose = require('mongoose');
 var moment = require('moment');
+var flatten = require('flat');
 // expose the routes to our app with module.exports
 module.exports = function(app) {
     //*****************************************************************/  
@@ -61,7 +62,6 @@ module.exports = function(app) {
             res.json(defaultSettings);
         });
     });
-
     //*****************************************************************/  
     //    networks
     //*****************************************************************/
@@ -78,24 +78,20 @@ module.exports = function(app) {
             };
             if (typeof settings.networks == 'undefined') settings.networks = {};
             settings.networks[req.body.namespace] = data;
-            
             Settings.updating({
                 networks: settings.networks
             }, function(settings) {
                 res.json(settings);
             });
-
         });
     });
     // configure network -------------------------------------------------------*/
     app.post('/api/settings/network/:namespace', function(req, res) {
-        Settings.findOne({  
+        Settings.findOne({
             name: 'settings'
         }, function(err, settings) {
-
             if (typeof settings.configs[req.params.namespace] == 'undefined') settings.configs[req.params.namespace] = {};
             settings.configs[req.params.namespace] = req.body;
-            
             if (req.body.customProperties) {
                 var re = /(\s+["'])([\w.:\/&=?]+)(["'])/gm;
                 var customProps = JSON.parse("{" + req.body.customProperties.replace(re, '\"$2\"') + "}");
@@ -106,9 +102,7 @@ module.exports = function(app) {
                     settings.configs[req.params.namespace][newProps[i]] = customProps[newProps[i]];
                 }
             }
-
             settings.networks[req.params.namespace].configured = true;
-
             Settings.updating({
                 configs: settings.configs,
                 networks: settings.networks
@@ -119,26 +113,25 @@ module.exports = function(app) {
     });
     // remove network settings -------------------------------------------------------*/
     app.delete('/api/settings/network/:namespace', function(req, res) {
-        Settings.findOne({
-            name: 'settings'
-        }, function(err, settings) {
-            if (err) console.log(err);
-            delete settings.networks[req.params.namespace];
-            Settings.updating({
-                networks: settings.networks
-            }, function(settings) {
-                res.json(settings);
+            Settings.findOne({
+                name: 'settings'
+            }, function(err, settings) {
+                if (err) console.log(err);
+                delete settings.networks[req.params.namespace];
+                Settings.updating({
+                    networks: settings.networks
+                }, function(settings) {
+                    res.json(settings);
+                });
             });
-        });
-    })
-    // remove network config -------------------------------------------------------*/
+        })
+        // remove network config -------------------------------------------------------*/
     app.delete('/disconnect/network/:namespace', function(req, res) {
         Settings.findOne({
             name: 'settings'
         }, function(err, settings) {
             delete settings.configs[req.params.namespace];
             settings.networks[req.params.namespace].connected = false;
-
             Settings.updating({
                 configs: settings.configs,
                 networks: settings.networks
@@ -166,15 +159,21 @@ module.exports = function(app) {
                     console.log('no profiles saved');
                 } else {
                     for (var i = 0; i < profiles.length; i++) {
-
-                    var flatten = require('flat');
-
                         if (typeof profiles[i]['profile'] == 'object') profiles[i]['profile'] = flatten(profiles[i]['profile']);
                         // console.log(profiles[i]['profile']);
                         data.profiles[profiles[i].name] = profiles[i];
+                        var profileKeys = Object.keys(profiles[i]['profile']);
+                        for (var j = 0; j < profileKeys.length; j++) {
+                            var re = /(\.+)/g;
+                            var str = profileKeys[j];
+                            var subst = '_';
+                            var safeKey = str.replace(re, subst);
+
+                            data.profiles[profiles[i].name]['profile'][safeKey] = data.profiles[profiles[i].name]['profile'][profileKeys[j]];
+                            if (str.indexOf('.') != -1) delete data.profiles[profiles[i].name]['profile'][profileKeys[j]];
+                        };
                     }
                 }
-
                 res.json(data); // return settings in JSON format
             });
         });
@@ -186,15 +185,12 @@ module.exports = function(app) {
             name: 'settings'
         }, function(err, settings) {
             if (err) console.log(err);
-
             Profile.remove({
                 name: req.params.namespace
             }, function(err, profile) {
                 if (err) res.send(err);
-
                 settings.configs[req.params.namespace]['profile'] = false;
                 Settings.updateConfig(settings.configs);
-
                 // get and return all the todos after you create another
                 Profile.find(function(err, profiles) {
                     if (err) res.send(err)
@@ -206,22 +202,18 @@ module.exports = function(app) {
                     res.json(data);
                 });
             });
-
         });
     });
     // add specific properties to profile -------------------------------------------------------*/
     app.post('/api/profile/props/:namespace', function(req, res) {
-
         Profile.nominateProfileProperties({
-            namespace: req.params.namespace, 
+            namespace: req.params.namespace,
             data: req.body
-        }, function(data){
+        }, function(data) {
             console.log('Settings Route > nominateProfileProperties');
             res.json(data);
         });
-
     });
-
     // application -------------------------------------------------------------
     app.get('/', function(req, res) {
         res.sendfile('./app/settings.html'); // load the single view file (angular will handle the page changes on the front-end)

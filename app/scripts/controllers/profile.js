@@ -55,8 +55,6 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
 
                     };
 
-
-
                 } else {
                     $scope.formData[profileValues[j]] = {
                         // value: (typeof savedValue == 'object') ? JSON.stringify(savedValue): savedValue,
@@ -100,16 +98,16 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
         // post goes to each network's api routes js
         console.log($scope.formData);
 
-        $http.post('/api/profile/props/'+namespace, $scope.formData)
-            .success(function(data) {
-                // console.log(data);
-                $scope.model.profiles[namespace] = data;
-                // $scope.model.profiles = data.profiles;
-                console.log($scope.model.profiles[namespace]);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
+        // $http.post('/api/profile/props/'+namespace, $scope.formData)
+        //     .success(function(data) {
+        //         // console.log(data);
+        //         $scope.model.profiles[namespace] = data;
+        //         // $scope.model.profiles = data.profiles;
+        //         console.log($scope.model.profiles[namespace]);
+        //     })
+        //     .error(function(data) {
+        //         console.log('Error: ' + data);
+        //     });
     };
 
 
