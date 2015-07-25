@@ -61,7 +61,11 @@ module.exports = function(app) {
             res.json(defaultSettings);
         });
     });
-    // social network namespace object
+
+    //*****************************************************************/  
+    //    networks
+    //*****************************************************************/
+    // create network object -------------------------------------------------------*/
     app.post('/api/settings/network/', function(req, res) {
         Settings.findOne({
             name: 'settings'
@@ -83,7 +87,7 @@ module.exports = function(app) {
 
         });
     });
-
+    // configure network -------------------------------------------------------*/
     app.post('/api/settings/network/:namespace', function(req, res) {
         Settings.findOne({  
             name: 'settings'
@@ -113,7 +117,7 @@ module.exports = function(app) {
             });
         });
     });
-
+    // remove network settings -------------------------------------------------------*/
     app.delete('/api/settings/network/:namespace', function(req, res) {
         Settings.findOne({
             name: 'settings'
@@ -127,6 +131,7 @@ module.exports = function(app) {
             });
         });
     })
+    // remove network config -------------------------------------------------------*/
     app.delete('/disconnect/network/:namespace', function(req, res) {
         Settings.findOne({
             name: 'settings'
@@ -142,6 +147,9 @@ module.exports = function(app) {
             });
         });
     });
+    //*****************************************************************/  
+    //    Profiles
+    //*****************************************************************/
     app.get('/api/profiles', function(req, res) {
         // get settings with mongoose, return default settings if !settings.saved
         Settings.findOne({
@@ -158,24 +166,20 @@ module.exports = function(app) {
                     console.log('no profiles saved');
                 } else {
                     for (var i = 0; i < profiles.length; i++) {
+
+                    var flatten = require('flat');
+
+                        if (typeof profiles[i]['profile'] == 'object') profiles[i]['profile'] = flatten(profiles[i]['profile']);
+                        // console.log(profiles[i]['profile']);
                         data.profiles[profiles[i].name] = profiles[i];
                     }
                 }
+
                 res.json(data); // return settings in JSON format
             });
         });
     });
-    app.get('/api/profiles/:namespace', function(req, res) {
-        // get settings with mongoose, return default settings if !settings.saved
-        Settings.findOne({
-            name: 'settings'
-        }, function(err, settings) {
-            if (err) console.log(err);
-
-                
-
-        });
-    });
+    // wipe profile -------------------------------------------------------*/
     app.delete('/api/profiles/:namespace', function(req, res) {
         // get settings with mongoose, return default settings if !settings.saved
         Settings.findOne({
@@ -205,10 +209,9 @@ module.exports = function(app) {
 
         });
     });
-
+    // add specific properties to profile -------------------------------------------------------*/
     app.post('/api/profile/props/:namespace', function(req, res) {
-        // console.log(req.body);
-        console.log('test');
+
         Profile.nominateProfileProperties({
             namespace: req.params.namespace, 
             data: req.body

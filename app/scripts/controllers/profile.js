@@ -12,7 +12,7 @@ var app = angular.module('controllers.Profile', [
     ]);
 
 app.controller('profileController', ['$scope','$stateParams', '$http', 
-    function profileController($scope, $stateParams, $http ) {
+    function ($scope, $stateParams, $http ) {
 
     $scope.model = {
         network: $stateParams.namespace
@@ -24,36 +24,66 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
     $http.get('/api/profiles', $scope.model.network)
         .success(function(data) {
             $scope.model.configs = data.configs;
+
+            console.log(data.profiles[$stateParams.namespace].props);
+
             $scope.formData[$stateParams.namespace] = {};
             var profileValues = Object.keys(data.profiles[$stateParams.namespace].profile);
 
-            for (var i = 0; i < profileValues.length; i++) {
+            for (var j = 0; j < profileValues.length; j++) {
 
-                var savedValue = data.profiles[$stateParams.namespace].profile[profileValues[i]];
+                $scope.formData[profileValues[j]] = {};
+                var savedValue = data.profiles[$stateParams.namespace].profile[profileValues[j]];
 
-                $scope.formData[profileValues[i]] = {
-                    // value: (typeof savedValue == 'object') ? JSON.stringify(savedValue): savedValue,
-                    // type: typeof savedValue
-                    value: savedValue
-                };
+                if (typeof savedValue == 'object' && savedValue != null) {
+                    console.log('--- object manipulation');  
+                    var subValues = Object.keys(savedValue);  
+                    // console.log(subValues);
+
+                    for (var i = 0; i < subValues.length; i++) {
+
+                        if (data.profiles[$stateParams.namespace].props[profileValues[j]]) {
+
+                            $scope.formData[profileValues[j]][subValues[i]] = {
+                                // value: (typeof savedValue == 'object') ? JSON.stringify(savedValue): savedValue,
+                                // type: typeof savedValue
+                                value: data.profiles[$stateParams.namespace].props[profileValues[j]][subValues[i]].value,
+                                enabled: data.profiles[$stateParams.namespace].props[profileValues[j]][subValues[i]].enabled      
+                            }                  
+                            // console.log($scope.formData[profileValues[j]]);
+                        }
+
+                    };
 
 
-                // $scope.formData[profileProps[i]].value = data.profiles[$stateParams.namespace].profile[profileProps[i]];
-            };
-            if (typeof data.profiles[$stateParams.namespace].props != 'undefined') {
 
-                var profileProps = Object.keys(data.profiles[$stateParams.namespace].props);
-                // console.log(data)
-                for (var i = 0; i < profileProps.length; i++) {
-                    $scope.formData[profileProps[i]].displayName = data.profiles[$stateParams.namespace].props[profileProps[i]].displayName;
-                    $scope.formData[profileProps[i]].enabled = true;
-                };
+                } else {
+                    $scope.formData[profileValues[j]] = {
+                        // value: (typeof savedValue == 'object') ? JSON.stringify(savedValue): savedValue,
+                        // type: typeof savedValue
+                        value: savedValue
+                    };
 
-            } 
-            // console.log(profileValues)
+                }
+
+            }
+
+            // if (typeof data.profiles[$stateParams.namespace].props != 'undefined') {
+
+            //     var profileProps = Object.keys(data.profiles[$stateParams.namespace].props);
+            //     // console.log(data)
+            //     for (var i = 0; i < profileProps.length; i++) {
+            //         $scope.formData[profileProps[i]].displayName = data.profiles[$stateParams.namespace].props[profileProps[i]].displayName;
+            //         $scope.formData[profileProps[i]].enabled = true;
+
+            //     }
+
+
+            // } 
 
             $scope.model.profiles = data.profiles;
-            console.log($scope);
+            console.log($scope.formData)
+
         })
         .error(function(data) {
             console.log('Error: ' + data);
@@ -62,7 +92,13 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
 
     $scope.updateProfileProps = function(namespace) {
         console.log('updateProfileProps');
+
+        var properties = Object.keys($scope.formData)
+        for (var i = 0; i < properties.length; i++) {
+            if (!$scope.formData[properties[i]].enabled) delete $scope.formData[properties[i]];
+        };
         // post goes to each network's api routes js
+        console.log($scope.formData);
 
         $http.post('/api/profile/props/'+namespace, $scope.formData)
             .success(function(data) {
