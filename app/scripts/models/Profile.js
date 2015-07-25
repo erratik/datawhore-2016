@@ -14,7 +14,6 @@ schema.statics = {
             Profile.findOne({
                 name: params.namespace
             }, function(err, profile) {
-
                 var savedProfile = {
                     name: params.namespace,
                     last_modified: Date.now() / 1000 | 0,
@@ -24,7 +23,6 @@ schema.statics = {
                     saved: true
                 };
                 if (!profile) {
-
                     Profile.create(savedProfile, function(err, profile) {
                         if (!err) {
                             console.log(' ');
@@ -64,44 +62,40 @@ schema.statics = {
             });
         },
         nominateProfileProperties: function(params, callback) {
-
             Profile.findOne({
                 name: params.namespace
             }, function(err, profile) {
                 if (!profile) {
-                	console.log('Profile Model > !!!! error, profile not found');
+                    console.log('Profile Model > !!!! error, profile not found');
                 } else {
-
-
-                	console.log('Profile Model > listing found profile');
+                    console.log('Profile Model > listing found profile');
                     profile.last_modified = Date.now() / 1000 | 0;
-                    // console.log(params.data);
-            		var newProps = Object.keys(params.data);
-                	if (typeof profile.props == 'undefined') profile.props = {};
+                    var receivedProps = flatten.unflatten(params.data, {
+                        delimiter: '__'
+                    });
+                    var newProps = Object.keys(receivedProps);
+                    if (typeof profile.props == 'undefined') profile.props = {};
                     for (var i = 0; i < newProps.length; i++) {
-                    	if (params.data[newProps[i]].enabled) {
-                    		profile.props[newProps[i]] = params.data[newProps[i]];
-                    		// console.log('saved > ' +newProps[i] );
-                    		// console.log(profile.props[newProps[i]]);
-                    	}
-
+                        if (receivedProps[newProps[i]].enabled) {
+                            profile.props[newProps[i]] = receivedProps[newProps[i]];
+                            // console.log('saved > ' +newProps[i] );
+                            // console.log(profile.props[newProps[i]]);
+                        }
                     };
-
-					Profile.update({name:params.namespace}, {props: profile.props}, {overwrite: true}, function(err){
-						if (err) {
-							console.log(err);
-						} else {
-
-		                    console.log(' ');
-		                    console.log('Profile Model > ... nominating profile properties for ' + params.namespace);
-		                    console.log(' ');
-                        	callback(profile);
-						}
-
-					});
-					
-
-
+                    Profile.update({name: params.namespace}, {props: profile.props}, {overwrite: true}, function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log(' ');
+                            console.log('Profile Model > ... nominating profile properties for ' + params.namespace);
+                            console.log(' ');
+                            // console.log(profile);
+                            // callback(flatten(profile, {
+                            //     delimiter: '__'
+                            // }));
+                            callback(profile);
+                        }
+                    });
                 }
             });
         }

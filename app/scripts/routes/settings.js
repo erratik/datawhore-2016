@@ -159,19 +159,11 @@ module.exports = function(app) {
                     console.log('no profiles saved');
                 } else {
                     for (var i = 0; i < profiles.length; i++) {
-                        if (typeof profiles[i]['profile'] == 'object') profiles[i]['profile'] = flatten(profiles[i]['profile']);
-                        // console.log(profiles[i]['profile']);
+                        if (typeof profiles[i]['profile'] == 'object') {
+                            profiles[i]['profile'] = flatten(profiles[i]['profile'], {delimiter: '__'});
+                        }
+                        
                         data.profiles[profiles[i].name] = profiles[i];
-                        var profileKeys = Object.keys(profiles[i]['profile']);
-                        for (var j = 0; j < profileKeys.length; j++) {
-                            var re = /(\.+)/g;
-                            var str = profileKeys[j];
-                            var subst = '__';
-                            var safeKey = str.replace(re, subst);
-
-                            data.profiles[profiles[i].name]['profile'][safeKey] = data.profiles[profiles[i].name]['profile'][profileKeys[j]];
-                            if (str.indexOf('.') != -1) delete data.profiles[profiles[i].name]['profile'][profileKeys[j]];
-                        };
                     }
                 }
                 res.json(data); // return settings in JSON format

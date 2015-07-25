@@ -27,7 +27,7 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
 
             console.log(data.profiles[$stateParams.namespace].props);
 
-            $scope.formData[$stateParams.namespace] = {};
+            // $scope.formData[$stateParams.namespace] = {};
             var profileValues = Object.keys(data.profiles[$stateParams.namespace].profile);
 
             for (var j = 0; j < profileValues.length; j++) {
@@ -71,14 +71,18 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
                 var profileProps = Object.keys(data.profiles[$stateParams.namespace].props);
                 // console.log(data)
                 for (var i = 0; i < profileProps.length; i++) {
-                    $scope.formData[profileProps[i]].displayName = data.profiles[$stateParams.namespace].props[profileProps[i]].displayName;
-                    $scope.formData[profileProps[i]].enabled = true;
+                    if (typeof $scope.formData[profileProps[i]] != 'undefined') {
+                        $scope.formData[profileProps[i]].displayName = data.profiles[$stateParams.namespace].props[profileProps[i]].displayName;
+                        $scope.formData[profileProps[i]].enabled = true;
+
+
+                    }
 
                 }
 
 
             } 
-
+            $scope.hidden = true;
             $scope.model.profiles = data.profiles;
             console.log($scope.formData)
 
@@ -92,10 +96,13 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
         console.log('updateProfileProps');
 
         var properties = Object.keys($scope.formData)
+        console.log('2test');
         for (var i = 0; i < properties.length; i++) {
+            console.log(typeof $scope.formData[properties[i]]);
             if (!$scope.formData[properties[i]].enabled) delete $scope.formData[properties[i]];
         };
         // post goes to each network's api routes js
+        console.log('test');
         console.log($scope.formData);
 
         $http.post('/api/profile/props/'+namespace, $scope.formData)
