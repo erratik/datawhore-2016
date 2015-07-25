@@ -1,19 +1,16 @@
-
-
-<div ng-if="type=='string'">
-{{type}} - {{value}}	
+<div ng-if="type!='object'">
+    {{value}}
+    <input type="hidden" ng-model="formData[key].value">
 </div>
-
 <div ng-if="type=='object'">
-	<div class="ui form">
-	  <div class="grouped fields" ng-repeat="(key, value) in value">
-	    <div class="field">
-	      <div class="ui radio checkbox">
-	        <input type="radio" name="fruit" tabindex="0" class="hidden">
-	        <label>{{key}}: {{value}}</label>
-{{value|typeof}}
+    <div class="ui form">
+        <div class="grouped fields" >
+            <div class="field" ng-repeat="(propname, propvalue) in value">
+                <div class="ui radio checkbox">
+                    <input type="radio" ng-model="formData[propname].value" tabindex="0" class="hidden">
+                    <label>{{propname}}: {{propvalue}}</label>
 
-	      </div>
-	    </div>
-	</div>
-</div>
+                </div>
+            </div>
+        </div>
+    </div>
