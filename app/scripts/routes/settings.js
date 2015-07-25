@@ -166,7 +166,7 @@ module.exports = function(app) {
                         for (var j = 0; j < profileKeys.length; j++) {
                             var re = /(\.+)/g;
                             var str = profileKeys[j];
-                            var subst = '_';
+                            var subst = '__';
                             var safeKey = str.replace(re, subst);
 
                             data.profiles[profiles[i].name]['profile'][safeKey] = data.profiles[profiles[i].name]['profile'][profileKeys[j]];
@@ -206,6 +206,7 @@ module.exports = function(app) {
     });
     // add specific properties to profile -------------------------------------------------------*/
     app.post('/api/profile/props/:namespace', function(req, res) {
+        // console.log(req.body);
         Profile.nominateProfileProperties({
             namespace: req.params.namespace,
             data: req.body

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var flatten = require('flat');
 var schema = new mongoose.Schema({
     name: String,
     last_modified: Number,

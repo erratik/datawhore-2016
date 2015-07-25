@@ -38,7 +38,7 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
                 if (typeof savedValue == 'object' && savedValue != null) {
                     console.log('--- object manipulation');  
                     var subValues = Object.keys(savedValue);  
-                    // console.log(subValues);
+                    console.log(subValues);
 
                     for (var i = 0; i < subValues.length; i++) {
 
@@ -50,7 +50,7 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
                                 value: data.profiles[$stateParams.namespace].props[profileValues[j]][subValues[i]].value,
                                 enabled: data.profiles[$stateParams.namespace].props[profileValues[j]][subValues[i]].enabled      
                             }                  
-                            // console.log($scope.formData[profileValues[j]]);
+                            console.log($scope.formData[profileValues[j]]);
                         }
 
                     };
@@ -66,18 +66,18 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
 
             }
 
-            // if (typeof data.profiles[$stateParams.namespace].props != 'undefined') {
+            if (typeof data.profiles[$stateParams.namespace].props != 'undefined') {
 
-            //     var profileProps = Object.keys(data.profiles[$stateParams.namespace].props);
-            //     // console.log(data)
-            //     for (var i = 0; i < profileProps.length; i++) {
-            //         $scope.formData[profileProps[i]].displayName = data.profiles[$stateParams.namespace].props[profileProps[i]].displayName;
-            //         $scope.formData[profileProps[i]].enabled = true;
+                var profileProps = Object.keys(data.profiles[$stateParams.namespace].props);
+                // console.log(data)
+                for (var i = 0; i < profileProps.length; i++) {
+                    $scope.formData[profileProps[i]].displayName = data.profiles[$stateParams.namespace].props[profileProps[i]].displayName;
+                    $scope.formData[profileProps[i]].enabled = true;
 
-            //     }
+                }
 
 
-            // } 
+            } 
 
             $scope.model.profiles = data.profiles;
             console.log($scope.formData)
@@ -98,16 +98,16 @@ app.controller('profileController', ['$scope','$stateParams', '$http',
         // post goes to each network's api routes js
         console.log($scope.formData);
 
-        // $http.post('/api/profile/props/'+namespace, $scope.formData)
-        //     .success(function(data) {
-        //         // console.log(data);
-        //         $scope.model.profiles[namespace] = data;
-        //         // $scope.model.profiles = data.profiles;
-        //         console.log($scope.model.profiles[namespace]);
-        //     })
-        //     .error(function(data) {
-        //         console.log('Error: ' + data);
-        //     });
+        $http.post('/api/profile/props/'+namespace, $scope.formData)
+            .success(function(data) {
+                // console.log(data);
+                $scope.model.profiles[namespace] = data;
+                // $scope.model.profiles = data.profiles;
+                console.log($scope.model.profiles[namespace]);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
     };
 
 
