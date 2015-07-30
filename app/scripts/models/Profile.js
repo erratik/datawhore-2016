@@ -6,7 +6,7 @@ var schema = new mongoose.Schema({
     saved: Boolean,
     avatar: String,
     username: String,
-    profile: {},
+    fetchedProfile: {},
     props: {}
 });
 schema.statics = {
@@ -14,10 +14,11 @@ schema.statics = {
             Profile.findOne({
                 name: params.namespace
             }, function(err, profile) {
+
                 var savedProfile = {
                     name: params.namespace,
                     last_modified: Date.now() / 1000 | 0,
-                    profile: params.profile,
+                    fetchedProfile: params.profile,
                     avatar: params.avatar,
                     username: params.username,
                     saved: true
@@ -28,24 +29,31 @@ schema.statics = {
                             console.log(' ');
                             console.log('Profile Model > ... creating profile for ' + params.namespace);
                             console.log(' ');
+
                             var data = {
                                 configs: params.configs,
                                 profiles: params.profiles
                             };
                             data.profiles[params.namespace] = profile;
                             params.configs[params.namespace]['profile'] = true;
+                            
+
                             Settings.updateConfig(params.configs);
                             console.log('API > ' + params.namespace + ' > saved profile...');
                             callback(data);
                         }
                     });
                 } else {
-                    console.log(' ');
-                    console.log('Profile Model > ... saving profile for ' + params.namespace);
-                    console.log(' ');
-                    profile = savedProfile;
+
+                    profile.last_modified = Date.now() / 1000 | 0;
+                    profile.fetchedProfile = savedProfile.fetchedProfile;
+                    profile.avatar = savedProfile.avatar;
+
                     profile.save(function(err) {
                         if (!err) {
+                            console.log(' ');
+                            console.log('Profile Model > ... saving profile for ' + params.namespace);
+                            console.log(' ');
                             var data = {
                                 configs: params.configs,
                                 profiles: params.profiles
@@ -53,11 +61,14 @@ schema.statics = {
                             data.profiles[params.namespace] = profile;
                             params.configs[params.namespace]['profile'] = true;
                             Settings.updateConfig(params.configs);
+
+                            console.log('Profile Model > callback to /api/profiles/' +params.namespace, data.profiles[params.namespace]);
                             callback(data);
                         } else {
                             console.log(err);
                         }
                     });
+
                 }
             });
         },
@@ -70,11 +81,9 @@ schema.statics = {
                 } else {
                     console.log('Profile Model > listing found profile');
                     profile.last_modified = Date.now() / 1000 | 0;
-                    var receivedProps = flatten.unflatten(params.data, {
-                        delimiter: '__'
-                    });
+                    var receivedProps = params.data;
                     var newProps = Object.keys(receivedProps);
-                    if (typeof profile.props == 'undefined') profile.props = {};
+                    profile.props = {};
                     for (var i = 0; i < newProps.length; i++) {
                         if (receivedProps[newProps[i]].enabled) {
                             profile.props[newProps[i]] = receivedProps[newProps[i]];
@@ -89,10 +98,11 @@ schema.statics = {
                             console.log(' ');
                             console.log('Profile Model > ... nominating profile properties for ' + params.namespace);
                             console.log(' ');
-                            // console.log(profile);
+                            console.log(profile);
                             // callback(flatten(profile, {
                             //     delimiter: '__'
                             // }));
+
                             callback(profile);
                         }
                     });

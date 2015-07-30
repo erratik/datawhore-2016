@@ -16,12 +16,10 @@ var client = new LastFmNode({
 // expose the routes to our app with module.exports
 module.exports = function(app) {
     app.post('/api/profiles/' + namespace, function(req, res) {
-        Settings.findOne({
-            name: 'settings'
-        }, function(err, settings) {
-            console.log('getInfo for ' + settings.configs[namespace].username);
+        console.log(req.body);
+            console.log('getInfo for ' + req.body.configs[namespace].username);
             client.request("user.getInfo", {
-                user: settings.configs[namespace].username,
+                user: req.body.configs[namespace].username,
                 handlers: {
                     success: function(data) {
                         // console.log("Success: " + data);
@@ -32,9 +30,9 @@ module.exports = function(app) {
                         Profile.updateProfile({
                             namespace: namespace,
                             avatar: data.avatar,
-                            username: settings.configs[namespace].username,
+                            username: req.body.configs[namespace].username,
                             profile: data.user,
-                            configs: settings.configs,
+                            configs: req.body.configs,
                             profiles: req.body.profiles
                         }, function(data) {
                             // console.log(data);
@@ -46,6 +44,6 @@ module.exports = function(app) {
                     }
                 }
             });
-        });
+
     });
 };

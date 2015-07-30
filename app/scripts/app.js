@@ -4,13 +4,17 @@ var app = angular.module('app', [
 
     'controllers.Settings',
     'controllers.Profiles',
-    'controllers.Profile',
     'controllers.Networks'
 ]);
 
 app.filter('typeof', function(){
     return function(context){
         return typeof context;
+    }
+});
+app.filter('count', function(){
+    return function(context){
+        return context.length;
     }
 });
 
@@ -26,7 +30,7 @@ app.constant('angularMomentConfig', {
         templateUrl: 'templates/tpl--settings.html'
     }).state('profiles', {
         url: '/',
-        controller: 'profilesController',
+        controller: 'profilesController as model',
         templateUrl: 'templates/tpl--profiles.html'
     }).state('profile', {
         url: '/profile/:namespace',

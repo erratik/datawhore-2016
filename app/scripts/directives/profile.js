@@ -6,14 +6,17 @@
         .directive('profileUpdated', function () {
         return {
             restrict: 'EA',
-            scope: "&",
+            scope: {},
+            template: 'No profile saved.',
             link: function (scope, element, attrs) {
-                var $parentScope = scope.$parent.$parent;
-                if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
-                    element.html('Last saved ' + moment.unix($parentScope.profiles[attrs.namespace].last_modified).fromNow());
-                } else {
-                    element.html('No profile saved.');
-                }
+
+                // var thisProfile = scope.namespace;
+// console.log(attrs);
+                if (attrs.date) 
+                    element.html('Last saved ' + moment.unix(attrs.date).fromNow());
+                // } else {
+                //     element.html('No profile saved.');
+                // }
             }
         };
     });    
@@ -21,17 +24,21 @@
     angular.module('directives.profileFetch', ['angularMoment'])
         .directive('profileFetch', function () {
         return {
-            restrict: 'EA',
-            scope: "&",
+            restrict: 'E',
+            scope: {
+                done: "&",
+                namespace: "@"
+            },
+            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">Update Profile </div>',
             link: function (scope, element, attrs) {
-                var $parentScope = scope.$parent.$parent;
-                var markup = '<div class="right mini ui button trigger"><img src="/images/settings/'+attrs.namespace+'.png" class="micro">';
+                // var thisProfile = scope['profile'];
+                // var markup = '<div class="right mini ui button trigger" ng-click="getProfile({profile.name})"><img src="/images/settings/'+attrs.namespace+'.png" class="micro">';
                 
-                markup += (typeof $parentScope.profiles[attrs.namespace] != 'undefined') ? 'Update' : 'Get';
+                // markup += (typeof thisProfile != 'undefined') ? 'Update' : 'Get';
 
-                markup += ' profile</div>';
+                // markup += ' profile</div>';
 
-                element.html(markup);
+                // element.html(markup);
             }
         };
     });    
@@ -43,9 +50,9 @@
             scope: "=",
             link: function (scope, element, attrs) {
                 
-                var $parentScope = scope.$parent.$parent;
+                var thisProfile = scope['profile'];
 
-                if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
+                if (typeof thisProfile != 'undefined') {
 
                     var markup = '<div class="right mini ui button trigger">';
                     
@@ -63,93 +70,54 @@
     angular.module('directives.profileAvatar', [])
         .directive('profileAvatar', function () {
         return {
-            restrict: 'E',
-            scope:  "=",
-            controller: function ($scope) {
-                // console.log($scope);
+            restrict: 'EA',
+            scope:  {
+                namespace: "@",
+                saved: "@",
+                avatar: "@"
             },
-            // templateUrl: tpl_folder+'/profile-avatar.html',
-            template: '',
+            template: '<img src="/images/settings/{{namespace}}.png" class="ui avatar">',
             link: function (scope, element, attrs) {
-                var $parentScope = scope.$parent.$parent;
-                // console.log($parentScope);
-                if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
-                    element.html('<img src="'+$parentScope.profiles[attrs.namespace].avatar+'" class="ui avatar">');
-                } else {
-                    element.html('<img src="/images/settings/'+attrs.namespace+'.png" class="ui avatar">');
+                
+                // console.log(attrs.$attr);
+                // var thisProfile = scope['profile'];
+                // // console.log(scope);
+                if (scope.saved) {
+                    element.html('<img src="'+ scope.avatar +'" class="ui avatar">');
+
                 }
             }
         };
     });
 
-    angular.module('directives.propertyValues', [])
-        .directive('propertyValues', function () {
+
+    angular.module('directives.profileCard', [])
+        .directive('profileCard', function () {
         return {
             restrict: 'E',
-            scope:  "=",
+            scope: '=',
             controller: function ($scope) {
-                // console.log($scope);
+                console.log($scope);
+                // $scope.model = {};
+                this.addProfile = function(){
+                    $scope.profile.saved = true;
+                }
             },
-            templateUrl: tpl_folder+'/profile--property-values.html',
+            templateUrl: tpl_folder+'/profile--card.html',
             link: function (scope, element, attrs) {
-                scope.type = typeof scope.value;
-                
-                // var $parentScope = scope.$parent.$parent;
-                // // console.log($parentScope);
-                // if (typeof $parentScope.profiles[attrs.namespace] != 'undefined') {
-                //     element.html('<img src="'+$parentScope.profiles[attrs.namespace].avatar+'" class="ui avatar">');
-                // } else {
-                //     element.html('<img src="/images/settings/'+attrs.namespace+'.png" class="ui avatar">');
-                // }
+                console.log(scope);
+            }
+        };
+    })
+    .directive('profile', function () {
+        return {
+            restrict: 'E',
+            require: 'profileCard',
+            link: function (scope, element, attrs, profileCard) {
+                console.log(attrs);
+                profileCard.addProfile();
             }
         };
     });
-
-    // angular.module('directives.disconnectNamespace', [])
-    //     .directive('disconnectNamespace', function () {
-    //     return {
-    //         restrict: 'E',
-    //         template: '<div class="ui negative mini button" ng-show="network.connected">Disconnect</div>',
-    //         link: function (scope, element, attrs) {
-    //             element.on('click', function(){
-    //                 scope.disconnectNamespace(scope.network.namespace);
-    //             });
-    //         }
-    //     };
-    // });
-
-    // angular.module('directives.removeNamespace', [])
-    //     .directive('removeNamespace', function () {
-    //     return {
-    //         restrict: 'E',
-    //         template: '<div class="ui negative button">Remove</div>',
-    //         link: function (scope, element, attrs) {
-    //             element.on('click', function(){
-    //                 scope.deleteNetworkNamespace(scope.network.namespace);
-    //             });
-    //         }
-    //     };
-    // });
-
-    // angular.module('directives.configureNamespace', [])
-    //     .directive('configureNamespace', function () {
-    //     return {
-    //         restrict: 'E',
-    //         template: '<div class="ui positive button">Save</div>',
-    //         link: function (scope, element, attrs) {
-    //             element.on('click', function(){
-    //                 scope.configureNetwork(scope.network.namespace);
-    //             });
-    //         }
-    //     };
-    // });
-
-    // angular.module('directives.customProperties', [])
-    //     .directive('customProperties', function () {
-    //     return {
-    //         restrict: 'E',
-    //         template: '<textarea ng-model="formData.customProperties" placeholder="Add image filename"></textarea>'//
-    //     };
-    // });
 
 })(angular);

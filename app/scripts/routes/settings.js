@@ -144,14 +144,17 @@ module.exports = function(app) {
     //    Profiles
     //*****************************************************************/
     app.get('/api/profiles', function(req, res) {
-        // get settings with mongoose, return default settings if !settings.saved
+
         Settings.findOne({
             name: 'settings'
         }, function(err, settings) {
+        // get settings with mongoose, return default settings if !settings.saved
+            console.log('/api/profiles > req.body');
+            console.log(req.body);
             var profiles = {};
             var data = {
-                configs: settings.configs,
-                profiles: profiles
+                profiles: profiles,
+                configs: settings.configs
                     // networks: settings.networks
             };
             Profile.find(function(err, profiles) {
@@ -159,16 +162,35 @@ module.exports = function(app) {
                     console.log('no profiles saved');
                 } else {
                     for (var i = 0; i < profiles.length; i++) {
-                        if (typeof profiles[i]['profile'] == 'object') {
-                            profiles[i]['profile'] = flatten(profiles[i]['profile'], {delimiter: '__'});
+
+                        if (typeof profiles[i]['fetchedProfile'] == 'object') {
+                            profiles[i]['fetchedProfile'] = flatten(profiles[i]['fetchedProfile'], {delimiter: '__'});
                         }
                         
                         data.profiles[profiles[i].name] = profiles[i];
                     }
+
                 }
                 res.json(data); // return settings in JSON format
             });
         });
+        
+    });
+    //*****************************************************************/  
+    //    Profiles
+    //*****************************************************************/
+    app.get('/api/profile/:namespace', function(req, res) {
+        // get settings with mongoose, return default settings if !settings.saved
+            Profile.findOne({name: req.params.namespace}, function(err, profile) {
+                if (!profile) {
+                    console.log('no profile found');
+                } else {
+                    profile.fetchedProfile = flatten(profile.fetchedProfile, {delimiter: '__'})
+                    res.json(profile); // return settings in JSON format
+                    
+                }
+            });
+        
     });
     // wipe profile -------------------------------------------------------*/
     app.delete('/api/profiles/:namespace', function(req, res) {
@@ -204,6 +226,7 @@ module.exports = function(app) {
             data: req.body
         }, function(data) {
             console.log('Settings Route > nominateProfileProperties');
+            data.fetchedProfile = flatten(data.fetchedProfile, {delimiter: '__'})
             res.json(data);
         });
     });

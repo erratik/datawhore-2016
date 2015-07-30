@@ -17,9 +17,7 @@ client.use({
 // expose the routes to our app with module.exports
 module.exports = function(app) {
     app.post('/api/profiles/' + namespace, function(req, res) {
-        Settings.findOne({
-            name: 'settings'
-        }, function(err, settings) {
+
             client.user_self_media_recent({
                 count: 1
             }, function(err, medias, pagination, remaining, limit) {
@@ -29,9 +27,9 @@ module.exports = function(app) {
                     Profile.updateProfile({
                         namespace: namespace,
                         avatar: medias[0].user.profile_picture,
-                        username: settings.configs[namespace].username,
+                        username: req.body.configs[namespace].username,
                         profile: medias[0].user,
-                        configs: settings.configs,
+                        configs: req.body.configs,
                         profiles: req.body.profiles
                     }, function(data) {
                         // console.log(data);
@@ -39,6 +37,6 @@ module.exports = function(app) {
                     });
                 }
             });
-        });
+            
     });
 };

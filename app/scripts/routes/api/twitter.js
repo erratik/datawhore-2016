@@ -19,11 +19,8 @@ var client = new Twitter({
 // expose the routes to our app with module.exports
 module.exports = function(app) {
     app.post('/api/profiles/'+namespace, function(req, res) {
-        Settings.findOne({
-            name: 'settings'
-        }, function(err, settings) {
 
-            if (err) res.send(err)
+            // if (err) res.send(err)
             var params = {
                 screen_name: req.body.configs[namespace].username
             };
@@ -35,7 +32,7 @@ module.exports = function(app) {
                         avatar: docs.profile_image_url, 
                         username: params.screen_name,
                         profile: docs,
-                        configs: settings.configs, 
+                        configs: req.body.configs, 
                         profiles: req.body.profiles
                     }, function(data){
                         // console.log(data);
@@ -45,7 +42,7 @@ module.exports = function(app) {
                     console.log(error)
                 }
             });
-        });
+            
     });
 
 

@@ -23,9 +23,7 @@ var client = require('node-foursquare')(swarmConfig);
 // expose the routes to our app with module.exports
 module.exports = function(app) {
     app.post('/api/profiles/' + namespace, function(req, res) {
-        Settings.findOne({
-            name: 'settings'
-        }, function(err, settings) {
+   
 
           client.Users.getUser('self', process.env.SWARM_ACCESS_TOKEN, 
             function (error, data) {
@@ -37,9 +35,9 @@ module.exports = function(app) {
                     Profile.updateProfile({
                         namespace: namespace,
                         avatar: data.user.photo.prefix+'400x400'+data.user.photo.suffix,
-                        username: settings.configs[namespace].username,
+                        username: req.body.configs[namespace].username,
                         profile: data.user,
-                        configs: settings.configs,
+                        configs: req.body.configs,
                         profiles: req.body.profiles
                     }, function(data) {
                         // console.log(data);
@@ -49,6 +47,5 @@ module.exports = function(app) {
               }
           });
 
-        });
     });
 };
