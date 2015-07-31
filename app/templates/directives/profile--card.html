@@ -1,18 +1,20 @@
 
     <div class="content">
         <div class="header">
-            <!-- <profile-avatar namespace="{{profile.name}}" saved="{{profile.saved}}" avatar="{{profile.avatar}}"></profile-avatar> -->
-           <!--  <img src="/images/settings/{{profile.name}}.png" class="ui avatar" ng-if="!profile.saved">
-            <img src="{{profile.avatar}}" class="ui avatar" ng-if="profile.saved"> -->
-            @{{profile}}
+            <img src="/images/settings/{{namespace}}.png" class="ui avatar" ng-if="!config.profile">
+            <img src="{{profile.avatar}}" class="ui avatar" ng-if="config.profile">
+            <span ng-show="!config.username">{{namespace}}</span>
+            <span ng-show="config.username">@{{config.username}}</span>
         </div>
         <div class="meta">
-            <!-- <profile-updated date="{{profile.last_modified}}"></profile-updated> -->
+            <span ng-show="!config.profile">No profile saved</span>
+            <span ng-if="config.profile">Updated {{profile.last_modified | fromNow }}</span>
         </div>
         <!-- <div class="description"></div> -->
     </div>
     <div class="extra content">
-        <!-- <profile-fetch namespace="{{profile.name}}" done="getProfile(profile.name)"></profile-fetch> -->
+        <div class="right mini ui button trigger" ng-click="getProfile('{{namespace}}')"><img src="/images/settings/{{namespace}}.png" class="micro">Update Profile </div>
+        <!-- <div profile-fetch namespace="{{namespace}}" done="getProfile(namespace)"></div> -->
         <!-- <profile-remove namespace="{{profile.name}}" ng-click="deleteProfile(profile.name)"></profile-remove> -->
     </div>
     

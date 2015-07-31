@@ -5,13 +5,18 @@
     angular.module('directives.profileUpdated', ['angularMoment'])
         .directive('profileUpdated', function () {
         return {
-            restrict: 'EA',
-            scope: {},
+            restrict: 'E',
+            scope: {
+                date: '@'
+            },
             template: 'No profile saved.',
+            controller: function($scope){
+                console.log($scope)
+            },
             link: function (scope, element, attrs) {
 
                 // var thisProfile = scope.namespace;
-// console.log(attrs);
+                console.log(attrs.date);
                 if (attrs.date) 
                     element.html('Last saved ' + moment.unix(attrs.date).fromNow());
                 // } else {
@@ -46,22 +51,27 @@
     angular.module('directives.profileRemove', ['angularMoment'])
         .directive('profileRemove', function () {
         return {
-            restrict: 'EA',
-            scope: "=",
+            restrict: 'E',
+            scope: {
+                done: "&",
+                namespace: "@"
+            },
+            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><i class="icon remove"></i>Wipe </div>',
+
             link: function (scope, element, attrs) {
                 
-                var thisProfile = scope['profile'];
+                // var thisProfile = scope['profile'];
 
-                if (typeof thisProfile != 'undefined') {
+                // if (typeof thisProfile != 'undefined') {
 
-                    var markup = '<div class="right mini ui button trigger">';
+                //     var markup = '<div class="right mini ui button trigger">';
                     
-                        markup +=  '<i class="trash icon"></i>Wipe';
+                //         markup +=  '<i class="trash icon"></i>Wipe';
 
-                        markup += '</div>';
+                //         markup += '</div>';
 
-                    element.html(markup);
-                }
+                //     element.html(markup);
+                // }
 
             }
         };
@@ -95,29 +105,50 @@
         .directive('profileCard', function () {
         return {
             restrict: 'E',
-            scope: '=',
+            scope:{},
             controller: function ($scope) {
                 console.log($scope);
-                // $scope.model = {};
-                this.addProfile = function(){
-                    $scope.profile.saved = true;
+                this.addProfile = function(namespace){
+                    $scope['namespace'] = namespace;
+                    $scope['profile'] = $scope.$parent.$parent.model.profiles[namespace];
+                    $scope['config'] = $scope.$parent.$parent.model.configs[namespace];
                 }
             },
             templateUrl: tpl_folder+'/profile--card.html',
             link: function (scope, element, attrs) {
-                console.log(scope);
+                element.bind('mouseenter',function(){
+                    console.log(scope.config);
+                });
             }
         };
     })
-    .directive('profile', function () {
+    .directive('namespace', function () {
         return {
-            restrict: 'E',
             require: 'profileCard',
-            link: function (scope, element, attrs, profileCard) {
-                console.log(attrs);
-                profileCard.addProfile();
+            link: function (scope, element, attrs, profileCardCtrl) {
+                // console.log(attrs);
+                profileCardCtrl.addProfile(attrs.namespace);
+            }
+        };
+    })
+    .directive('avatar', function () {
+        return {
+            require: 'profileCard',
+            link: function (scope, element, attrs, profileCardCtrl) {
+                profileCardCtrl.addNamespace(attrs.name);
+            }
+        };
+    })
+    .directive('last_modified', function () {
+        return {
+            require: 'profileCard',
+            link: function (scope, element, attrs, profileCardCtrl) {
+                profileCardCtrl.addNamespace(attrs.name);
             }
         };
     });
+
+
+
 
 })(angular);

@@ -5,7 +5,7 @@
     <h3 class="ui header dividing">{{network}}</h3>
 
     <div class="ui link cards">
-        <profile-card class="card" ng-if="profile.name==network"></profile-card>
+        <profile-card class="card" namespace={{network}}></profile-card>
         </div>
     <cite>{{profile.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</cite>
     <div class="ui right floated small primary labeled icon button" ng-click="hidden=!hidden">

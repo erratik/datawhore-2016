@@ -3,9 +3,8 @@ var app = angular.module('controllers.Profiles', [
     'angularMoment', 
     'directives.profileUpdated', 
     'directives.profileRemove', 
-    'directives.profileFetch', 
-    'directives.profileAvatar', 
-    'directives.profileCard'
+    'directives.profileAvatar',
+    'directives.profileFetch'
 ]);
 
 app.service("profileSettings", function(){

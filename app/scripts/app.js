@@ -12,9 +12,15 @@ app.filter('typeof', function(){
         return typeof context;
     }
 });
-app.filter('count', function(){
+app.filter('length', function(){
     return function(context){
-        return context.length;
+        // console.log(context.length);
+        return (typeof context == "object") ? Object.keys(context).length : '';
+    }
+});
+app.filter('fromNow', function(){
+    return function(date){
+        return moment.unix(date).fromNow();
     }
 });
 
