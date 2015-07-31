@@ -79,26 +79,21 @@
 
     angular.module('directives.profileAvatar', [])
         .directive('profileAvatar', function () {
-        return {
-            restrict: 'EA',
-            scope:  {
-                namespace: "@",
-                saved: "@",
-                avatar: "@"
-            },
-            template: '<img src="/images/settings/{{namespace}}.png" class="ui avatar">',
-            link: function (scope, element, attrs) {
-                
-                // console.log(attrs.$attr);
-                // var thisProfile = scope['profile'];
-                // // console.log(scope);
-                if (scope.saved) {
-                    element.html('<img src="'+ scope.avatar +'" class="ui avatar">');
+            return {
+                restrict: 'E',
+                scope: {
+                    namespace: "@",
+                    avatar: "@"
+                },
+                template: '<img src="/images/settings/{{namespace}}.png" class="ui right floated mini avatar">',
+                link: function (scope, element, attrs) {
+                    if (scope.avatar) {
+                        element.html('<img src="'+ scope.avatar +'" class="ui right floated mini avatar">');
 
+                    }
                 }
-            }
-        };
-    });
+            };
+        })
 
 
     angular.module('directives.profileCard', [])
@@ -128,14 +123,6 @@
             link: function (scope, element, attrs, profileCardCtrl) {
                 // console.log(attrs);
                 profileCardCtrl.addProfile(attrs.namespace);
-            }
-        };
-    })
-    .directive('avatar', function () {
-        return {
-            require: 'profileCard',
-            link: function (scope, element, attrs, profileCardCtrl) {
-                profileCardCtrl.addNamespace(attrs.name);
             }
         };
     })

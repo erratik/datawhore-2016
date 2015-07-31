@@ -1,8 +1,9 @@
 
     <div class="content">
-        <div class="header">
-            <img src="/images/settings/{{namespace}}.png" class="ui avatar" ng-if="!config.profile">
-            <img src="{{model.profiles[namespace].avatar}}" class="ui avatar" ng-if="config.profile">
+        <div class="header"><!-- 
+            <img src="/images/settings/{{namespace}}.png" class="ui right floated mini avatar" ng-if="!config.profile">
+            <img src="{{model.profiles[namespace].avatar}}" class="ui right floated mini avatar" ng-if="config.profile"> -->
+            <profile-avatar namespace="{{namespace}}" avatar="{{model.profiles[namespace].avatar}}"></profile-avatar>
 
             <span ng-show="!config.username">{{namespace}}</span>
             <span ng-show="config.username">@{{config.username}}</span>
