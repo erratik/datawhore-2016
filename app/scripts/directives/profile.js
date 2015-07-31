@@ -10,18 +10,10 @@
                 date: '@'
             },
             template: 'No profile saved.',
-            controller: function($scope){
-                console.log($scope)
-            },
             link: function (scope, element, attrs) {
 
-                // var thisProfile = scope.namespace;
-                console.log(attrs.date);
                 if (attrs.date) 
                     element.html('Last saved ' + moment.unix(attrs.date).fromNow());
-                // } else {
-                //     element.html('No profile saved.');
-                // }
             }
         };
     });    
@@ -34,17 +26,7 @@
                 done: "&",
                 namespace: "@"
             },
-            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">Update Profile </div>',
-            link: function (scope, element, attrs) {
-                // var thisProfile = scope['profile'];
-                // var markup = '<div class="right mini ui button trigger" ng-click="getProfile({profile.name})"><img src="/images/settings/'+attrs.namespace+'.png" class="micro">';
-                
-                // markup += (typeof thisProfile != 'undefined') ? 'Update' : 'Get';
-
-                // markup += ' profile</div>';
-
-                // element.html(markup);
-            }
+            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">Update Profile </div>'
         };
     });    
 
@@ -56,46 +38,61 @@
                 done: "&",
                 namespace: "@"
             },
-            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><i class="icon remove"></i>Wipe </div>',
-
-            link: function (scope, element, attrs) {
-                
-                // var thisProfile = scope['profile'];
-
-                // if (typeof thisProfile != 'undefined') {
-
-                //     var markup = '<div class="right mini ui button trigger">';
-                    
-                //         markup +=  '<i class="trash icon"></i>Wipe';
-
-                //         markup += '</div>';
-
-                //     element.html(markup);
-                // }
-
-            }
+            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><i class="icon remove"></i>Wipe </div>'
         };
     });    
 
     angular.module('directives.profileAvatar', [])
         .directive('profileAvatar', function () {
-            return {
-                restrict: 'E',
-                scope: {
-                    namespace: "@",
-                    avatar: "@"
-                },
-                template: '<img src="/images/settings/{{namespace}}.png" class="ui right floated mini avatar">',
-                link: function (scope, element, attrs) {
-                    if (scope.avatar) {
-                        element.html('<img src="'+ scope.avatar +'" class="ui right floated mini avatar">');
-
-                    }
+        return {
+            restrict: 'E',
+            scope: {
+                namespace: "@",
+                avatar: "@"
+            },
+            controller: function ($scope, $attrs) {
+                this.bla = function () {
+                    console.log($attrs);
                 }
-            };
-        })
+            },
+            template: '<img src="/images/settings/{{namespace}}.png" class="ui right floated mini avatar">',
+            link: function (scope, element, attrs, profileController) {
+
+                if (scope.avatar) {
+                    element.html('<img src="'+ scope.avatar +'" class="ui right floated mini avatar">');
+
+                }
+                scope.$watch('avatar', function(newVal) {
+                    if(newVal) { 
+                        element.html('<img src="'+ scope.avatar +'" class="ui  mini avatar image">');
+                    }
+                }, true);
+            }
+        };
+    });
+
+    angular.module('directives.profileUsername', [])
+        .directive('profileUsername', function () {
+        return {
+            restrict: 'E',
+            scope: {
+                namespace: "@",
+                username: "@"
+            },
+            template: '{{namespace}}',
+            link: function (scope, element, attrs) {
+                if (scope.username) {
+                    element.text('@'+scope.username);
+
+                }
+            }
+        };
+    });
 
 
+
+
+/*
     angular.module('directives.profileCard', [])
         .directive('profileCard', function () {
         return {
@@ -135,7 +132,7 @@
         };
     });
 
-
+*/
 
 
 })(angular);

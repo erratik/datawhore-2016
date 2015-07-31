@@ -32,8 +32,8 @@
     // routes ======================================================================
 
 
+    require('./app/scripts/routes/profiles')(app);
     require('./app/scripts/routes/settings')(app);
-
     require('./app/scripts/routes/connect')(app);
 
     // TODO: Tay - require-directory?

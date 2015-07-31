@@ -37,7 +37,7 @@
         </div>
         <div class="ui container">
             <div class="ui grid">
-                <div class="four wide column" ng-controller="settingsMenu as profiles">
+                <div class="four wide column" >
 
                     <div class="ui secondary vertical menu">
                         <div class="ui bulleted list">
@@ -46,14 +46,6 @@
                                     <a class="item" ng-href="#/">
                                     Profiles
                                     </a>
-                                </div>
-                                <div class="list">
-                                    <div class="item" ng-repeat="network in profiles">
-                                        <i class="right triangle icon"></i>
-                                        <div class="content">
-                                            <a class="item" ng-href="/#/profile/{{network.name}}">{{network.name}}</a>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="item">
@@ -65,6 +57,7 @@
                     </div>
                 </div>
                 <div class="twelve wide column">
+                
                     <div ui-view></div>
                 </div>
             </div>

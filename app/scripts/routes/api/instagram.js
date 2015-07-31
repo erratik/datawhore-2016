@@ -27,10 +27,8 @@ module.exports = function(app) {
                     Profile.updateProfile({
                         namespace: namespace,
                         avatar: medias[0].user.profile_picture,
-                        username: req.body.configs[namespace].username,
-                        profile: medias[0].user,
-                        configs: req.body.configs,
-                        profiles: req.body.profiles
+                        username: process.env.INSTAGRAM_USERNAME,
+                        profile: medias[0].user
                     }, function(data) {
                         // console.log(data);
                         res.json(data);

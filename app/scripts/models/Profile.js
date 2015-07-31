@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Settings = require('./Settings');
 var flatten = require('flat');
 var schema = new mongoose.Schema({
     name: String,
@@ -15,61 +16,63 @@ schema.statics = {
                 name: params.namespace
             }, function(err, profile) {
 
-                var savedProfile = {
-                    name: params.namespace,
-                    last_modified: Date.now() / 1000 | 0,
-                    fetchedProfile: params.profile,
-                    avatar: params.avatar,
-                    username: params.username,
-                    saved: true
-                };
-                if (!profile) {
-                    Profile.create(savedProfile, function(err, profile) {
-                        if (!err) {
-                            console.log(' ');
-                            console.log('Profile Model > ... creating profile for ' + params.namespace);
-                            console.log(' ');
+                Settings.findOne({
+                    name: 'settings'
+                }, function(err, settings) {
 
-                            var data = {
-                                configs: params.configs,
-                                profiles: params.profiles
-                            };
-                            data.profiles[params.namespace] = profile;
-                            params.configs[params.namespace]['profile'] = true;
-                            
+                    var savedProfile = {
+                        name: params.namespace,
+                        last_modified: Date.now() / 1000 | 0,
+                        fetchedProfile: params.profile,
+                        avatar: params.avatar,
+                        username: params.username,
+                        saved: true
+                    };
+                    if (!profile) {
+                        Profile.create(savedProfile, function(err, profile) {
+                            if (!err) {
+                                console.log(' ');
+                                console.log('Profile Model > ... creating profile for ' + params.namespace);
+                                console.log(' ');
 
-                            Settings.updateConfig(params.configs);
-                            console.log('API > ' + params.namespace + ' > saved profile...');
-                            callback(data);
-                        }
-                    });
-                } else {
+                                settings.configs[params.namespace]['profile'] = true;
+                                var data = {
+                                    config: settings.configs[params.namespace],
+                                    profile: profile
+                                };
+                                Settings.updateConfig(settings.configs);
+                                console.log('API > ' + params.namespace + ' > saved profile...');
+                                callback(data);
+                            }
+                        });
+                    } else {
 
-                    profile.last_modified = Date.now() / 1000 | 0;
-                    profile.fetchedProfile = savedProfile.fetchedProfile;
-                    profile.avatar = savedProfile.avatar;
+                        profile.last_modified = Date.now() / 1000 | 0;
+                        profile.fetchedProfile = savedProfile.fetchedProfile;
+                        profile.avatar = savedProfile.avatar;
 
-                    profile.save(function(err) {
-                        if (!err) {
-                            console.log(' ');
-                            console.log('Profile Model > ... saving profile for ' + params.namespace);
-                            console.log(' ');
-                            var data = {
-                                configs: params.configs,
-                                profiles: params.profiles
-                            };
-                            data.profiles[params.namespace] = profile;
-                            params.configs[params.namespace]['profile'] = true;
-                            Settings.updateConfig(params.configs);
+                        profile.save(function(err) {
+                            if (!err) {
+                                console.log(' ');
+                                console.log('Profile Model > ... saving profile for ' + params.namespace);
+                                console.log(' ');
 
-                            console.log('Profile Model > callback to /api/profiles/' +params.namespace, data.profiles[params.namespace]);
-                            callback(data);
-                        } else {
-                            console.log(err);
-                        }
-                    });
+                                settings.configs[params.namespace]['profile'] = true;
+                                var data = {
+                                    config: settings.configs[params.namespace],
+                                    profile: profile
+                                };
+                                Settings.updateConfig(settings.configs);
 
-                }
+                                console.log('Profile Model > callback to /api/profiles/' +params.namespace, profile);
+                                callback(data);
+                            } else {
+                                console.log(err);
+                            }
+                        });
+
+                    }
+                });
             });
         },
         nominateProfileProperties: function(params, callback) {

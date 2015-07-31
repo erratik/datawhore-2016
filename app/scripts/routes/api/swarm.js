@@ -35,10 +35,8 @@ module.exports = function(app) {
                     Profile.updateProfile({
                         namespace: namespace,
                         avatar: data.user.photo.prefix+'400x400'+data.user.photo.suffix,
-                        username: req.body.configs[namespace].username,
-                        profile: data.user,
-                        configs: req.body.configs,
-                        profiles: req.body.profiles
+                        username: process.env.SWARM_USERNAME,
+                        profile: data.user
                     }, function(data) {
                         // console.log(data);
                         res.json(data);

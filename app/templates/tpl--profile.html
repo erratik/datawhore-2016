@@ -1,12 +1,18 @@
 <!-- template: settings-network-profiles -->
-
 <div class="ui container">
-
-    <h3 class="ui header dividing">{{network}}</h3>
-
-    <div class="ui link cards">
-        <profile-card class="card" namespace={{network}}></profile-card>
+    <h3 class="ui header dividing">
+        <profile-avatar namespace="{{network}}" avatar="{{profile.avatar}}" class="ui avatar floated left"></profile-avatar>
+        <div class="content">
+            Profile Properties
+            <div class="sub header">
+                {{network}}
+            </div>
         </div>
+
+        <profile-fetch namespace="{{network}}" done="getProfile(network)" style="float: right"></profile-fetch>
+        <profile-remove namespace="{{network}}" done="deleteProfile(network)" class="floated right" style="float: right"></profile-remove>
+    </h3>
+
     <cite>{{profile.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</cite>
     <div class="ui right floated small primary labeled icon button" ng-click="hidden=!hidden">
         <i class="add icon"></i> Add Properties

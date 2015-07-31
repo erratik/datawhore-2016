@@ -1,21 +1,15 @@
 
     <div class="content">
-        <div class="header"><!-- 
-            <img src="/images/settings/{{namespace}}.png" class="ui right floated mini avatar" ng-if="!config.profile">
-            <img src="{{model.profiles[namespace].avatar}}" class="ui right floated mini avatar" ng-if="config.profile"> -->
+        <div class="header">
             <profile-avatar namespace="{{namespace}}" avatar="{{model.profiles[namespace].avatar}}"></profile-avatar>
-
-            <span ng-show="!config.username">{{namespace}}</span>
-            <span ng-show="config.username">@{{config.username}}</span>
+            <profile-username namespace="{{namespace}}" username="{{config.username}}"></profile-username>
         </div>
         <div class="meta">
-            <span ng-show="!config.profile">No profile saved</span>
-            <span ng-if="config.profile">Updated {{model.profiles[namespace].last_modified | fromNow }}</span>
+            <profile-updated date="{{model.profiles[namespace].last_modified}}"></profile-updated>
         </div>
-        <!-- <div class="description"></div> -->
     </div>
     <div class="extra content">
         <profile-fetch namespace="{{namespace}}" done="getProfile(namespace)"></profile-fetch>
-        <profile-remove namespace="{{namespace}}" done="deleteProfile(namespace)"></profile-remove>
+        <a class="ui button mini" ng-href="/#/profile/{{namespace}}"><i class="icon edit"></i> Edit</a>
     </div>
     

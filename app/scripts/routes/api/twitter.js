@@ -22,7 +22,7 @@ module.exports = function(app) {
 
             // if (err) res.send(err)
             var params = {
-                screen_name: req.body.configs[namespace].username
+                screen_name: process.env.TWITTER_USERNAME
             };
             client.get('users/show', params, function(error, docs, response) {
                 if (!error) {
@@ -31,9 +31,7 @@ module.exports = function(app) {
                         namespace: namespace, 
                         avatar: docs.profile_image_url, 
                         username: params.screen_name,
-                        profile: docs,
-                        configs: req.body.configs, 
-                        profiles: req.body.profiles
+                        profile: docs
                     }, function(data){
                         // console.log(data);
                         res.json(data);
