@@ -65,6 +65,10 @@ schema.statics = {
                                 Settings.updateConfig(settings.configs);
 
                                 console.log('Profile Model > callback to /api/profiles/' +params.namespace, profile);
+
+                        // if (typeof profiles[i]['fetchedProfile'] == 'object') {
+                                data.profile.fetchedProfile = flatten(data.profile['fetchedProfile'], {delimiter: '__'});
+                        // }
                                 callback(data);
                             } else {
                                 console.log(err);

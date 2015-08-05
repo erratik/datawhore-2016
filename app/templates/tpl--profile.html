@@ -1,7 +1,7 @@
 <!-- template: settings-network-profiles -->
 <div class="ui container">
     <h3 class="ui header dividing">
-        <profile-avatar namespace="{{network}}" avatar="{{profile.avatar}}" class="ui avatar floated left"></profile-avatar>
+        <profile-avatar namespace="{{network}}" avatar="{{profile.avatar}}"  styles="ui left avatar floated left image"></profile-avatar>
         <div class="content">
             Profile Properties
             <div class="sub header">
@@ -41,7 +41,7 @@
         <tr ng-repeat="(key, value) in profile.fetchedProfile" ng-show="formData[key].enabled||!hidden">
             <td class="">
                 <div class="ui fitted checkbox">
-                    <input type="checkbox" ng-model="formData[key].enabled"> <label></label>
+                    <input type="checkbox" ng-model="profile.props[key].enabled"> <label></label>
                 </div>
             </td>
             <td>{{key}}</td>

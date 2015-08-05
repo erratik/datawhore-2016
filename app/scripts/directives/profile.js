@@ -14,6 +14,12 @@
 
                 if (attrs.date) 
                     element.html('Last saved ' + moment.unix(attrs.date).fromNow());
+
+                scope.$watch('date', function(newVal) {
+                    if(newVal.length) { 
+                    element.html('Last saved ' + moment.unix(attrs.date).fromNow());
+                    }
+                }, true);
             }
         };
     });    
@@ -48,25 +54,31 @@
             restrict: 'E',
             scope: {
                 namespace: "@",
-                avatar: "@"
+                avatar: "@",
+                styles: "@"
             },
-            controller: function ($scope, $attrs) {
-                this.bla = function () {
-                    console.log($attrs);
+            controller: function ($scope) {
+                this.bla = function (namespace) {
+                    // console.log($attrs);
+                    $scope.namespace = namespace;
                 }
+                // console.log($scope.namespace);
             },
-            template: '<img src="/images/settings/{{namespace}}.png" class="ui right floated mini avatar">',
-            link: function (scope, element, attrs, profileController) {
+            template: '<img src="/images/settings/{{namespace}}.png" class="{{styles}}">',
+            link: function (scope, element, attrs) {
 
                 if (scope.avatar) {
-                    element.html('<img src="'+ scope.avatar +'" class="ui right floated mini avatar">');
-
+                    element.html('<img src="'+ scope.avatar +'" class="mini avatar">').addClass(scope.styles);
                 }
                 scope.$watch('avatar', function(newVal) {
-                    if(newVal) { 
-                        element.html('<img src="'+ scope.avatar +'" class="ui  mini avatar image">');
+                    // console.log(scope.namespace);
+                    if(newVal.length) { 
+                        element.html('<img src="'+ scope.avatar +'" class="mini avatar">').addClass(scope.styles);
+                    } else {
+                        element.html('<img src="/images/settings/'+ scope.namespace +'.png" class="mini avatar">').addClass(scope.styles);
                     }
                 }, true);
+
             }
         };
     });

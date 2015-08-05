@@ -261,15 +261,14 @@ module.exports = function(app) {
 
     // var cookieParser = require('cookie-parser');    // 
     // var session = require('express-session'); // 
-    //     // // app.use(cookieParser());
-    //     app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }))
-    //     app.use(fbgraph.auth( {
-    //             appId : process.env.FACEBOOK_API_KEY,
-    //             appSecret : process.env.FACEBOOK_API_SECRET,
-    //             redirectUri : "http://datawhore.erratik.ca:3000/facebook",
-    //             scope: 'public_profile, email, user_about_me, user_actions.news, user_photos, user_posts, user_status, user_tagged_places, user_likes, user_location, user_hometown, user_events, user_birthday, user_friends',
-    //             apiVersion: "v2.2"
-    //         }));
+    // app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }))
+    // app.use(fbgraph.auth( {
+    //         appId : process.env.FACEBOOK_API_KEY,
+    //         appSecret : process.env.FACEBOOK_API_SECRET,
+    //         redirectUri : "http://datawhore.erratik.ca:3000/facebook",
+    //         scope: 'public_profile, email, user_about_me, user_actions.news, user_photos, user_posts, user_status, user_tagged_places, user_likes, user_location, user_hometown, user_events, user_birthday, user_friends',
+    //         apiVersion: "v2.2"
+    //     }));
     app.get('/connect/facebook', function(req, res) {
         fbgraph.redirectLoginForm(req, res);
     });
