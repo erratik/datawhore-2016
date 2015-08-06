@@ -66,6 +66,7 @@ module.exports = function(app) {
                 } else {
                     profile.fetchedProfile = flatten(profile.fetchedProfile, {delimiter: '__'});
                     data.profile = profile
+                    // console.log(data);
                     res.json(data); // return settings in JSON format
                     
                 }
@@ -102,7 +103,8 @@ module.exports = function(app) {
     });
     // add specific properties to profile -------------------------------------------------------*/
     app.post('/api/profile/props/:namespace', function(req, res) {
-        // console.log(req.body);
+        console.log('Settings Route > /api/profile/props/'+req.params.namespace+' > req.body');
+        console.log(req.body);
         Profile.nominateProfileProperties({
             namespace: req.params.namespace,
             data: req.body

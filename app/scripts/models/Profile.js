@@ -90,6 +90,8 @@ schema.statics = {
                     profile.last_modified = Date.now() / 1000 | 0;
                     var receivedProps = params.data;
                     var newProps = Object.keys(receivedProps);
+                    console.log('Profile Model > receivedProps');
+                    console.log(receivedProps);
                     profile.props = {};
                     for (var i = 0; i < newProps.length; i++) {
                         if (receivedProps[newProps[i]].enabled) {

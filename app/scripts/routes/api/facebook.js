@@ -13,15 +13,12 @@ var fbgraph = require('fbgraphapi');
 
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    console.log('test');
-
     app.post('/api/profiles/facebook', function(req, res) {
         console.log('boo');
         var fb = new fbgraph.Facebook(process.env.FACEBOOK_ACCESS_TOKEN, 'v2.4');
         fb.graph('/me?fields=id,name,location,birthday,friends,picture,cover', function(err, me) {
                 if (err) console.log(err);
-                console.log(me);
-                console.log('test');
+                
                 Profile.updateProfile({
                     namespace: namespace,
                     avatar: me.picture.data.url,

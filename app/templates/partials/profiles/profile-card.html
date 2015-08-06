@@ -1,15 +1,37 @@
-
-    <div class="content">
-        <div class="header">
-            <profile-avatar namespace="{{namespace}}" avatar="{{model.profiles[namespace].avatar}}" styles="ui right floated mini avatar"></profile-avatar>
-            <profile-username namespace="{{namespace}}" username="{{config.username}}"></profile-username>
-        </div>
-        <div class="meta">
-            <profile-updated date="{{model.profiles[namespace].last_modified}}"></profile-updated>
+<div class="content">
+    <div class="header">
+        <profile-avatar namespace="{{namespace}}" avatar="{{model.profiles[namespace].avatar}}" styles="ui right floated mini avatar"></profile-avatar>
+        <profile-username namespace="{{namespace}}" username="{{config.username}}"></profile-username>
+    </div>
+    <div class="meta">
+        <profile-updated date="{{model.profiles[namespace].last_modified}}"></profile-updated>
+    </div>
+    <div class="ui accordion">
+        <div class="item">
+            <a class="title">
+            <i class="dropdown icon"></i>
+            <span>Properties</span>
+            </a>
+            <div class="content">
+                <div class="ui form">
+                    <div class="grouped fields" ng-repeat="(key, property)  in model.profiles[namespace].props">
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" value="small">
+                                <label>{{key}}</label>
+                                <input type="text" ng-model="formData[namespace][key]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui mini  button green" ng-click="updateProfileProps(namepsace)">
+                    Update
+                </div>
+            </div>
         </div>
     </div>
-    <div class="extra content">
-        <profile-fetch namespace="{{namespace}}" done="getProfile(namespace)"></profile-fetch>
-        <a class="ui button mini" ng-href="/#/profile/{{namespace}}"><i class="icon edit"></i> Edit</a>
-    </div>
-    
+</div>
+<div class="extra content">
+    <profile-fetch namespace="{{namespace}}" done="getProfile(namespace)"></profile-fetch>
+    <a class="ui button mini" ng-href="/#/profile/{{namespace}}"><i class="icon edit"></i> Edit</a>
+</div>

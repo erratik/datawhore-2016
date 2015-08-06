@@ -12,16 +12,14 @@
         <profile-fetch namespace="{{network}}" done="getProfile(network)" style="float: right"></profile-fetch>
         <profile-remove namespace="{{network}}" done="deleteProfile(network)" class="floated right" style="float: right"></profile-remove>
     </h3>
-
-    <cite>{{profile.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</cite>
+    <div>
+        <cite>{{profile.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</cite>
+    </div>
     <div class="ui right floated small primary labeled icon button" ng-click="hidden=!hidden">
         <i class="add icon"></i> Add Properties
     </div>
     <div class="ui small  button" ng-click="updateProfileProps(network)">
         Approve
-    </div>
-    <div class="ui small  disabled button">
-        Approve All
     </div>
     <table class="ui compact celled definition table">
         <thead class="full-width">
@@ -38,10 +36,10 @@
             <th colspan="4">
             </th>
         </tr>
-        <tr ng-repeat="(key, value) in profile.fetchedProfile" ng-show="formData[key].enabled||!hidden">
+        <tr ng-repeat="(key, value) in profile.fetchedProfile | orderBy:sortType:sortReverse">
             <td class="">
                 <div class="ui fitted checkbox">
-                    <input type="checkbox" ng-model="profile.props[key].enabled"> <label></label>
+                    <input type="checkbox" ng-model="formData[key].enabled"> <label></label>
                 </div>
             </td>
             <td>{{key}}</td>
@@ -50,7 +48,7 @@
             </td>
             <td>
                 {{value}}
-                <input type="text" ng-model="formData[key].value">
+                <input type="hidden" ng-model="formData[key].value">
             </td>
         </tr>
     </tbody>
