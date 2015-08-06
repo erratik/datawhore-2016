@@ -86,26 +86,34 @@ schema.statics = {
                 if (!profile) {
                     console.log('Profile Model > !!!! error, profile not found');
                 } else {
-                    console.log('Profile Model > listing found profile');
+                //             console.log(' ');
+                //     console.log('Profile Model > listing found profile');
+                            console.log(' ');
                     profile.last_modified = Date.now() / 1000 | 0;
                     var receivedProps = params.data;
                     var newProps = Object.keys(receivedProps);
                     console.log('Profile Model > receivedProps');
+                            console.log(' ');
                     console.log(receivedProps);
                     profile.props = {};
                     for (var i = 0; i < newProps.length; i++) {
-                        if (receivedProps[newProps[i]].enabled) {
+                        if (!params.enabling || receivedProps[newProps[i]].enabled) {
                             profile.props[newProps[i]] = receivedProps[newProps[i]];
                             // console.log('saved > ' +newProps[i] );
                             // console.log(profile.props[newProps[i]]);
                         }
                     };
+                            console.log(' ');
+                            console.log('Profile Model > ... nominating profile properties for ' + params.namespace);
+                            console.log(' ');
+                            console.log( profile.props);
+
                     Profile.update({name: params.namespace}, {props: profile.props}, {overwrite: true}, function(err) {
                         if (err) {
                             console.log(err);
                         } else {
                             console.log(' ');
-                            console.log('Profile Model > ... nominating profile properties for ' + params.namespace);
+                            console.log('Profile Model > ... attempted to save properties for ' + params.namespace);
                             console.log(' ');
                             console.log(profile);
                             // callback(flatten(profile, {

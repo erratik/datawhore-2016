@@ -107,9 +107,10 @@ module.exports = function(app) {
         console.log(req.body);
         Profile.nominateProfileProperties({
             namespace: req.params.namespace,
-            data: req.body
+            data: req.body.data,
+            enabling: req.body.enabling
         }, function(data) {
-            console.log('Settings Route > nominateProfileProperties');
+            console.log('Settings Route > nominateProfileProperties (enabling:'+req.body.enabling+')');
             data.fetchedProfile = flatten(data.fetchedProfile, {delimiter: '__'})
             res.json(data);
         });

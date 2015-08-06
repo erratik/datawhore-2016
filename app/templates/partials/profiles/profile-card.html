@@ -18,13 +18,14 @@
                         <div class="field">
                             <div class="ui radio checkbox">
                                 <input type="radio" value="small">
-                                <label>{{key}}</label>
-                                <input type="text" ng-model="formData[namespace][key]">
+                                <label ng-dblclick="edit[namespace][key]=!edit[namespace][key]" ng-show="!edit[namespace][key]" >{{key}}</label>
+                                <input type="text" ng-show="edit[namespace][key]" placeholder="{{key}}" ng-model="formData[namespace][key].displayName" ng-dblclick="edit[namespace][key]=!edit[namespace][key]">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="ui mini  button green" ng-click="updateProfileProps(namepsace)">
+
+                <div class="ui mini  button green" namespace="{{namespace}}" ng-click="updateProfileProps(namespace)">
                     Update
                 </div>
             </div>
