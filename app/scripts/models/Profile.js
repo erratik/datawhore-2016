@@ -89,7 +89,7 @@ schema.statics = {
                 //             console.log(' ');
                 //     console.log('Profile Model > listing found profile');
                             console.log(' ');
-                    profile.last_modified = Date.now() / 1000 | 0;
+
                     var receivedProps = params.data;
                     var newProps = Object.keys(receivedProps);
                     console.log('Profile Model > receivedProps');
@@ -108,14 +108,14 @@ schema.statics = {
                             console.log(' ');
                             console.log( profile.props);
 
-                    Profile.update({name: params.namespace}, {props: profile.props}, {overwrite: true}, function(err) {
+                    Profile.update({name: params.namespace}, {props: profile.props, last_modified: Date.now() / 1000 | 0}, {overwrite: true}, function(err) {
                         if (err) {
                             console.log(err);
                         } else {
                             console.log(' ');
                             console.log('Profile Model > ... attempted to save properties for ' + params.namespace);
                             console.log(' ');
-                            console.log(profile);
+                            console.log(profile.props);
                             // callback(flatten(profile, {
                             //     delimiter: '__'
                             // }));

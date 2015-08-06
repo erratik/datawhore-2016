@@ -18,7 +18,10 @@
                         <div class="field">
                             <div class="ui radio checkbox">
                                 <input type="radio" value="small">
-                                <label ng-dblclick="edit[namespace][key]=!edit[namespace][key]" ng-show="!edit[namespace][key]" >{{key}}</label>
+                                <label ng-dblclick="edit[namespace][key]=!edit[namespace][key]">
+                                    <span ng-show="edit[namespace][key]||formData[namespace][key].displayName">{{formData[namespace][key].displayName}}</span>
+                                    <span ng-show="!edit[namespace][key]" ng-if="!formData[namespace][key].displayName">{{key}}</span> 
+                                </label>
                                 <input type="text" ng-show="edit[namespace][key]" placeholder="{{key}}" ng-model="formData[namespace][key].displayName" ng-dblclick="edit[namespace][key]=!edit[namespace][key]">
                             </div>
                         </div>

@@ -133,6 +133,9 @@ app.controller('profilesController', ['$scope', '$http', 'ProfileService', funct
             init();
     });
 
+
+    $scope.greeting = "Hello";
+
     // when submitting the add form, send the text to the node API
     $scope.getProfile = function(namespace) {
         // $scope.model = fetchProfile.getobject(namespace);
