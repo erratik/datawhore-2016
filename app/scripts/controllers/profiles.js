@@ -23,13 +23,6 @@ app.service('ProfileService', function ($http, $q){
             then(function(response) {
                 var data = response.data;
                 data.formData = {};
-                if (!namespace) {
-                    profilesData = {formData : {}};
-                    var profiles = Object.keys(response.data.profiles);
-                    for (var i = 0; i < profiles.length; i++) {
-                       profilesData.formData[profiles[i]] = {};
-                    };
-                }
 
                 var setValues = function(profileValues, formData, content, callback){
                     // console.log(content);
@@ -56,10 +49,20 @@ app.service('ProfileService', function ($http, $q){
                 };
 
                 if (namespace) {
+                    // SINGLE PROFILE -------------------------------------------------------*/
                     setValues(Object.keys(data.profile.fetchedProfile), data.formData, data.profile, function(formData){
                         data.formData = formData;
                     });
+
                 } else {
+                    // MULTIPLE PROFILES -------------------------------------------------------*/
+
+                    profilesData = {formData : {}};
+                    var profiles = Object.keys(response.data.profiles);
+                    for (var i = 0; i < profiles.length; i++) {
+                       profilesData.formData[profiles[i]] = {};
+                    };
+
                     for (var i = 0; i < profiles.length; i++) {
                         setValues(Object.keys(response.data.profiles[profiles[i]].props), profilesData.formData[profiles[i]], response.data.profiles[profiles[i]], function(formData){
                             data.formData[profiles[i]] = formData;
@@ -72,7 +75,7 @@ app.service('ProfileService', function ($http, $q){
 
     // FETCHING A NEW PROFILE FROM THE NETWORK
     ProfileService.update = function(namespace){            
-        return $http.post('/api/profiles/' + namespace).
+        return $http.post('/api/' + namespace + '/profile').
         then(function(response) {
             return (response.data);
         });            
@@ -144,11 +147,9 @@ app.controller('profilesController', ['$scope', '$http', 'ProfileService', funct
 
     $scope.updateProfileProps = function(namespace) {
         $scope.ProfileService.updateProps(namespace, false, $scope.formData[namespace]).then(function(profile){
-            // $scope.model.profiles[namespace] = items.profile;
-            // $scope.model.configs[namespace] = items.config;
-            console.log(profile);
+            // console.log(profile);
             $scope.model.profiles[namespace] = profile;
-            $scope.edit[namespace]=!$scope.edit[namespace];
+            // $scope.edit[namespace]=!$scope.edit[namespace];
         });
     };
 
@@ -188,10 +189,11 @@ app.controller('profileController', ['$scope', '$http',  '$stateParams', 'Profil
 
            
         $scope.updateProfileProps = function(namespace) {
-            $scope.ProfileService.updateProps(namespace, true, $scope.formData).then(function(items){
+            $scope.ProfileService.updateProps(namespace, true, $scope.formData).then(function(profile){
                 // $scope.model.profiles[namespace] = items.profile;
                 // $scope.model.configs[namespace] = items.config;
-                console.log(items);
+                console.log(profile);
+                $scope.profile = profile;
             });
         
         };

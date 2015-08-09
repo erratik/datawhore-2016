@@ -22,7 +22,7 @@ var client = require('node-foursquare')(swarmConfig);
 
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    app.post('/api/profiles/' + namespace, function(req, res) {
+    app.post('/api/' + namespace + '/profile', function(req, res) {
    
 
           client.Users.getUser('self', process.env.SWARM_ACCESS_TOKEN, 

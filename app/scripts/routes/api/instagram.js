@@ -14,27 +14,30 @@ client.use({
     client_secret: process.env.INSTAGRAM_API_SECRET,
     access_token: process.env.INSTAGRAM_API_ACCESS_TOKEN
 });
+var flatten = require('flat');
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    app.post('/api/profiles/' + namespace, function(req, res) {
+    app.post('/api/' + namespace + '/profile', function(req, res) {
 
-            client.user_self_media_recent({
-                count: 1
-            }, function(err, medias, pagination, remaining, limit) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    Profile.updateProfile({
-                        namespace: namespace,
-                        avatar: medias[0].user.profile_picture,
-                        username: process.env.INSTAGRAM_USERNAME,
-                        profile: medias[0].user
-                    }, function(data) {
-                        // console.log(data);
-                        res.json(data);
-                    });
-                }
-            });
+        client.user('self', function(err, result, remaining, limit) {
+            if (err) {
+                console.log(err);
+            } else {
+                // console.log(result);
+                Profile.updateProfile({
+                    namespace: namespace,
+                    avatar: result.profile_picture,
+                    username: process.env.INSTAGRAM_USERNAME,
+                    profile: result
+                }, function(data) {
+                    // console.log(data);
+                    res.json(data);
+                });
+            }
+        });
             
     });
+
+
+
 };

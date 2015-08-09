@@ -15,7 +15,7 @@ var client = new LastFmNode({
 });
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    app.post('/api/profiles/' + namespace, function(req, res) {
+    app.post('/api/' + namespace + '/profile', function(req, res) {
         // console.log(req.body);
             console.log('getInfo for ' + process.env.LASTFM_USERNAME);
             client.request("user.getInfo", {

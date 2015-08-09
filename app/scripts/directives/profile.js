@@ -64,7 +64,7 @@
                 }
                 // console.log($scope.namespace);
             },
-            template: '<img src="/images/settings/{{namespace}}.png" class="{{styles}}">',
+            template: '<div class="ui mini text loader">&nbsp;</div>',
             link: function (scope, element, attrs) {
 
                 if (scope.avatar) {

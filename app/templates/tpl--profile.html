@@ -1,60 +1,66 @@
 <!-- template: settings-network-profiles -->
 <div class="ui container">
-    <h3 class="ui header dividing">
+    <div class="ui header dividing">
         <profile-avatar namespace="{{network}}" avatar="{{profile.avatar}}"  styles="ui left avatar floated left image"></profile-avatar>
         <div class="content">
-            Profile Properties
+            {{network}} Profile
             <div class="sub header">
-                {{network}}
+                {{profile.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}
             </div>
         </div>
-
         <profile-fetch namespace="{{network}}" done="getProfile(network)" style="float: right"></profile-fetch>
         <profile-remove namespace="{{network}}" done="deleteProfile(network)" class="floated right" style="float: right"></profile-remove>
-    </h3>
-    <div>
-        <cite>{{profile.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</cite>
     </div>
-    <div class="ui right floated small primary labeled icon button" ng-click="hidden=!hidden">
-        <i class="add icon"></i> Add Properties
+    <div class="ui header">
+        <div class="content">Profile Properties</div>
+        <div class="right floated mini ui button trigger" ng-click="hidden=!hidden">
+            <i class="add icon"></i>Add Props   
+        </div>
     </div>
-    <div class="ui small  button" ng-click="updateProfileProps(network)">
-        Approve
+    <div class="ui bulleted list"  ng-show="hidden">
+        <div class="item" ng-repeat="(key, value) in profile.props">
+            <div class="content">
+                <div class="header">
+                    <span ng-if="!value.displayName">{{key}}</span>
+                    <span ng-if="value.displayName">{{value.displayName}}</span>
+                </div>
+                {{value.value}}
+            </div>
+        </div>
     </div>
-    <table class="ui compact celled definition table">
+    <table class="ui compact celled definition table" ng-show="!hidden">
         <thead class="full-width">
             <tr>
                 <th></th>
                 <th>Name</th>
-                <!-- <th>Display Name</th> -->
                 <th>Value</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-            <th></th
-            <th colspan="4">
-            </th>
-        </tr>
-        <tr ng-repeat="(key, value) in profile.fetchedProfile | orderBy:sortType:sortReverse">
-            <td class="">
-                <div class="ui fitted checkbox">
-                    <input type="checkbox" ng-model="formData[key].enabled"> <label></label>
-                </div>
-            </td>
-            <td>{{key}}</td>
-            <!-- <td>
-                <input type="text" ng-model="formData[key].displayName">
-            </td> -->
-            <td>
-                {{value}}
-                <input type="hidden" ng-model="formData[key].value">
-            </td>
-        </tr>
-    </tbody>
-    <tfoot class="full-width">
-    <td colspan="4">
-    </td>
-    </tfoot>
-</table>
+                <th></th>
+                <th colspan="4"></th>
+            </tr>
+            <tr ng-repeat="(key, value) in profile.fetchedProfile | orderBy:sortType:sortReverse">
+                <td class="">
+                    <div class="ui fitted checkbox">
+                        <input type="checkbox" ng-model="formData[key].enabled"> <label></label>
+                    </div>
+                </td>
+                <td>{{key}}</td>
+                <td>
+                    {{value}}
+                    <input type="text" ng-model="formData[key].value">
+                </td>
+            </tr>
+        </tbody>
+        <tfoot class="full-width">
+        <td colspan="4">
+            <div class="ui small  button" ng-click="updateProfileProps(network)">
+                Approve
+            </div>
+        </td>
+        </tfoot>
+    </table>
+
 </div>
