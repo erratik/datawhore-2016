@@ -34,18 +34,7 @@
             },
             template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">Fetch Profile </div>'
         };
-    });    
-    // angular.module('directives.profileUpdate', ['angularMoment'])
-    //     .directive('profileUpdate', function () {
-    //     return {
-    //         restrict: 'E',
-    //         scope: {
-    //             done: "=",
-    //             namespace: "@"
-    //         },
-    //         template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">Update Profile </div>'
-    //     };
-    // });    
+    });       
 
     angular.module('directives.profileRemove', ['angularMoment'])
         .directive('profileRemove', function () {
@@ -111,51 +100,6 @@
             }
         };
     });
-
-
-
-
-/*
-    angular.module('directives.profileCard', [])
-        .directive('profileCard', function () {
-        return {
-            restrict: 'E',
-            scope:{},
-            controller: function ($scope) {
-                console.log($scope);
-                this.addProfile = function(namespace){
-                    $scope['namespace'] = namespace;
-                    $scope['profile'] = $scope.$parent.$parent.model.profiles[namespace];
-                    $scope['config'] = $scope.$parent.$parent.model.configs[namespace];
-                }
-            },
-            templateUrl: tpl_folder+'/profile--card.html',
-            link: function (scope, element, attrs) {
-                element.bind('mouseenter',function(){
-                    console.log(scope.config);
-                });
-            }
-        };
-    })
-    .directive('namespace', function () {
-        return {
-            require: 'profileCard',
-            link: function (scope, element, attrs, profileCardCtrl) {
-                // console.log(attrs);
-                profileCardCtrl.addProfile(attrs.namespace);
-            }
-        };
-    })
-    .directive('last_modified', function () {
-        return {
-            require: 'profileCard',
-            link: function (scope, element, attrs, profileCardCtrl) {
-                profileCardCtrl.addNamespace(attrs.name);
-            }
-        };
-    });
-
-*/
 
 
 

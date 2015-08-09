@@ -92,20 +92,20 @@ app.service('ProfileService', function ($http, $q){
             // console.log($scope.formData);
             var properties = Object.keys(formData)
 
-            console.log(formData);
+            // console.log(formData);
             // console.log(':: updateProfileProps > properties');
             for (var i = 0; i < properties.length; i++) {
                 // console.log($scope.formData[properties[i]]);
                 if (!formData[properties[i]].enabled == 'off') delete $scope.formData[properties[i]];
             };         
 
-            console.log(formData);
+            // console.log(formData);
 
             return $http.post('/api/profile/props/' + namespace, {data:formData, enabling: enabling}).
             then(function(response) {
                 var data = response.data;
                 data.formData = formData;
-                console.log(response.data);
+                // console.log(response.data);
                 return (response.data);
             });            
 
@@ -133,9 +133,6 @@ app.controller('profilesController', ['$scope', '$http', 'ProfileService', funct
             init();
     });
 
-
-    $scope.greeting = "Hello";
-
     // when submitting the add form, send the text to the node API
     $scope.getProfile = function(namespace) {
         // $scope.model = fetchProfile.getobject(namespace);
@@ -145,13 +142,15 @@ app.controller('profilesController', ['$scope', '$http', 'ProfileService', funct
         });
     };
 
-        $scope.updateProfileProps = function(namespace) {
-            $scope.ProfileService.updateProps(namespace, false, $scope.formData[namespace]).then(function(items){
-                // $scope.model.profiles[namespace] = items.profile;
-                // $scope.model.configs[namespace] = items.config;
-                console.log(items);
-            });
-        };
+    $scope.updateProfileProps = function(namespace) {
+        $scope.ProfileService.updateProps(namespace, false, $scope.formData[namespace]).then(function(profile){
+            // $scope.model.profiles[namespace] = items.profile;
+            // $scope.model.configs[namespace] = items.config;
+            console.log(profile);
+            $scope.model.profiles[namespace] = profile;
+            $scope.edit[namespace]=!$scope.edit[namespace];
+        });
+    };
 
 }]);
 app.controller('profileController', ['$scope', '$http',  '$stateParams', 'ProfileService', function profilesController($scope, $http, $stateParams, ProfileService) {
