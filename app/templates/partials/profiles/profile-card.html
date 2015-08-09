@@ -1,23 +1,24 @@
-<div class="content">
-    <div class="header">
-        <profile-avatar namespace="{{namespace}}" avatar="{{model.profiles[namespace].avatar}}" styles="ui right floated mini avatar"></profile-avatar>
-        <profile-username namespace="{{namespace}}" username="{{config.username}}"></profile-username>
-    </div>
-    <div class="meta">
-        <profile-updated date="{{model.profiles[namespace].last_modified}}"></profile-updated>
-    </div>
-    <div class="ui accordion">
+<!-- <div class=""> -->
+    <div class="ui accordion content">
         <div class="item">
             <a class="title">
-            <i class="dropdown icon"></i>
-            <span>Properties</span>
+            <!-- <i class="dropdown icon"></i> -->
+            
+            <div class="header">
+                <profile-avatar namespace="{{namespace}}" avatar="{{model.profiles[namespace].avatar}}" styles="ui right floated mini avatar"></profile-avatar>
+                <profile-username namespace="{{namespace}}" username="{{config.username}}"></profile-username>
+            </div>
+            <div class="meta">
+                <profile-updated date="{{model.profiles[namespace].last_modified}}"></profile-updated>
+            </div>
+
             </a>
             <div class="content">
                 <div class="ui form">
                     <div class="grouped fields" ng-repeat="(key, property)  in model.profiles[namespace].props">
                         <div class="field">
-                            <div class="ui radio checkbox">
-                                <input type="radio" value="small">
+                            <div class="ui checkbox">
+                                <input type="checkbox" value="small">
                                 <label ng-dblclick="edit[namespace][key]=!edit[namespace][key]">
                                     <span ng-show="edit[namespace][key]||formData[namespace][key].displayName">{{formData[namespace][key].displayName}}</span>
                                     <span ng-show="!edit[namespace][key]" ng-if="!formData[namespace][key].displayName">{{key}}</span> 
@@ -34,7 +35,7 @@
             </div>
         </div>
     </div>
-</div>
+<!-- </div> -->
 <div class="extra content">
     <profile-fetch namespace="{{namespace}}" done="getProfile(namespace)"></profile-fetch>
     <a class="ui button mini" ng-href="/#/profile/{{namespace}}"><i class="icon edit"></i> Edit</a>

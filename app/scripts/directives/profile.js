@@ -102,10 +102,10 @@
                 namespace: "@",
                 username: "@"
             },
-            template: '{{namespace}}',
+            template: '<h4>{{namespace}}</h4>',
             link: function (scope, element, attrs) {
                 if (scope.username) {
-                    element.text('@'+scope.username);
+                    element.html('<h4>@'+scope.username+'</h4>');
 
                 }
             }
