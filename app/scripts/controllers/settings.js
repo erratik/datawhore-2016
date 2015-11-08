@@ -12,19 +12,32 @@ var app = angular.module('controllers.Settings', [
     ]);
 
 
-app.controller('settingsController', ['$scope', '$http', function settingsController($scope, $http) {
+app.controller('settingsController', ['$scope', '$http', 'SettingsService', function settingsController($scope, $http, SettingsService) {
 
-    $scope.formData = {};
+
+
+    $scope.SettingsService = angular.copy(SettingsService);
+
+    // $scope.profiles.load();
+    $scope.SettingsService.load().then(function(items){
+        // console.log(items);
+       $scope.settings = items;
+       $scope.formData = items.formData;
+            console.log($scope);
+            init();
+    });
+
+    // $scope.formData = {};
 
     // when landing on the page, get all settings and show them
-    $http.get('/api/settings')
-        .success(function(data) {
-            $scope.settings = data;
-            console.log(data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
+    // $http.get('/api/settings')
+    //     .success(function(data) {
+    //         $scope.settings = data;
+    //         console.log(data);
+    //     })
+    //     .error(function(data) {
+    //         console.log('Error: ' + data);
+    //     });
 
     // when submitting the add form, send the text to the node API
     $scope.createSettings = function() {

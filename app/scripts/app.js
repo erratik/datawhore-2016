@@ -4,7 +4,10 @@ var app = angular.module('app', [
 
     'controllers.Settings',
     'controllers.Profiles',
-    'controllers.Networks'
+    'controllers.Networks',
+    'services.Settings',
+    'services.Profile'
+
 ]);
 
 app.filter('typeof', function(){
