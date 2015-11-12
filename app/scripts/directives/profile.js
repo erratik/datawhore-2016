@@ -7,19 +7,19 @@
         return {
             restrict: 'E',
             scope: {
-                date: '@'
+                date: '='
             },
             template: 'No profile saved.',
             link: function (scope, element, attrs) {
 
-                if (attrs.date) 
-                    element.html('Last saved ' + moment.unix(attrs.date).fromNow());
+                if (scope.date) 
+                    element.html('Last saved ' + moment.unix(scope.date).fromNow());
 
-                scope.$watch('date', function(newVal) {
-                    if(newVal.length) { 
-                    element.html('Last saved ' + moment.unix(attrs.date).fromNow());
-                    }
-                }, true);
+                // scope.$watch('date', function(newVal) {
+                //     if(newVal.length) { 
+                //     element.html('Last saved ' + moment.unix(attrs.date).fromNow());
+                //     }
+                // }, true);
             }
         };
     });    
@@ -53,31 +53,24 @@
         return {
             restrict: 'E',
             scope: {
-                namespace: "@",
-                avatar: "@",
+                namespace: "=",
+                profile: "=",
                 styles: "@"
             },
-            controller: function ($scope) {
-                this.bla = function (namespace) {
-                    // console.log($attrs);
-                    $scope.namespace = namespace;
-                }
-                // console.log($scope.namespace);
-            },
-            template: '<div class="ui mini text loader">&nbsp;</div>',
+            templateUrl: 'templates/directives/profile--avatar.html',
             link: function (scope, element, attrs) {
 
-                if (scope.avatar) {
-                    element.html('<img src="'+ scope.avatar +'" class="mini avatar">').addClass(scope.styles);
-                }
-                scope.$watch('avatar', function(newVal) {
-                    // console.log(scope.namespace);
-                    if(newVal.length) { 
-                        element.html('<img src="'+ scope.avatar +'" class="mini avatar">').addClass(scope.styles);
-                    } else {
-                        element.html('<img src="/images/settings/'+ scope.namespace +'.png" class="mini avatar">').addClass(scope.styles);
-                    }
-                }, true);
+                // if (scope.avatar) {
+                //     element.html('<img src="'+ scope.avatar +'" class="mini avatar">').addClass(scope.styles);
+                // }
+                // scope.$watch('avatar', function(newVal) {
+                //     // console.log(scope.namespace);
+                //     if(newVal.length) { 
+                //         element.html('<img src="'+ scope.avatar +'" class="mini avatar">').addClass(scope.styles);
+                //     } else {
+                //         element.html('<img src="/images/settings/'+ scope.namespace +'.png" class="mini avatar">').addClass(scope.styles);
+                //     }
+                // }, true);
 
             }
         };
@@ -88,15 +81,47 @@
         return {
             restrict: 'E',
             scope: {
-                namespace: "@",
-                username: "@"
+                profile: "=",
+                namespace: "=",
+                username: "="
             },
-            template: '<h4>{{namespace}}</h4>',
+            template: '{{namespace}}',
             link: function (scope, element, attrs) {
-                if (scope.username) {
-                    element.html('<h4>@'+scope.username+'</h4>');
+                if (scope.username) 
+                    element.html('@'+scope.username+'');
+                // element.wrap('<h4></h4>');
 
-                }
+            }
+        };
+    });
+
+    angular.module('directives.profileRow', [])
+        .directive('profileRow', function () {
+        return {
+            replace: true,
+            restrict: 'E',
+            scope: {
+                data: "="
+            },
+            templateUrl: 'templates/directives/profile--single-row.html',
+            link: function (scope, element, attrs) {
+               
+            }
+        };
+    });
+    angular.module('directives.profileCard', [])
+        .directive('profileCard', function () {
+        return {
+            replace: true,
+            restrict: 'E',
+            scope: {
+                profiles: "=",
+                configs: "="
+            },
+            templateUrl: 'templates/directives/profile--card.html',
+            link: function (scope, element, attrs) {
+                console.log('hello');
+               // element.prepend('<tr><th id="par" class="span" colspan="5" scope="colgroup">Attribute</th></tr>');
             }
         };
     });

@@ -1,30 +1,34 @@
 // public/core.js
 var app = angular.module('controllers.Profiles', [
-    'angularMoment', 
 
     'directives.profileUpdated', 
-    // 'directives.profileUpdate', 
     'directives.profileRemove', 
     'directives.profileUsername',
     'directives.profileAvatar',
-    'directives.profileFetch'
+    'directives.profileFetch',
+    'directives.profileCard',
+    'directives.profileRow'
 ]);
 
 
 
 
-app.controller('profilesController', ['$scope', '$http', 'ProfileService', function profilesController($scope, $http, ProfileService) {
-    // console.log(this);
 
-    $scope.ProfileService = angular.copy(ProfileService);
+app.controller('profilesController', ['$scope', '$http', 'ProfileService', 'configs', 'profiles', function profilesController($scope, $http, ProfileService, configs, profiles) {
+    // console.log(profiles);
+    $scope.configs = configs;
+    $scope.profiles = profiles;
+    // $scope.ProfileService = angular.copy(ProfileService);
 
-    // $scope.profiles.load();
-    $scope.ProfileService.load().then(function(items){
-       $scope.model = items;
-       $scope.formData = items.formData;
-            console.log($scope);
-            init();
-    });
+    // // $scope.profiles.load();
+    // $scope.ProfileService.load().then(function(items){
+    //    $scope.model = items;
+    //    $scope.formData = items.formData;
+    //         console.log($scope);
+    //         init();
+    // });
+
+    console.log($scope);
 
     // when submitting the add form, send the text to the node API
     $scope.getProfile = function(namespace) {
@@ -44,19 +48,21 @@ app.controller('profilesController', ['$scope', '$http', 'ProfileService', funct
     };
 
 }]);
-app.controller('profileController', ['$scope', '$http',  '$stateParams', 'ProfileService', function profilesController($scope, $http, $stateParams, ProfileService) {
+app.controller('profileController', ['$scope', '$http',  '$stateParams', 'ProfileService', 'profileData', 'postData', 
+    function profileController($scope, $http, $stateParams, ProfileService, profileData, postData) {
         // Setting up the scope's data -------------------------------------------------------*/
-        $scope.network = $stateParams.namespace;
-        $scope.ProfileService = angular.copy(ProfileService);
-        $scope.formData = {};
 
-        $scope.ProfileService.load($scope.network).then(function(data){
-            $scope.hidden = true;
-            $scope.profile = data.profile;
-            $scope.config = data.config;
-            $scope.formData = data.formData;
-            //console.log($scope.formData);
-        });
+
+        $scope.hidden = true;
+
+        $scope.formData = {};
+        $scope.formData.postConfig = profileData.postConfig;
+        $scope.formData.profileConfig = profileData.profileConfig;
+
+        $scope.profileInfo = profileData.profileInfo;
+        $scope.postData = postData;
+
+        console.log($scope);
 
         // when submitting the add form, send the text to the node API
         $scope.deleteProfile = function(namespace) {
@@ -69,24 +75,38 @@ app.controller('profileController', ['$scope', '$http',  '$stateParams', 'Profil
 
         // when submitting the add form, send the text to the node API
         $scope.getProfile = function(namespace) {
-            //console.log(':: getProfile');
-            // $scope.model = fetchProfile.getobject(namespace);
-            $scope.ProfileService.update(namespace).then(function(data){
-                $scope.profile = data.profile;
-                $scope.config = data.config;
+            ProfileService.getProfile({namespace: $scope.profileInfo.name}).then(function(data){
+                $scope.profileInfo = data.profileInfo;
             });
         };
-
            
-        $scope.updateProfileProps = function(namespace) {
-            $scope.ProfileService.updateProps(namespace, true, $scope.formData).then(function(profile){
-                // $scope.model.profiles[namespace] = items.profile;
-                // $scope.model.configs[namespace] = items.config;
-                console.log(profile);
-                $scope.profile = profile;
+        $scope.updateProfile = function(namespace) {
+            // console.log($scope.profileInfo.name)
+            ProfileService.update($scope.profileInfo.name, $scope.formData).then(function(data){
+                // profileData = 
+                // console.log(data);
+                $scope.profileInfo.last_modified = data.last_modified;
             });
         
         };
 
     }
 ]);
+
+
+// app.controller('facebookProfileController', ['$scope', '$http',  '$stateParams', 'ProfileService', 'FacebookService', 
+//     function facebookProfileController($scope, $http, $stateParams, ProfileService, FacebookService) {
+
+//         $scope.FacebookService = angular.copy(FacebookService);
+
+//         $scope.FacebookService.getPosts().then(function(data){
+//             // $scope.hidden = true;
+//             // $scope.profile. = data.profile;
+//             // $scope.config = data.config;
+//             // $scope.formData = data.formData;
+//             console.log(data);
+//         });
+
+//     }
+// ]);
+

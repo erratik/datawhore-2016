@@ -13,6 +13,8 @@ var fbgraph = require('fbgraphapi');
 
 // expose the routes to our app with module.exports
 module.exports = function(app) {
+
+    // UPDATE FACEBOOK PROFILE
     app.post('/api/' + namespace + '/profile', function(req, res) {
         // console.log('boo');
         var fb = new fbgraph.Facebook(process.env.FACEBOOK_ACCESS_TOKEN, 'v2.4');
@@ -31,4 +33,18 @@ module.exports = function(app) {
         });
 
     });
+
+    //GET POSTS
+    app.get('/api/' + namespace + '/posts', function(req, res) {
+        console.log(req.body);
+        var fb = new fbgraph.Facebook(process.env.FACEBOOK_ACCESS_TOKEN, 'v2.4');
+        fb.graph('/me/feed', function(err, result) {
+            if (err) console.log(err);
+                
+            console.log(result);
+               
+        });
+
+    });
+
 };

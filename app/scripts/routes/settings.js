@@ -4,8 +4,7 @@ var Settings = require('../models/Settings');
 var Profile = require('../models/Profile');
 var obj = require('../../../utils/objTools');
 var str = require('../../../utils/stringTools');
-var merge = require('merge'),
-    original, cloned;
+var merge = require('merge'),original, cloned;
 var mongoose = require('mongoose');
 var moment = require('moment');
 var flatten = require('flat');
@@ -16,14 +15,12 @@ module.exports = function(app) {
     //*****************************************************************/
     app.get('/api/settings', function(req, res) {
         // get settings with mongoose, return default settings if !settings.saved
-        Settings.findOne({
-            name: 'settings'
-        }, function(err, settings) {
-            if (err) res.send(err)
-            if (!settings) settings = defaultSettings;
-            res.json(settings); // return settings in JSON format
+        Settings.getNetworkConfigs({}, function(data){
+
+            res.json(data);
         });
     });
+
     app.post('/api/settings', function(req, res) {
         Settings.findOne({
             name: 'settings'

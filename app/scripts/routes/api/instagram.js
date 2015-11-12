@@ -39,5 +39,33 @@ module.exports = function(app) {
     });
 
 
+    app.post('/api/' + namespace + '/posts/:count', function(req, res) {
+        // console.log(req.params);
+        // console.log(req.body);
+        // console.log(req);
+        client.user_self_media_recent({count: req.body.count}, function(err, medias, pagination, remaining, limit) {
+            if (err) {
+                console.log(err);
+            } else {
+                /*var mediaKeyCategories = Object.keys(medias[0]);
+
+                var postObject = {};
+                for (var i = 0; i < mediaKeyCategories.length; i++) {
+                    postObject[mediaKeyCategories[i]] = {};
+                    // created > postObject['+mediaKeyCategories[i]+'] = {};
+                    console.log('created > postObject['+mediaKeyCategories[i]+'] = {};');
+                };
+
+                console.log(postObject);
+                // console.groupEnd();
+
+                var postData = {};*/
+                // res.json(flatten(medias, {delimiter: '__'}));
+                // res.json(medias)
+                res.json({posts:medias, flat: flatten(medias, {delimiter: '__'})});
+            }
+        });
+
+    });
 
 };

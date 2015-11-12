@@ -1,4 +1,6 @@
- 
+*.log 
+*.txt
 .env
 bower_components
 node_modules
+data

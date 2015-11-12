@@ -26,18 +26,14 @@ app.controller('settingsController', ['$scope', '$http', 'SettingsService', func
             console.log($scope);
             init();
     });
-
-    // $scope.formData = {};
-
-    // when landing on the page, get all settings and show them
-    // $http.get('/api/settings')
-    //     .success(function(data) {
-    //         $scope.settings = data;
-    //         console.log(data);
-    //     })
-    //     .error(function(data) {
-    //         console.log('Error: ' + data);
+    
+    // $scope.updateProfileProps = function(namespace) {
+    //     $scope.ProfileService.updateProps(namespace, false, $scope.formData[namespace]).then(function(profile){
+    //         // console.log(profile);
+    //         $scope.model.profiles[namespace] = profile;
+    //         // $scope.edit[namespace]=!$scope.edit[namespace];
     //     });
+    // };
 
     // when submitting the add form, send the text to the node API
     $scope.createSettings = function() {

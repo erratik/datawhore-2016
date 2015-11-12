@@ -1,7 +1,7 @@
 <!-- partial: settings-timestamps -->
-<h3 class="ui header dividing">Profiles ({{model.configs| length}})</h3>
+<h3 class="ui header dividing">Profiles ({{profiles| length}})</h3>
 <div class="ui link cards three">
+    <profile-card configs="configs" profiles="profiles"></profile-card>
 
-    <div class="card" ng-repeat="(namespace,config) in model.configs" ng-include="'templates/partials/profiles/profile-card.html'"></div>
-
+    <!-- <profile-card ng-repeat="(namespace,config) in profiles" ></profile-card> -->
 </div>

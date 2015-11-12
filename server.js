@@ -19,6 +19,11 @@
     // Connect to our mongo database
     mongoose.connect(process.env.MONGO_DB);  
 
+mongoose.connection.on('error', function(err){
+    console.log(process.env.MONGO_DB);
+    console.log(err);
+});
+
     app.use(express.static(__dirname + '/app'));  // set the static files location /app/img will be /img for users
     app.use('/bower_components', express.static(__dirname + '/bower_components'));
     app.use(morgan('dev'));                                         // log every request to the console

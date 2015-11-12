@@ -18,17 +18,14 @@
 				<div class="title item">datawhore</div>
 				<div class="right menu">
 					<div class="ui simple dropdown item">
-						<i class="browser icon"></i> Demo
+						<i class="settings icon"></i> admin
 						<i class="dropdown icon"></i>
 						<div class="menu">
-							<a class="item">
-							<i class="user icon"></i> Login
+							<a class="item" ui-sref="profiles">
+							<i class="users icon"></i> profiles
 							</a>
-							<a class="item" ng-href="#/pagination">
-							<i class="table icon"></i> Pagination
-							</a>
-							<a class="item" ng-href="#/tabs">
-							<i class="ellipsis horizontal icon"></i> Tab
+							<a class="item" ui-sref="settings">
+							<i class="setting horizontal icon"></i> settings
 							</a>
 						</div>
 					</div>
@@ -37,26 +34,7 @@
 		</div>
 		<div class="ui container">
 			<div class="ui grid">
-				<div class="four wide column" >
-
-					<div class="ui secondary vertical menu">
-						<div class="ui bulleted list">
-							<div class="item">
-								<div>
-									<a class="item" ng-href="#/">
-									Profiles
-									</a>
-								</div>
-							</div>
-							<div class="item">
-								<a class="item" ng-href="#/settings">
-								Settings
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="twelve wide column">
+				<div class="sixteen wide column">
 				
 					<div ui-view></div>
 				</div>
@@ -70,9 +48,12 @@
 		<script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 		<script src="../bower_components/moment/moment.js"></script>
 		<script src="../bower_components/angular-moment/angular-moment.js"></script>
+		<script src="../bower_components/angular-filter/dist/angular-filter.js"></script>
+		<script src="../bower_components/angular-semantic-ui/dist/angular-semantic-ui.js"></script>
 		<script src="../bower_components/jquery/dist/jquery.js"></script>
 		<script src="../bower_components/semantic/dist/semantic.js"></script>
 		<!-- endbower -->
+
 		<script src="scripts/controllers/profiles.js"></script>
 		<script src="scripts/controllers/settings.js"></script>
 		<script src="scripts/services/profile.js"></script>
@@ -89,7 +70,7 @@
 				setTimeout(function(){
 				$('.ui.accordion').accordion();
 
-			}, 1000);
+			}, 5000);
 			};
 
 		</script>

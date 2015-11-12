@@ -50,6 +50,31 @@ schema.statics = {
 
         });
 
+    },
+    getNetworkConfigs: function(params, callback){
+
+        if (params.namespace) {
+            Settings.findOne('settings', function(err, settings) {
+                if (!settings) {
+                    console.log('no settings found');
+                } else {
+                    callback(settings.networks[params.namespace]); // return settings in JSON format
+                    
+                }
+            });
+        } else {
+
+            Settings.find(function(err, settings) {
+                if (!settings.length) {
+                    console.log('no settings saved');
+                } else {
+                    // console.log(settings[0].networks)
+
+                    callback(settings[0].networks); // return settings in JSON format
+                }
+            });
+        }
+            
     }
 }
 module.exports = Settings = mongoose.model('Settings', schema);

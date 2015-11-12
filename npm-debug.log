@@ -1,0 +1,320 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@2.14.7
+3 info using node@v4.2.2
+4 verbose readDependencies loading dependencies from /Users/erratik/Sites/datawhore/package.json
+5 warn package.json datawhore@0.0.0 No repository field.
+6 warn package.json datawhore@0.0.0 No license field.
+7 verbose install where, deps [ '/Users/erratik/Sites/datawhore',
+7 verbose install   [ 'body-parser',
+7 verbose install     'cookie-parser',
+7 verbose install     'dotenv',
+7 verbose install     'express',
+7 verbose install     'express-session',
+7 verbose install     'flat',
+7 verbose install     'method-override',
+7 verbose install     'mongoose',
+7 verbose install     'morgan',
+7 verbose install     'require-directory',
+7 verbose install     'socket.io',
+7 verbose install     'angular-moment',
+7 verbose install     'autoprefixer-core',
+7 verbose install     'browser-sync',
+7 verbose install     'connect',
+7 verbose install     'connect-livereload',
+7 verbose install     'del',
+7 verbose install     'dribbble-api',
+7 verbose install     'fbgraphapi',
+7 verbose install     'gulp',
+7 verbose install     'gulp-cache',
+7 verbose install     'gulp-csso',
+7 verbose install     'gulp-filter',
+7 verbose install     'gulp-flatten',
+7 verbose install     'gulp-if',
+7 verbose install     'gulp-imagemin',
+7 verbose install     'gulp-jshint',
+7 verbose install     'gulp-less',
+7 verbose install     'gulp-livereload',
+7 verbose install     'gulp-load-plugins',
+7 verbose install     'gulp-minify-html',
+7 verbose install     'gulp-postcss',
+7 verbose install     'gulp-protractor',
+7 verbose install     'gulp-size',
+7 verbose install     'gulp-uglify',
+7 verbose install     'gulp-useref',
+7 verbose install     'gulp-watch-less',
+7 verbose install     'instagram-node',
+7 verbose install     'jshint-stylish',
+7 verbose install     'lastfm',
+7 verbose install     'main-bower-files',
+7 verbose install     'merge',
+7 verbose install     'moment',
+7 verbose install     'moves',
+7 verbose install     'node-foursquare',
+7 verbose install     'nodemon',
+7 verbose install     'oauth-signature',
+7 verbose install     'opn',
+7 verbose install     'pinterest-api',
+7 verbose install     'request',
+7 verbose install     'serve-index',
+7 verbose install     'serve-static',
+7 verbose install     'tumblr',
+7 verbose install     'twitter' ] ]
+8 verbose install where, peers [ '/Users/erratik/Sites/datawhore', [] ]
+9 verbose installManyTop reading for lifecycle /Users/erratik/Sites/datawhore/package.json
+10 info preinstall datawhore@0.0.0
+11 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/angular-moment/package.json
+12 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/autoprefixer-core/package.json
+13 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/body-parser/package.json
+14 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/browser-sync/package.json
+15 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/connect/package.json
+16 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/connect-livereload/package.json
+17 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/cookie-parser/package.json
+18 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/del/package.json
+19 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/dotenv/package.json
+20 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/dribbble-api/package.json
+21 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/express/package.json
+22 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/express-session/package.json
+23 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/fbgraphapi/package.json
+24 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/flat/package.json
+25 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp/package.json
+26 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-cache/package.json
+27 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-csso/package.json
+28 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-filter/package.json
+29 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-flatten/package.json
+30 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-if/package.json
+31 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-imagemin/package.json
+32 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-jshint/package.json
+33 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-less/package.json
+34 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-livereload/package.json
+35 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-load-plugins/package.json
+36 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-minify-html/package.json
+37 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-nodemon/package.json
+38 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-postcss/package.json
+39 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-protractor/package.json
+40 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-size/package.json
+41 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-uglify/package.json
+42 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-useref/package.json
+43 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/gulp-watch-less/package.json
+44 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/instagram-node/package.json
+45 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/jshint-stylish/package.json
+46 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/lastfm/package.json
+47 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/main-bower-files/package.json
+48 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/merge/package.json
+49 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/method-override/package.json
+50 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/moment/package.json
+51 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/mongodb/package.json
+52 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/mongoose/package.json
+53 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/morgan/package.json
+54 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/moves/package.json
+55 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/node-foursquare/package.json
+56 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/nodemon/package.json
+57 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/oauth-signature/package.json
+58 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/opn/package.json
+59 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/pinterest-api/package.json
+60 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/request/package.json
+61 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/require-directory/package.json
+62 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/serve-index/package.json
+63 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/serve-static/package.json
+64 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/socket.io/package.json
+65 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/tumblr/package.json
+66 verbose installManyTop reading scoped package data from /Users/erratik/Sites/datawhore/node_modules/twitter/package.json
+67 info package.json mongoose@3.6.20 No license field.
+68 info package.json angular-moment@0.10.3 No license field.
+69 info package.json connect-livereload@0.5.3 No license field.
+70 info package.json fbgraphapi@0.5.0 No license field.
+71 info package.json dribbble-api@0.0.3 No license field.
+72 info package.json gulp-if@1.2.5 No license field.
+73 info package.json gulp-minify-html@0.1.8 No license field.
+74 info package.json instagram-node@0.5.8 No license field.
+75 info package.json gulp-protractor@0.0.12 No license field.
+76 info package.json node-foursquare@0.3.0 No license field.
+77 info package.json twitter@1.2.5 No license field.
+78 info package.json socket.io@1.3.7 No license field.
+79 verbose readDependencies loading dependencies from /Users/erratik/Sites/datawhore/package.json
+80 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/angular-moment/package.json
+81 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/autoprefixer-core/package.json
+82 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/body-parser/package.json
+83 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/browser-sync/package.json
+84 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/connect/package.json
+85 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/connect-livereload/package.json
+86 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/cookie-parser/package.json
+87 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/del/package.json
+88 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/dotenv/package.json
+89 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/dribbble-api/package.json
+90 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/express/package.json
+91 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/express-session/package.json
+92 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/fbgraphapi/package.json
+93 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/flat/package.json
+94 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp/package.json
+95 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-cache/package.json
+96 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-csso/package.json
+97 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-filter/package.json
+98 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-flatten/package.json
+99 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-if/package.json
+100 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-imagemin/package.json
+101 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-jshint/package.json
+102 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-less/package.json
+103 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-livereload/package.json
+104 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-load-plugins/package.json
+105 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-minify-html/package.json
+106 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-nodemon/package.json
+107 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-postcss/package.json
+108 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-protractor/package.json
+109 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-size/package.json
+110 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-uglify/package.json
+111 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-useref/package.json
+112 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/gulp-watch-less/package.json
+113 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/instagram-node/package.json
+114 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/jshint-stylish/package.json
+115 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/lastfm/package.json
+116 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/main-bower-files/package.json
+117 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/merge/package.json
+118 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/method-override/package.json
+119 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/moment/package.json
+120 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/mongodb/package.json
+121 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/mongoose/package.json
+122 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/morgan/package.json
+123 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/moves/package.json
+124 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/node-foursquare/package.json
+125 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/nodemon/package.json
+126 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/oauth-signature/package.json
+127 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/opn/package.json
+128 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/pinterest-api/package.json
+129 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/request/package.json
+130 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/require-directory/package.json
+131 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/serve-index/package.json
+132 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/serve-static/package.json
+133 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/socket.io/package.json
+134 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/tumblr/package.json
+135 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/twitter/package.json
+136 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/.bin/browser-sync/package.json
+137 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/.bin/gulp/package.json
+138 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/.bin/nodemon/package.json
+139 verbose targetResolver reading package data from /Users/erratik/Sites/datawhore/node_modules/.bin/opn/package.json
+140 verbose already installed skipping lastfm@^0.9.2 /Users/erratik/Sites/datawhore
+141 verbose already installed skipping main-bower-files@^2.4.1 /Users/erratik/Sites/datawhore
+142 verbose already installed skipping merge@^1.2.0 /Users/erratik/Sites/datawhore
+143 verbose already installed skipping moment@^2.9.0 /Users/erratik/Sites/datawhore
+144 verbose already installed skipping moves@0.0.2 /Users/erratik/Sites/datawhore
+145 verbose already installed skipping node-foursquare@^0.3.0 /Users/erratik/Sites/datawhore
+146 verbose already installed skipping nodemon@^1.2.1 /Users/erratik/Sites/datawhore
+147 verbose already installed skipping oauth-signature@^1.3.0 /Users/erratik/Sites/datawhore
+148 verbose already installed skipping opn@^1.0.1 /Users/erratik/Sites/datawhore
+149 verbose already installed skipping pinterest-api@^1.1.3 /Users/erratik/Sites/datawhore
+150 verbose already installed skipping request@^2.55.0 /Users/erratik/Sites/datawhore
+151 verbose already installed skipping serve-index@^1.5.3 /Users/erratik/Sites/datawhore
+152 verbose already installed skipping serve-static@^1.7.1 /Users/erratik/Sites/datawhore
+153 verbose already installed skipping tumblr@^0.4.1 /Users/erratik/Sites/datawhore
+154 verbose already installed skipping twitter@^1.2.5 /Users/erratik/Sites/datawhore
+155 verbose already installed skipping body-parser@~1.5.2 /Users/erratik/Sites/datawhore
+156 verbose already installed skipping cookie-parser@^1.3.5 /Users/erratik/Sites/datawhore
+157 verbose already installed skipping dotenv@^1.2.0 /Users/erratik/Sites/datawhore
+158 verbose already installed skipping express@~4.7.2 /Users/erratik/Sites/datawhore
+159 verbose already installed skipping express-session@^1.11.3 /Users/erratik/Sites/datawhore
+160 verbose already installed skipping flat@^1.6.0 /Users/erratik/Sites/datawhore
+161 verbose already installed skipping method-override@~2.1.2 /Users/erratik/Sites/datawhore
+162 verbose already installed skipping mongoose@~3.6.2 /Users/erratik/Sites/datawhore
+163 verbose already installed skipping morgan@~1.2.2 /Users/erratik/Sites/datawhore
+164 verbose already installed skipping require-directory@^2.1.1 /Users/erratik/Sites/datawhore
+165 verbose already installed skipping socket.io@^1.1.0 /Users/erratik/Sites/datawhore
+166 verbose already installed skipping angular-moment@^0.10.1 /Users/erratik/Sites/datawhore
+167 verbose already installed skipping autoprefixer-core@^3.0.1 /Users/erratik/Sites/datawhore
+168 silly cache add args [ 'browser-sync@2.3.4', null ]
+169 verbose cache add spec browser-sync@2.3.4
+170 silly cache add parsed spec Result {
+170 silly cache add   raw: 'browser-sync@2.3.4',
+170 silly cache add   scope: null,
+170 silly cache add   name: 'browser-sync',
+170 silly cache add   rawSpec: '2.3.4',
+170 silly cache add   spec: '2.3.4',
+170 silly cache add   type: 'version' }
+171 silly addNamed browser-sync@2.3.4
+172 verbose addNamed "2.3.4" is a plain semver version for browser-sync
+173 silly mapToRegistry name browser-sync
+174 silly mapToRegistry using default registry
+175 silly mapToRegistry registry https://registry.npmjs.org/
+176 silly mapToRegistry uri https://registry.npmjs.org/browser-sync
+177 verbose addNameVersion registry:https://registry.npmjs.org/browser-sync not in flight; fetching
+178 verbose already installed skipping connect@^3.0.1 /Users/erratik/Sites/datawhore
+179 verbose already installed skipping connect-livereload@^0.5.0 /Users/erratik/Sites/datawhore
+180 verbose already installed skipping del@^0.1.0 /Users/erratik/Sites/datawhore
+181 verbose already installed skipping dribbble-api@0.0.3 /Users/erratik/Sites/datawhore
+182 verbose already installed skipping fbgraphapi@^0.5.0 /Users/erratik/Sites/datawhore
+183 verbose already installed skipping gulp@^3.9.0 /Users/erratik/Sites/datawhore
+184 verbose already installed skipping gulp-cache@^0.2.4 /Users/erratik/Sites/datawhore
+185 verbose already installed skipping gulp-csso@^0.2.9 /Users/erratik/Sites/datawhore
+186 verbose already installed skipping gulp-filter@^2.0.0 /Users/erratik/Sites/datawhore
+187 verbose already installed skipping gulp-flatten@^0.0.4 /Users/erratik/Sites/datawhore
+188 verbose already installed skipping gulp-if@^1.2.5 /Users/erratik/Sites/datawhore
+189 verbose already installed skipping gulp-imagemin@^2.0.0 /Users/erratik/Sites/datawhore
+190 verbose already installed skipping gulp-jshint@^1.9.0 /Users/erratik/Sites/datawhore
+191 verbose already installed skipping gulp-less@^3.0.3 /Users/erratik/Sites/datawhore
+192 verbose already installed skipping gulp-livereload@^3.0.2 /Users/erratik/Sites/datawhore
+193 verbose request uri https://registry.npmjs.org/browser-sync
+194 verbose request no auth needed
+195 info attempt registry request try #1 at 12:13:11 PM
+196 verbose request id e178c7fb96878448
+197 verbose etag "29BK6TALAFY644KOZMDZIVM20"
+198 http request GET https://registry.npmjs.org/browser-sync
+199 verbose already installed skipping gulp-load-plugins@^0.8.0 /Users/erratik/Sites/datawhore
+200 verbose already installed skipping gulp-minify-html@^0.1.8 /Users/erratik/Sites/datawhore
+201 verbose already installed skipping gulp-postcss@^3.0.0 /Users/erratik/Sites/datawhore
+202 verbose already installed skipping gulp-protractor@0.0.12 /Users/erratik/Sites/datawhore
+203 verbose already installed skipping gulp-size@^1.1.0 /Users/erratik/Sites/datawhore
+204 verbose already installed skipping gulp-uglify@^1.0.2 /Users/erratik/Sites/datawhore
+205 verbose already installed skipping gulp-useref@^1.0.2 /Users/erratik/Sites/datawhore
+206 verbose already installed skipping gulp-watch-less@^1.0.1 /Users/erratik/Sites/datawhore
+207 verbose already installed skipping instagram-node@^0.5.7 /Users/erratik/Sites/datawhore
+208 verbose already installed skipping jshint-stylish@^1.0.0 /Users/erratik/Sites/datawhore
+209 http 200 https://registry.npmjs.org/browser-sync
+210 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+210 verbose headers   etag: '"7JMV4OWY0FDSC79ATMOF9T732"',
+210 verbose headers   'content-type': 'application/json',
+210 verbose headers   'cache-control': 'max-age=60',
+210 verbose headers   'content-length': '413746',
+210 verbose headers   'accept-ranges': 'bytes',
+210 verbose headers   date: 'Thu, 12 Nov 2015 17:13:09 GMT',
+210 verbose headers   via: '1.1 varnish',
+210 verbose headers   age: '51',
+210 verbose headers   connection: 'keep-alive',
+210 verbose headers   'x-served-by': 'cache-iad2139-IAD',
+210 verbose headers   'x-cache': 'HIT',
+210 verbose headers   'x-cache-hits': '1',
+210 verbose headers   'x-timer': 'S1447348389.726859,VS0,VE1',
+210 verbose headers   vary: 'Accept' }
+211 silly get cb [ 200,
+211 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+211 silly get     etag: '"7JMV4OWY0FDSC79ATMOF9T732"',
+211 silly get     'content-type': 'application/json',
+211 silly get     'cache-control': 'max-age=60',
+211 silly get     'content-length': '413746',
+211 silly get     'accept-ranges': 'bytes',
+211 silly get     date: 'Thu, 12 Nov 2015 17:13:09 GMT',
+211 silly get     via: '1.1 varnish',
+211 silly get     age: '51',
+211 silly get     connection: 'keep-alive',
+211 silly get     'x-served-by': 'cache-iad2139-IAD',
+211 silly get     'x-cache': 'HIT',
+211 silly get     'x-cache-hits': '1',
+211 silly get     'x-timer': 'S1447348389.726859,VS0,VE1',
+211 silly get     vary: 'Accept' } ]
+212 verbose get saving browser-sync to /Users/erratik/.npm/registry.npmjs.org/browser-sync/.cache.json
+213 verbose stack Error: version not found: browser-sync@2.3.4
+213 verbose stack     at setData (/usr/local/lib/node_modules/npm/lib/cache/add-named.js:137:12)
+213 verbose stack     at RES (/usr/local/lib/node_modules/npm/node_modules/inflight/inflight.js:23:14)
+213 verbose stack     at f (/usr/local/lib/node_modules/npm/node_modules/once/once.js:17:25)
+213 verbose stack     at fixName (/usr/local/lib/node_modules/npm/lib/cache/add-named.js:29:5)
+213 verbose stack     at saved (/usr/local/lib/node_modules/npm/lib/cache/caching-client.js:173:7)
+213 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/graceful-fs/polyfills.js:210:7
+213 verbose stack     at FSReqWrap.oncomplete (fs.js:82:15)
+214 verbose statusCode 404
+215 verbose cwd /Users/erratik/Sites/datawhore
+216 error Darwin 13.4.0
+217 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install"
+218 error node v4.2.2
+219 error npm  v2.14.7
+220 error version not found: browser-sync@2.3.4
+221 error If you need help, you may report this error at:
+221 error     <https://github.com/npm/npm/issues>
+222 verbose exit [ 1, true ]

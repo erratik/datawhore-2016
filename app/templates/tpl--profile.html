@@ -1,15 +1,15 @@
 <!-- template: settings-network-profiles -->
 <div class="ui container">
     <div class="ui header dividing">
-        <profile-avatar namespace="{{network}}" avatar="{{profile.avatar}}"  styles="ui left avatar floated left image"></profile-avatar>
+        <profile-avatar namespace="profileInfo.name" profile="profileInfo" styles="ui left avatar floated left image"></profile-avatar>
         <div class="content">
-            {{network}} Profile
+            {{profileInfo.name}} Profile
             <div class="sub header">
-                {{profile.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}
+                {{profileInfo.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}
             </div>
         </div>
-        <profile-fetch namespace="{{network}}" done="getProfile(network)" style="float: right"></profile-fetch>
-        <profile-remove namespace="{{network}}" done="deleteProfile(network)" class="floated right" style="float: right"></profile-remove>
+        <profile-fetch namespace="{{profileInfo.name}}" done="getProfile(profileInfo.name)" style="float: right"></profile-fetch>
+        <profile-remove namespace="{{profileInfo.name}}" done="deleteProfile(profileInfo.name)" class="floated right" style="float: right"></profile-remove>
     </div>
     <div class="ui header">
         <div class="content">Profile Properties</div>
@@ -44,7 +44,7 @@
             <tr ng-repeat="(key, value) in profile.fetchedProfile | orderBy:sortType:sortReverse">
                 <td class="">
                     <div class="ui fitted checkbox">
-                        <input type="checkbox" ng-model="formData[key].enabled"> <label></label>
+                        <input type="checkbox" ng-model="formData[key].enabled" > <label></label>
                     </div>
                 </td>
                 <td>{{key}}</td>
@@ -56,11 +56,84 @@
         </tbody>
         <tfoot class="full-width">
         <td colspan="4">
-            <div class="ui small  button" ng-click="updateProfileProps(network)">
+            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
                 Approve
             </div>
         </td>
         </tfoot>
     </table>
+
+    <table class="ui compact celled definition table">
+        <tbody>
+            <tr ng-repeat="(label, attribute) in formData.profileConfig" ng-if="countProperties(attribute.content)">
+                <td colspan="3">
+                {{label}}
+                    <table>
+                        <profile-row data="formData.profileConfig[label].content" label="{{label}}"></profile-row>
+                    </table>
+                </td>
+
+            </tr>
+        </tbody>
+        <tfoot class="full-width">
+        <td colspan="4">
+            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                Approve
+            </div>
+        </td>
+        </tfoot>
+    </table>
+    <div class="ui header">
+        <div class="content">Post Design</div>
+        <!-- <div class="right floated mini ui button trigger" ng-click="hidden=!hidden">
+            <i class="add icon"></i>Add Props   
+        </div> -->
+    </div>
+    <table class="ui compact celled definition table">
+        <tbody>
+            <tr ng-repeat="(label, attribute) in formData.postConfig" ng-if="countProperties(attribute.content)">
+                <td colspan="3">
+                {{label}}
+                    <table>
+                        <tbody>
+                            <profile-row data="formData.postConfig[label].content" label="{{label}}"></profile-row>
+                        </tbody>
+                        <tfoot class="full-width">
+                        <td colspan="4">
+                            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                                Approve
+                            </div>
+                        </td>
+                        </tfoot>
+                    </table>
+                </td>
+
+            </tr>
+        </tbody>
+        <tfoot class="full-width">
+        <td colspan="4">
+            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                Approve
+            </div>
+        </td>
+        </tfoot>
+    </table>
+
+    <div ng-switch on="profileInfo.name">
+        <div ng-switch-when="instagram">
+            <div>
+
+                <!-- <img src="{{post.images.thumbnail.url}}"> -->
+            </div>
+            <!-- this is {{postConfig}} -->
+
+
+        </div>
+    </div>
+
+
+    <div ng-repeat="config in formData">
+       <!-- {{config}}  -->
+    </div>
 
 </div>

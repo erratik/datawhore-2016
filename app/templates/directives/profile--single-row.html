@@ -1,0 +1,28 @@
+
+<tr>      
+    <td class="" ng-if="data.value">
+        <div class="ui fitted checkbox">
+            <input type="checkbox" ng-model="data.enabled"> <label></label>
+        </div>
+    </td>
+    <td ng-if="data.value">
+        <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span>{{data.label}}</span></div>
+        <!-- <div ng-if="show"><input type="text" ng-model="data.label"></div><button class="ui icon button" ng-click="show=!show" ng-hide="!show"><i class="checkmark icon" ></i></button> -->
+        <div class="ui action input" ng-hide="!show">
+          <input type="text" ng-model="data.label">
+          <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
+            <i class="checkmark icon"></i>
+          </button>
+        </div>
+    </td>
+    <td ng-if="data.value">
+        {{data.value}} 
+        <input type="hidden" ng-model="data.value">
+    </td>
+
+    <td ng-if="!data.value" class="">
+        <h2>{{label}}</h2>
+        <div ng-include="'templates/partials/profile--another-row.html'"></div>
+    </td>
+    
+</tr>

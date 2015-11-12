@@ -1,20 +1,38 @@
 
-    <div class="content">
-        <div class="header">
-            <img src="/images/settings/{{namespace}}.png" class="ui avatar" ng-if="!config.profile">
-            <img src="{{profile.avatar}}" class="ui avatar" ng-if="config.profile">
-            <span ng-show="!config.username">{{namespace}}</span>
-            <span ng-show="config.username">@{{config.username}}</span>
+<div class="card" ng-repeat="(namespace, config) in configs">
+
+    <div class="ui accordion content">
+        <div class="item">
+            <a class="title">
+            <!-- <i class="dropdown icon"></i> -->
+            
+            <div class="header">
+                <profile-avatar namespace="namespace" profile="profiles[namespace].profileInfo" styles="ui right floated mini circular image"></profile-avatar>
+                <profile-username namespace="namespace" username="config.username" profile="profiles[namespace].profileInfo" header="true"></profile-username>
+            </div>
+            <div class="meta">
+
+                <profile-updated date="profiles[namespace].profileInfo.last_modified"></profile-updated>
+                
+            </div>
+
+            </a>
+
+                <div class="ui list tiny">
+                  <div class="item">
+                    <i class="icon" ng-class="{'check green': profiles[namespace].profileConfig, 'help gray': !profiles[namespace].profileConfig}"></i>
+                    Profile configured
+                  </div>
+                  <div class="item">
+                    <i class="icon" ng-class="{'check green': profiles[namespace].postConfig, 'help gray': !profiles[namespace].postConfig}"></i>
+                    Post configured
+                  </div>
+                </div>
         </div>
-        <div class="meta">
-            <span ng-show="!config.profile">No profile saved</span>
-            <span ng-if="config.profile">Updated {{profile.last_modified | fromNow }}</span>
-        </div>
-        <!-- <div class="description"></div> -->
     </div>
     <div class="extra content">
-        <div class="right mini ui button trigger" ng-click="getProfile('{{namespace}}')"><img src="/images/settings/{{namespace}}.png" class="micro">Update Profile </div>
-        <!-- <div profile-fetch namespace="{{namespace}}" done="getProfile(namespace)"></div> -->
-        <!-- <profile-remove namespace="{{profile.name}}" ng-click="deleteProfile(profile.name)"></profile-remove> -->
+        <profile-fetch namespace="{{namespace}}" done="getProfile(namespace)"></profile-fetch>
+        <a class="ui button mini" ng-href="/#/profile/{{namespace}}"><i class="icon edit"></i> Edit</a>
+        <!-- <a class="ui button mini" ui-sref="profiles.namespace({namespace: namespace})"><i class="icon edit"></i> Edit</a> -->
     </div>
-    
+</div>
