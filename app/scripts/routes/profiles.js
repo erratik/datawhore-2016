@@ -26,12 +26,21 @@ module.exports = function(app) {
     //    Profiles
     //*****************************************************************/
     app.get('/api/profile/:namespace', function(req, res) {
-
         Profile.get({namespace: req.params.namespace}, function(profile){
+            // console.log();
             res.json(profile);
         });
 
     });
+
+    app.get('/api/profile/config/:namespace', function(req, res) {
+        Profile.getConfig(req.params.namespace, function(profile){
+            // console.log();
+            res.json(profile);
+        });
+
+    });
+
     // wipe profile -------------------------------------------------------*/
     app.delete('/api/profiles/:namespace', function(req, res) {
         // console.log('test');
@@ -52,7 +61,30 @@ module.exports = function(app) {
     });
     // add specific properties to profile -------------------------------------------------------*/
     app.post('/api/profile/update/:namespace', function(req, res) {
-            console.log(req.body);
+            req.body.flatProfileConfig = JSON.parse(JSON.stringify(req.body.profileConfig));
+            //filter out only enabled ones...
+
+            var _profileKeys = Object.keys(req.body.flatProfileConfig);
+            for (var i = 0; i < _profileKeys.length; i++) {
+                var attribute = req.body.flatProfileConfig[_profileKeys[i]];
+                // console.log(attribute);
+                if (typeof attribute.grouped == 'boolean' && !attribute.grouped) {
+                    if (!attribute.content.enabled) 
+                        delete req.body.flatProfileConfig[_profileKeys[i]];
+                } else {
+                    var _attributeKeys = Object.keys(attribute.content);
+                    for (var j = 0; j < _attributeKeys.length; j++) {
+                        var attribute = req.body.flatProfileConfig[_profileKeys[i]].content[_attributeKeys[j]];
+                        if (!attribute.content.enabled) 
+                            delete req.body.flatProfileConfig[_profileKeys[i]].content[_attributeKeys[j]];
+
+                    }
+                    if (!Object.keys(req.body.flatProfileConfig[_profileKeys[i]].content).length) 
+                        delete req.body.flatProfileConfig[_profileKeys[i]];
+                }
+            };
+            req.body.flatProfileConfig = flatten(req.body.flatProfileConfig, {delimiter: '$'});
+
             Profile.update({
                 namespace: req.params.namespace,
                 data: req.body

@@ -20,8 +20,8 @@ app.service('ProfileService', function ($http, $q){
             then(function(response) {
                 if (params.namespace) {
                     console.log(':: ProfileService ::  getProfile (single) ');
+                    // console.log(data);
                     var data = response.data;
-                    console.log(data);
                     var profile = buildProfile({profile: data, loadConfig: params.loadConfig});
                     // console.log(profile);
                     return profile;
@@ -37,12 +37,40 @@ app.service('ProfileService', function ($http, $q){
                 }
         });            
     }
+
+    ProfileService.getConfig = function(namespace){  
+
+        var url = '/api/profile/config/'+namespace;
+        // var url = (params.namespace) ? '/api/profile/'+params.namespace : '/api/profiles' ;
+        // console.log(this.getPosts({namespace: 'instagram', count: 1}));
+        console.log(url);
+        return $http.get(url).
+            then(function(response) {
+                // if (params.namespace) {
+                    var data = response.data;
+                    console.log(':: ProfileService ::  getProfileConfig (single) ');
+
+         
+                    console.log(data);
+                    return data;
+                // } else {
+                //     console.log(':: ProfileService ::  getProfile (all) ');
+                //     var profiles = {};
+
+                //     for (var i = 0; i < response.data.length; i++) {
+                //         profiles[response.data[i].name] = buildProfile({profile:response.data[i], loadConfig: params.loadConfig});
+                //     };
+
+                //     return profiles;
+                // }
+        });            
+    }
+    
     
     ProfileService.cleanProfile = function(options){  
         var params = {
             namespace: options.namespace
         };
-        console.log(params);
         return $http.get('/api/' + params.namespace + '/profile').
         then(function(response) {
             var data = response.data;

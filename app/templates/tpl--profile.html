@@ -14,11 +14,82 @@
     </div>
     <div class="ui header">
         <div class="content">Profile Properties</div>
-        <div class="right floated mini ui button trigger" ng-click="hidden=!hidden">
-            <i class="add icon"></i>Add Props   
-        </div>
     </div>
-    <div class="ui bulleted list"  ng-show="hidden">
+    <div class="ui stackable two column vertically divided grid">
+      <div class="row">
+        <div class="column">
+          <div class="ui segment">Content</div>
+        </div>
+        <div class="column">
+          <div class="ui segment">
+
+          <table class="ui compact celled definition table">
+              <tbody>
+                  <tr ng-repeat="(label, attribute) in formData.profileConfig" ng-if="countProperties(attribute.content)">
+                      <td colspan="3">
+                        <div class="title" ng-if="attribute.grouped">{{label}}</div>
+                          <table>
+                              <profile-row data="formData.profileConfig[label].content" label="{{label}}"></profile-row>
+                          </table>
+                      </td>
+
+                  </tr>
+              </tbody>
+              <tfoot class="full-width">
+              <td colspan="4">
+                  <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                      Approve
+                  </div>
+              </td>
+              </tfoot>
+          </table>
+
+          </div>
+        </div>
+      </div>
+      <div class="ui header">
+          <div class="content">Post Design</div>
+          <!-- <div class="right floated mini ui button trigger" ng-click="hidden=!hidden">
+              <i class="add icon"></i>Add Props   
+          </div> -->
+      </div>
+      <div class="row">
+        <div class="column wide six">
+          <div class="ui segment">
+                post
+          </div>
+        </div>
+        <div class="column wide ten">
+          <div class="ui segment">Properties
+          <table class="ui compact celled definition table">
+              <tbody>
+                  <tr ng-repeat="(label, attribute) in formData.postConfig" ng-if="countProperties(attribute.content)">
+                      <td colspan="3">
+                      {{label}}
+                                  <profile-row data="formData.postConfig[label].content" label="{{label}}" grouped="attribute.grouped"></profile-row>
+                              <!-- <tfoot class="full-width">
+                              <td colspan="4">
+                                  <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                                      Approve
+                                  </div>
+                              </td>
+                              </tfoot> -->
+                      </td>
+
+                  </tr>
+              </tbody>
+              <tfoot class="full-width">
+              <td colspan="4">
+                  <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                      Approve
+                  </div>
+              </td>
+              </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+<!--     <div class="ui bulleted list"  ng-show="hidden">
         <div class="item" ng-repeat="(key, value) in profile.props">
             <div class="content">
                 <div class="header">
@@ -63,58 +134,7 @@
         </td>
         </tfoot>
     </table>
-
-    <table class="ui compact celled definition table">
-        <tbody>
-            <tr ng-repeat="(label, attribute) in formData.profileConfig" ng-if="countProperties(attribute.content)">
-                <td colspan="3">
-                {{label}}
-                    <table>
-                        <profile-row data="formData.profileConfig[label].content" label="{{label}}"></profile-row>
-                    </table>
-                </td>
-
-            </tr>
-        </tbody>
-        <tfoot class="full-width">
-        <td colspan="4">
-            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
-                Approve
-            </div>
-        </td>
-        </tfoot>
-    </table>
-    <div class="ui header">
-        <div class="content">Post Design</div>
-        <!-- <div class="right floated mini ui button trigger" ng-click="hidden=!hidden">
-            <i class="add icon"></i>Add Props   
-        </div> -->
-    </div>
-    <table class="ui compact celled definition table">
-        <tbody>
-            <tr ng-repeat="(label, attribute) in formData.postConfig" ng-if="countProperties(attribute.content)">
-                <td colspan="3">
-                {{label}}
-                            <profile-row data="formData.postConfig[label].content" label="{{label}}" grouped="attribute.grouped"></profile-row>
-                        <!-- <tfoot class="full-width">
-                        <td colspan="4">
-                            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
-                                Approve
-                            </div>
-                        </td>
-                        </tfoot> -->
-                </td>
-
-            </tr>
-        </tbody>
-        <tfoot class="full-width">
-        <td colspan="4">
-            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
-                Approve
-            </div>
-        </td>
-        </tfoot>
-    </table>
+ -->
 
     <div ng-switch on="profileInfo.name">
         <div ng-switch-when="instagram">

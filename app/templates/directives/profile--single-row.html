@@ -3,14 +3,14 @@
     <tbody>
 
     <tr>      
-        <td class="" ng-if="data.value">
+        <td class="" ng-if="data.value" width="5%">
 
             <div class="ui fitted checkbox">
                 <input type="checkbox" ng-model="data.enabled"> <label></label>
             </div>
         </td>
-        <td ng-if="data.value">
-            <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span>{{data.label}} {{subrow}}</span></div>
+        <td ng-if="data.value"  width="25%">
+            <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span>{{data.label}}</span></div>
             <!-- <div ng-if="show"><input type="text" ng-model="data.label"></div><button class="ui icon button" ng-click="show=!show" ng-hide="!show"><i class="checkmark icon" ></i></button> -->
             <div class="ui action input" ng-hide="!show">
               <input type="text" ng-model="data.label">
@@ -19,7 +19,7 @@
               </button>
             </div>
         </td>
-        <td ng-if="data.value">
+        <td ng-if="data.value" width="70%">
             {{data.value}} 
             <input type="hidden" ng-model="data.value">
         </td>

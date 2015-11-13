@@ -102,7 +102,7 @@
                 done: "&",
                 namespace: "@"
             },
-            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">Fetch Profile </div>'
+            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">Clean Profile </div>'
         };
     });       
 

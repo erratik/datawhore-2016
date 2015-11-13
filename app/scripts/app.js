@@ -77,13 +77,14 @@ app.constant('angularMomentConfig', {
         templateUrl: 'templates/tpl--profile.html',
         resolve: {
           profileData: function(ProfileService, $stateParams) {
-            console.log($stateParams);
+            
             return ProfileService.getProfile({namespace: $stateParams.namespace, loadConfig: true});
             // return ProfileService.load($stateParams.namespace);
+          },
+          config: function(ProfileService, $stateParams) {
+            console.log($stateParams);
+            return ProfileService.getConfig($stateParams.namespace);
           }
-          // postData: function(ProfileService, $stateParams) {
-          //   return ProfileService.getPosts({namespace: $stateParams.namespace, count: 1});
-          // }
         }
     });
 }]);
@@ -151,6 +152,7 @@ var buildProfile = function(options) {
     } else if (params.loadConfig) {
         console.log('> loaded config with profileInfo:'+params.profile.name);
     }
+    console.log(params.profile);
 
     var _nfo = {
         profileInfo: {
@@ -160,8 +162,6 @@ var buildProfile = function(options) {
             username: params.profile.username
         }
     };
-
-    console.log(params.profile);
 
     var profileConfig = (params.profile.profileConfig) ? params.profile.profileConfig : makeParent(params.profile, {});
     var postConfig = (params.profile.postConfig) ? params.profile.postConfig : makeParent(params.profile, {});

@@ -23,7 +23,7 @@ module.exports = function(app) {
             if (err) {
                 console.log(err);
             } else {
-                // console.log(result);
+                console.log(result);
                 Profile.update({
                     namespace: namespace,
                     data: {

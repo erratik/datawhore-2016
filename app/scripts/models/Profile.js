@@ -9,15 +9,15 @@ var schema = new mongoose.Schema({
     avatar: String,
     username: String,
     fetchedProfile: {},
-    fetchedProfileFlat: {},
-    props: {},
+    flatProfileConfig: {},
     profileConfig: {},
-    postConfig: {}
+    postConfig: {},
 });
 schema.statics = {
         get: function(params, callback){
 
-            var columns = params.columns;
+            var columns = params.columns;   
+            console.log(params);
             if (params.namespace) {
                 // Profile.findOne({name: params.namespace}, function(err, profile) {
             Profile.findOne({name: params.namespace}).select().exec(function(err, profile) {
@@ -88,6 +88,32 @@ schema.statics = {
                     
                 }
             });
+        },
+        getConfig: function(namespace, callback){
+
+            if (namespace) {
+
+            Profile.findOne({name: namespace}).exec(function(err, profile) {
+                    if (!profile) {
+                        console.log('no profile config found');
+
+                    } else {
+                        callback(profile.flatProfileConfig); // return settings in JSON format
+                        
+                    }
+                });
+            } else {
+
+                Profile.find(function(err, profiles) {
+                    if (!profiles.length) {
+                        console.log('no profile config found');
+                    } else {
+                        console.log(profiles.length+' profiles saved');
+                        callback(profiles); // return settings in JSON format
+                    }
+                });
+            }
+                
         }
     }
     // Return a Drop model based upon the defined schema
