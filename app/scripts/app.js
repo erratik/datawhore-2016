@@ -80,15 +80,15 @@ app.constant('angularMomentConfig', {
             console.log($stateParams);
             return ProfileService.getProfile({namespace: $stateParams.namespace, loadConfig: true});
             // return ProfileService.load($stateParams.namespace);
-          },
-          postData: function(ProfileService, $stateParams) {
-            return ProfileService.getPosts({namespace: $stateParams.namespace, count: 1});
           }
+          // postData: function(ProfileService, $stateParams) {
+          //   return ProfileService.getPosts({namespace: $stateParams.namespace, count: 1});
+          // }
         }
     });
 }]);
 
-
+    
 
 var makeParent = function(nodeParent, objParent) {
     // var obj;
@@ -98,8 +98,8 @@ var makeParent = function(nodeParent, objParent) {
         var content = nodeParent[_nodeKeys[i]];
         if (content !== null ) {
             var that = nodeParent[_nodeKeys[i]];
-
             objParent[_nodeKeys[i]] = makeData(that, _nodeKeys[i]);
+            // console.log(Object.keys(that.content.value));
             var injected = objParent[_nodeKeys[i]];
 
             if (injected.grouped 
@@ -141,32 +141,44 @@ Object.prototype.countProperties = function(foo) {
 };
 
 
-var buildProfile = function(profile, loadConfig) {
-    
-    if (loadConfig == 'soft'){
-        console.log('> soft loaded config with profileInfo');
-    } else if (loadConfig) {
-        console.log('> loaded config with profileInfo');
+var buildProfile = function(options) {
+    var params = {
+        profile: options.profile || {},
+        loadConfig: options.loadConfig
+    };
+    if (params.loadConfig == 'soft'){
+        console.log('> soft loaded config with profileInfo:'+params.profile.name);
+    } else if (params.loadConfig) {
+        console.log('> loaded config with profileInfo:'+params.profile.name);
     }
+
     var _nfo = {
         profileInfo: {
-            avatar: profile.avatar,
-            last_modified: profile.last_modified,
-            name: profile.name,
-            saved: profile.saved,
-            username: profile.username
+            avatar: params.profile.avatar,
+            last_modified: params.profile.last_modified,
+            name: params.profile.name,
+            username: params.profile.username
         }
     };
 
-    var profileConfig = (profile.postConfig || profile.profileConfig) ? profile.profileConfig : makeParent(profile, {});
-    var postConfig = (profile.postConfig || profile.profileConfig) ? profile.postConfig : makeParent(profile, {});
+    console.log(params.profile);
 
-    if (loadConfig == 'soft'){
-        _nfo.profileConfig = (profile.profileConfig) ? true : false;
-        _nfo.postConfig = (profile.postConfig) ? true : false;
+    var profileConfig = (params.profile.profileConfig) ? params.profile.profileConfig : makeParent(params.profile, {});
+    var postConfig = (params.profile.postConfig) ? params.profile.postConfig : makeParent(params.profile, {});
+
+    if (params.loadConfig == 'soft'){
+        _nfo.profileConfig = (params.profile.profileConfig) ? true : false;
+        _nfo.postConfig = (params.profile.postConfig) ? true : false;
     } else {
 
         _nfo.profileConfig = profileConfig;
+        var _deletingKeys = Object.keys(_nfo.profileInfo);
+        for (var i = 0; i < _deletingKeys.length; i++) {
+            delete _nfo.profileConfig[_deletingKeys[i]];
+        };
+            delete _nfo.profileConfig['_id'];
+
+
         _nfo.postConfig = postConfig;
     }
 

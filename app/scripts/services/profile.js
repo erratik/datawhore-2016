@@ -15,12 +15,14 @@ app.service('ProfileService', function ($http, $q){
         };
 
         var url = (params.namespace) ? '/api/profile/'+params.namespace : '/api/profiles' ;
+        // console.log(this.getPosts({namespace: 'instagram', count: 1}));
         return $http.get(url).
             then(function(response) {
                 if (params.namespace) {
                     console.log(':: ProfileService ::  getProfile (single) ');
                     var data = response.data;
-                    var profile = buildProfile(data, params.loadConfig);
+                    console.log(data);
+                    var profile = buildProfile({profile: data, loadConfig: params.loadConfig});
                     // console.log(profile);
                     return profile;
                 } else {
@@ -28,7 +30,7 @@ app.service('ProfileService', function ($http, $q){
                     var profiles = {};
 
                     for (var i = 0; i < response.data.length; i++) {
-                        profiles[response.data[i].name] = buildProfile(response.data[i], params.loadConfig);
+                        profiles[response.data[i].name] = buildProfile({profile:response.data[i], loadConfig: params.loadConfig});
                     };
 
                     return profiles;
@@ -36,6 +38,21 @@ app.service('ProfileService', function ($http, $q){
         });            
     }
     
+    ProfileService.cleanProfile = function(options){  
+        var params = {
+            namespace: options.namespace
+        };
+        console.log(params);
+        return $http.get('/api/' + params.namespace + '/profile').
+        then(function(response) {
+            var data = response.data;
+            // var postConfig = makeParent(response.data.posts[0], {});
+
+        console.log(data);
+            return data;
+        });            
+    }
+
     ProfileService.getPosts = function(options){  
         var params = {
             namespace: options.namespace,
@@ -52,13 +69,14 @@ app.service('ProfileService', function ($http, $q){
     }
 
     ProfileService.update = function(namespace, formData){   
-
         return $http.post('/api/profile/update/' + namespace, formData).
         then(function(response) {
             var data = response.data;
-            data.formData = formData;
-            // console.log(response.data);
-            return (response.data);
+            // data.formData = formData;
+            console.log(data);
+        console.log('---');
+        console.log(formData);
+            return data;
         });            
         return formData;
 

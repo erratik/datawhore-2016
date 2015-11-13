@@ -17,24 +17,41 @@ client.use({
 var flatten = require('flat');
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    app.post('/api/' + namespace + '/profile', function(req, res) {
+    app.get('/api/' + namespace + '/profile', function(req, res) {
 
         client.user('self', function(err, result, remaining, limit) {
             if (err) {
                 console.log(err);
             } else {
                 // console.log(result);
-                Profile.updateProfile({
+                Profile.update({
                     namespace: namespace,
-                    avatar: result.profile_picture,
-                    username: process.env.INSTAGRAM_USERNAME,
-                    profile: result
-                }, function(data) {
-                    // console.log(data);
-                    res.json(data);
+                    data: {
+                        fetchedProfile: result,
+                        profileConfig: makeParent(result, {})
+                    }
+                }, function(profile) {
+                    
+                    client.user_self_media_recent({count: 1}, function(err, medias, pagination, remaining, limit) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            // console.log(result);
+                            Profile.update({
+                                data: {
+                                    postConfig: makeParent(medias[0], {})
+                                }
+                            }, function(profile) {
+                                res.json(profile);
+                            });
+                        }
+                    });
+
                 });
             }
-        });
+        })
+
+        // console.log(post);
             
     });
 
@@ -47,25 +64,49 @@ module.exports = function(app) {
             if (err) {
                 console.log(err);
             } else {
-                /*var mediaKeyCategories = Object.keys(medias[0]);
-
-                var postObject = {};
-                for (var i = 0; i < mediaKeyCategories.length; i++) {
-                    postObject[mediaKeyCategories[i]] = {};
-                    // created > postObject['+mediaKeyCategories[i]+'] = {};
-                    console.log('created > postObject['+mediaKeyCategories[i]+'] = {};');
-                };
-
-                console.log(postObject);
-                // console.groupEnd();
-
-                var postData = {};*/
-                // res.json(flatten(medias, {delimiter: '__'}));
-                // res.json(medias)
                 res.json({posts:medias, flat: flatten(medias, {delimiter: '__'})});
             }
         });
 
     });
 
+};
+
+var makeParent = function(nodeParent, objParent) {
+    // var obj;
+    var _nodeKeys = Object.keys(nodeParent);
+    for (var i = 0; i < _nodeKeys.length; i++) {
+
+        var content = nodeParent[_nodeKeys[i]];
+        if (content !== null ) {
+            var that = nodeParent[_nodeKeys[i]];
+
+            objParent[_nodeKeys[i]] = makeData(that, _nodeKeys[i]);
+            var injected = objParent[_nodeKeys[i]];
+
+            if (injected.grouped 
+                && typeof injected.content.value == 'object' 
+                || typeof injected.content.value == 'array') {
+                objParent[_nodeKeys[i]].content = makeParent(injected.content.value, {});
+            }
+
+        }
+    };
+    return objParent;
+};
+
+
+var makeData = function(val, label){
+    var obj = {
+            content: {
+                enabled: false,
+                label: label,
+                value: val
+            }
+        
+    };  
+    var thisVal = obj.content.value;
+    obj.grouped = (typeof thisVal == 'array' || typeof thisVal == 'object') ? true : false;
+
+    return obj;
 };

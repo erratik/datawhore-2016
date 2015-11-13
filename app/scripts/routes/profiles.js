@@ -17,6 +17,7 @@ module.exports = function(app) {
     //*****************************************************************/
     app.get('/api/profiles', function(req, res) {
         Profile.get({}, function(profile){
+            // if (req.body) console.log("jkh")
             res.json(profile);
         });
         
@@ -51,14 +52,16 @@ module.exports = function(app) {
     });
     // add specific properties to profile -------------------------------------------------------*/
     app.post('/api/profile/update/:namespace', function(req, res) {
-        console.log('Settings Route > /api/profile/props/'+req.params.namespace+' > req.body');
-            Profile.updateConfig({
+            console.log(req.body);
+            Profile.update({
                 namespace: req.params.namespace,
                 data: req.body
             }, function(profile) {
                 res.json(profile);
             });
     });
+
+
     // application -------------------------------------------------------------
     
     app.get('/profiles', function(req, res) {

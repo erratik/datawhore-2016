@@ -1,11 +1,25 @@
 
-    <td >
-    
-        <div ng-repeat="(label, attribute) in data">
-       <!-- -> {{attribute.content.value}} -->
-        <h2 ng-if="!attribute.content.value">{{label}}</h2>
-            <table>
-                <profile-row data="attribute.content" label="{{label}}"></profile-row>
-            </table>
-        </div>
-    </td>
+<table width="100%">
+    <tr>
+	
+	    <td>
+	        <div ng-repeat="(label, attribute) in data" >
+	       <!-- -> {{attribute.content.value}} -->
+
+	       <div ng-switch on="label">
+	           <div ng-switch-when="data">
+
+	           		<profile-row data="attribute.content[0].content" label="{{label}}"></profile-row>
+	            </div>
+  				<div ng-switch-default>
+		        	<h3 ng-if="!attribute.content.value">{{label}} group</h2>
+	       			<!-- <h4 ng-if="attribute.content.value && !subrow">@#$ {{subrow}} {{label}}  ({{countProperties(attribute.content)}})</h2> -->
+		            <profile-row data="attribute.content" label="{{label}}" subrow="'true'"></profile-row>
+	       			<hr ng-if="!attribute.content.value && countProperties(attribute.content) == 3">
+       			</div>
+	       </div>
+
+	        </div>
+	    </td>
+	</tr>
+</table>

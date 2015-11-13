@@ -15,7 +15,7 @@ var fbgraph = require('fbgraphapi');
 module.exports = function(app) {
 
     // UPDATE FACEBOOK PROFILE
-    app.post('/api/' + namespace + '/profile', function(req, res) {
+    app.get('/api/' + namespace + '/profile', function(req, res) {
         // console.log('boo');
         var fb = new fbgraph.Facebook(process.env.FACEBOOK_ACCESS_TOKEN, 'v2.4');
         fb.graph('/me?fields=id,name,location,birthday,friends,picture,cover', function(err, me) {

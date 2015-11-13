@@ -8,7 +8,8 @@
                 {{profileInfo.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}
             </div>
         </div>
-        <profile-fetch namespace="{{profileInfo.name}}" done="getProfile(profileInfo.name)" style="float: right"></profile-fetch>
+
+        <profile-fetch namespace="{{profileInfo.name}}" done="cleanProfile(profileInfo.name)" style="float: right"></profile-fetch>
         <profile-remove namespace="{{profileInfo.name}}" done="deleteProfile(profileInfo.name)" class="floated right" style="float: right"></profile-remove>
     </div>
     <div class="ui header">
@@ -94,18 +95,14 @@
             <tr ng-repeat="(label, attribute) in formData.postConfig" ng-if="countProperties(attribute.content)">
                 <td colspan="3">
                 {{label}}
-                    <table>
-                        <tbody>
-                            <profile-row data="formData.postConfig[label].content" label="{{label}}"></profile-row>
-                        </tbody>
-                        <tfoot class="full-width">
+                            <profile-row data="formData.postConfig[label].content" label="{{label}}" grouped="attribute.grouped"></profile-row>
+                        <!-- <tfoot class="full-width">
                         <td colspan="4">
                             <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
                                 Approve
                             </div>
                         </td>
-                        </tfoot>
-                    </table>
+                        </tfoot> -->
                 </td>
 
             </tr>
