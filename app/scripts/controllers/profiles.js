@@ -78,11 +78,8 @@ app.controller('profileController', ['$scope', '$http',  '$stateParams', 'Profil
             $scope.formData.profileConfig = data.profileConfig;
             $scope.formData.postConfig = data.postConfig;
             $scope.formData.profileProperties = data.profileProperties;
-            console.log(data.profileProperties);
-            ProfileService.getConfig($scope.profileInfo.name).then(function(data){
-                // console.log
-                $scope.profileData = data;
-            });
+            //console.log(data.profileProperties);
+            
         }
 
         $scope.watchAttribute = function(attrPath) {
