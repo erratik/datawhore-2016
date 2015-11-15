@@ -19,7 +19,7 @@ schema.statics = {
         get: function(params, callback){
 
             var columns = params.columns;   
-            console.log(params);
+            // console.log(params);
             if (params.namespace) {
                 // Config.findOne({name: params.namespace}, function(err, profile) {
             Config.findOne({name: params.namespace}).select().exec(function(err, config) {
@@ -38,11 +38,11 @@ schema.statics = {
                             }
                         });
                     } else {
-                        Config.findOne({name: params.namespace}).exec(function(err, config) {
+                        Profile.get(config,function(profile) {
                             if (!config) {
                                 console.log('no abridged config found');
                             } else {
-                                console.log(config);
+                                console.log(profile);
                             }
                         });
                         callback(config); // return settings in JSON format
@@ -107,11 +107,20 @@ schema.statics = {
                         var props = writeProfileProperties(params.data.flatProfileConfig);
                         config.profileProperties = (unflatten(props, {delimiter:'__'}));
                     }
-                    
+
                     // console.log(config);
                     config.save(function (err) {
                       if (err) return handleError(err);
                         console.log('config saved');
+
+                        Profile.get(config,function(profile) {
+                            if (!config) {
+                                console.log('no abridged config found');
+                            } else {
+                                console.log(profile);
+                            }
+                        });
+                        
                         callback(config);
                     });
                     
@@ -127,7 +136,7 @@ schema.statics = {
                         console.log('no config config found');
 
                     } else {
-                        console.log(config)
+
                         if (!config.profileProperties && config.flatProfileConfig) {
                             var props = writeProfileProperties(config.flatProfileConfig);
                             callback(unflatten(props, {delimiter:'__'})); // return settings in JSON format

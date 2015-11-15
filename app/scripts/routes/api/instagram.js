@@ -17,7 +17,7 @@ client.use({
 module.exports = function(app) {
     app.get('/api/' + namespace + '/config', function(req, res) {
 
-                console.log('result');
+                // console.log('result');
         client.user('self', function(err, result, remaining, limit) {
             if (err) {
                 console.log(err);
@@ -35,7 +35,7 @@ module.exports = function(app) {
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log(medias);
+                            // console.log(medias);
                             Config.update({
                                 namespace: namespace,
                                 data: {

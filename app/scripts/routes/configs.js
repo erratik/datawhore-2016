@@ -17,7 +17,7 @@ module.exports = function(app) {
     app.get('/api/configs', function(req, res) {
         Config.get({}, function(config){
             // if (req.body) console.log("jkh")
-            delete config
+            // delete config
             res.json(config);
         });
         
