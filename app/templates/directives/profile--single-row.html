@@ -1,17 +1,15 @@
 
 <table width="100%">
-    <tbody>
-
-    <tr>      
-        <td class="" ng-if="data.value" width="5%">
+    
+    <tr ng-if="data.value">      
+        <td class="" width="5%" ng-if="checkboxes">
 
             <div class="ui fitted checkbox">
                 <input type="checkbox" ng-model="data.enabled"> <label></label>
             </div>
         </td>
-        <td ng-if="data.value"  width="25%">
+        <td  width="25%">
             <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span>{{data.label}}</span></div>
-            <!-- <div ng-if="show"><input type="text" ng-model="data.label"></div><button class="ui icon button" ng-click="show=!show" ng-hide="!show"><i class="checkmark icon" ></i></button> -->
             <div class="ui action input" ng-hide="!show">
               <input type="text" ng-model="data.label">
               <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
@@ -19,18 +17,16 @@
               </button>
             </div>
         </td>
-        <td ng-if="data.value" width="70%">
+        <td width="70%" ng-if="values">
             {{data.value}} 
             <input type="hidden" ng-model="data.value">
         </td>
-
-        <td ng-if="!data.value" colspan="3">
-            <h2>{{label}}</h2>
-
-            <div ng-include="'templates/partials/profile--another-row.html'"></div>
-
-        </td>
-        
     </tr>
-    </tbody>
+    <tr ng-if="!data.value">
+        <td colspan="3">
+            <h2>{{label}}</h2>
+            <div ng-include="'templates/partials/forms/table--row-nested.html'"></div>
+        </td>
+    </tr>
+
 </table>

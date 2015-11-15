@@ -27,82 +27,20 @@ app.controller('profilesController', ['$scope', '$http', 'ProfileService', 'conf
 
 }]);
 
-app.controller('profileController', ['$scope', '$http',  '$stateParams', 'ProfileService', 'profileData', 'config',
-    function profileController($scope, $http, $stateParams, ProfileService, profileData, config) {
+app.controller('profileController', ['$scope', '$http',  '$stateParams', 'ProfileService', 'profile', 'config',
+    function profileController($scope, $http, $stateParams, ProfileService, profile, config) {
         // Setting up the scope's data -------------------------------------------------------*/
 
 
-        console.log($scope);
         $scope.hidden = true;
-        $scope.config = config;
         $scope.formData = {};
-        $scope.formData.profileConfig = profileData.profileConfig;
-        $scope.formData.postConfig = profileData.postConfig;
-        $scope.profileInfo = profileData.profileInfo;
+        $scope.formData.profileConfig = profile.profileConfig;
+        $scope.formData.postConfig = profile.postConfig;
+        $scope.profileInfo = profile.profileInfo;
 
-        $scope.profileData = {};
-
-
-        // var _configKeys = Object.keys($scope.formData.profileConfig);
-        // for (var i = 0; i < _configKeys.length; i++) {
-        //     var attrPath = 'formData.profileConfig.' + _configKeys[i];
-
-        //     if (typeof $scope.formData.profileConfig[_configKeys[i]].content.enabled == 'boolean') {
-                
-        //         $scope.$watchCollection(
-        //             attrPath+ '.content',
-        //             function( newValue, oldValue ) {
-        //                 // console.log( oldValue);
-        //                 if (newValue.enabled) {
-        //                     console.log( newValue.label + ' will be saved');
-
-        //                 }
-        //             }
-        //         );
-        //     }
-
-        // }
-
-        // // console.log(_deepConfigKeys);
-        // // setTimeout(function(){
-
-        // _deepConfigKeys = [];
-        // for (var i = 0; i < _configKeys.length; i++) {
-        //     if (typeof $scope.formData.profileConfig[_configKeys[i]].content.enabled != 'boolean') {
-        //         _deepConfigKeys = Object.keys($scope.formData.profileConfig[_configKeys[i]].content);
-
-        //     }
-        // }
-
-        // console.log(_deepConfigKeys);
-
-        // for (var i = 0; i < $scope._deepConfigKeys.length; i++) {
-        //         var deeperContent = $scope.formData.profileConfig[ $scope._deepConfigKeys[i]].content;
-        //         var _depperContentKeys = Object.keys(deeperContent);
-        //     // var attrPath = 'formData.profileConfig.' + _deepConfigKeys[i] + '.content.' + _depperContentKeys.content;
-
-        //     // console.log($scope.formData.profileConfig[_configKeys[i]].content);
-        //     // if (typeof $scope.formData.profileConfig[_configKeys[i]].content.enabled == 'boolean') {
-
-
-        //         for (var j = 0; j < _depperContentKeys.length; j++) {
-                    
-        //             var deepAttrPath = 'formData.profileConfig.' +  $scope._deepConfigKeys[i] + '.content.'+ _depperContentKeys[j] + '.content';
-        //             // var attrName = _depperContentKeys[j];
-        //             console.log(deepAttrPath);
-
-        //              $scope.$watchCollection(
-        //                 deepAttrPath,
-        //                 function( newValue, oldValue ) {
-        //                     if (newValue.enabled) {
-        //                         console.log( $scope.formData.profileConfig[$scope._deepConfigKeys[i]].content[_depperContentKeys[j]].label+'__'+newValue.label + ' will be saved');
-        //                     }
-        //                     // console.log( oldValue);
-        //                 }
-        //             );
-        //         };
-        //     // }
-        // }
+        // $scope.profileData = config;
+        $scope.formData.profileProperties = config;
+        console.log($scope);
 
 
         // when submitting the add form, send the text to the node API
@@ -124,6 +62,7 @@ app.controller('profileController', ['$scope', '$http',  '$stateParams', 'Profil
         $scope.updateProfile = function(namespace) {
             ProfileService.update($scope.profileInfo.name, $scope.formData).then(function(data){
                 $scope.profileInfo.last_modified = data.last_modified;
+                updatedConfigs(data);
             });
         
         };
@@ -131,10 +70,20 @@ app.controller('profileController', ['$scope', '$http',  '$stateParams', 'Profil
         // when submitting the add form, send the text to the node API
         $scope.cleanProfile = function(namespace) {
             ProfileService.cleanProfile({namespace: namespace}).then(function(data){
-                $scope.formData.profileConfig = data.profileConfig;
-                $scope.formData.postConfig = data.postConfig;
+                updatedConfigs(data);
             });
         };
+
+        function updatedConfigs(data) {
+            $scope.formData.profileConfig = data.profileConfig;
+            $scope.formData.postConfig = data.postConfig;
+            $scope.formData.profileProperties = data.profileProperties;
+            console.log(data.profileProperties);
+            ProfileService.getConfig($scope.profileInfo.name).then(function(data){
+                // console.log
+                $scope.profileData = data;
+            });
+        }
 
         $scope.watchAttribute = function(attrPath) {
 

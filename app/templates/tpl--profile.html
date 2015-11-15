@@ -18,7 +18,36 @@
     <div class="ui stackable two column vertically divided grid">
       <div class="row">
         <div class="column">
-          <div class="ui segment">Content</div>
+          <div class="ui segment">
+          <div class="ui list">
+              
+              <div class="item"ng-repeat="(label, attribute) in formData.profileProperties">
+                <div class="header">{{attribute.label}}</div>
+                {{attribute.value}} ({{label}})
+              </div>
+          </div>
+
+          <table class="ui compact celled definition table">
+              <tbody>
+                  <tr ng-repeat="(label, attribute) in formData.profileProperties">
+                      <td colspan="3">
+                          
+                              <profile-row data="attribute" label="{{attribute.label}}"></profile-row>
+                          
+                      </td>
+
+                  </tr>
+              </tbody>
+              <tfoot class="full-width">
+              <td colspan="4">
+                  <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                      Approve
+                  </div>
+              </td>
+              </tfoot>
+          </table>
+
+          </div>
         </div>
         <div class="column">
           <div class="ui segment">
@@ -28,9 +57,9 @@
                   <tr ng-repeat="(label, attribute) in formData.profileConfig" ng-if="countProperties(attribute.content)">
                       <td colspan="3">
                         <div class="title" ng-if="attribute.grouped">{{label}}</div>
-                          <table>
-                              <profile-row data="formData.profileConfig[label].content" label="{{label}}"></profile-row>
-                          </table>
+                          
+                              <profile-row data="formData.profileConfig[label].content" label="{{label}}" checkboxes="true" values="true"></profile-row>
+                          
                       </td>
 
                   </tr>
@@ -66,7 +95,7 @@
                   <tr ng-repeat="(label, attribute) in formData.postConfig" ng-if="countProperties(attribute.content)">
                       <td colspan="3">
                       {{label}}
-                                  <profile-row data="formData.postConfig[label].content" label="{{label}}" grouped="attribute.grouped"></profile-row>
+                                  <profile-row data="formData.postConfig[label].content" label="{{label}}" grouped="attribute.grouped" checkboxes="true" values="true"></profile-row>
                               <!-- <tfoot class="full-width">
                               <td colspan="4">
                                   <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">

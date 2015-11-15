@@ -11,7 +11,8 @@ var schema = new mongoose.Schema({
     fetchedProfile: {},
     flatProfileConfig: {},
     profileConfig: {},
-    postConfig: {},
+    profileProperties: {},
+    postConfig: {}
 });
 schema.statics = {
         get: function(params, callback){
@@ -79,7 +80,7 @@ schema.statics = {
                         profile[_savingKeys[i]] = params.data[_savingKeys[i]];
                     };
                     profile.last_modified= moment().unix();
-
+                    // console.log(profile);
                     profile.save(function (err) {
                       if (err) return handleError(err);
                         console.log('profile saved');

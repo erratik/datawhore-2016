@@ -84,11 +84,17 @@
             scope: {
                 data: "=",
                 grouped: '=',
-                subrow: '='
+                checkboxes: '@',
+                values: '@'
             },
             templateUrl: 'templates/directives/profile--single-row.html',
-            link: function (scope, element, attrs) {
-               
+            link: function(scope, element, attrs) {
+
+                // attrs.$observe('checkboxes', function() {
+
+                //     scope.checkboxes = scope.$eval(attrs.checkboxes);
+                // });
+
             }
         };
     });

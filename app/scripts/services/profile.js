@@ -50,7 +50,6 @@ app.service('ProfileService', function ($http, $q){
                     var data = response.data;
                     console.log(':: ProfileService ::  getProfileConfig (single) ');
 
-         
                     console.log(data);
                     return data;
                 // } else {
@@ -101,9 +100,8 @@ app.service('ProfileService', function ($http, $q){
         then(function(response) {
             var data = response.data;
             // data.formData = formData;
-            console.log(data);
-        console.log('---');
-        console.log(formData);
+            // console.log(data);
+            
             return data;
         });            
         return formData;

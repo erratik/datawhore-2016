@@ -76,7 +76,7 @@ app.constant('angularMomentConfig', {
         controller: 'profileController',
         templateUrl: 'templates/tpl--profile.html',
         resolve: {
-          profileData: function(ProfileService, $stateParams) {
+          profile: function(ProfileService, $stateParams) {
             
             return ProfileService.getProfile({namespace: $stateParams.namespace, loadConfig: true});
             // return ProfileService.load($stateParams.namespace);
@@ -152,7 +152,7 @@ var buildProfile = function(options) {
     } else if (params.loadConfig) {
         console.log('> loaded config with profileInfo:'+params.profile.name);
     }
-    console.log(params.profile);
+    // console.log(params.profile);
 
     var _nfo = {
         profileInfo: {
@@ -165,6 +165,7 @@ var buildProfile = function(options) {
 
     var profileConfig = (params.profile.profileConfig) ? params.profile.profileConfig : makeParent(params.profile, {});
     var postConfig = (params.profile.postConfig) ? params.profile.postConfig : makeParent(params.profile, {});
+    var profileProperties = (params.profile.profileProperties) ? params.profile.profileProperties : false;
 
     if (params.loadConfig == 'soft'){
         _nfo.profileConfig = (params.profile.profileConfig) ? true : false;
@@ -176,28 +177,17 @@ var buildProfile = function(options) {
         for (var i = 0; i < _deletingKeys.length; i++) {
             delete _nfo.profileConfig[_deletingKeys[i]];
         };
-            delete _nfo.profileConfig['_id'];
+        delete _nfo.profileConfig['_id'];
 
 
         _nfo.postConfig = postConfig;
+        if (profileProperties) _nfo.profileProperties = profileProperties;
     }
 
     return _nfo;
 };
 
 
-var enabledProperties = function(props){ 
-    console.log(props);
-    var obj = {};
-    // var propsKeys = Object.keys(props);
-    // for (var i = 0; i < propsKeys.length; i++) {
-    //     if (typeof props[propsKeys[i]].content.enabled == 'boolean') {
-
-    //     console.log(props[propsKeys[i]].content);
-    //     }
-
-    // };
-
-    return obj; 
-
-};
+Object.prototype.foo = function() {
+    console.log('fooooo');
+}
