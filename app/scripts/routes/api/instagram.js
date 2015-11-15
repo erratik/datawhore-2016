@@ -1,11 +1,10 @@
 // load the setting model
-var defaultSettings = require('../../../../config');
-var obj = require('../../../../utils/objTools');
-var str = require('../../../../utils/stringTools');
-var Settings = require('../../models/Settings');
-var Profile = require('../../models/Profile');
+var Config = require('../../models/Config');
+var merge = require('merge'),original, cloned;
+var mongoose = require('mongoose');
 var merge = require('merge'),
     original, cloned;
+var flatten = require('flat');
 var mongoose = require('mongoose');
 var namespace = 'instagram';
 var client = require('instagram-node').instagram();
@@ -14,35 +13,37 @@ client.use({
     client_secret: process.env.INSTAGRAM_API_SECRET,
     access_token: process.env.INSTAGRAM_API_ACCESS_TOKEN
 });
-var flatten = require('flat');
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    app.get('/api/' + namespace + '/profile', function(req, res) {
+    app.get('/api/' + namespace + '/config', function(req, res) {
 
+                console.log('result');
         client.user('self', function(err, result, remaining, limit) {
             if (err) {
                 console.log(err);
             } else {
-                console.log(result);
-                Profile.update({
+
+                Config.update({
                     namespace: namespace,
                     data: {
                         fetchedProfile: result,
                         profileConfig: makeParent(result, {})
                     }
-                }, function(profile) {
+                }, function(config) {
                     
                     client.user_self_media_recent({count: 1}, function(err, medias, pagination, remaining, limit) {
                         if (err) {
                             console.log(err);
                         } else {
-                            // console.log(result);
-                            Profile.update({
+                            console.log(medias);
+                            Config.update({
+                                namespace: namespace,
                                 data: {
                                     postConfig: makeParent(medias[0], {})
                                 }
-                            }, function(profile) {
-                                res.json(profile);
+                            }, function(config) {
+                            // console.log(config);
+                                res.json(config);
                             });
                         }
                     });

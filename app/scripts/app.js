@@ -5,13 +5,57 @@ var app = angular.module('app', [
     'angularify.semantic',
 
     'controllers.Settings',
-    'controllers.Profiles',
+    'controllers.Config',
     'controllers.Networks',
     // 'services.Settings',
     'services.Settings',
-    'services.Profile'
+    'services.Config'
 
 ]);
+
+
+// use unix timestamps in angular views
+app.constant('angularMomentConfig', {
+    preprocess: 'unix', // optional
+}).config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
+    $urlRouterProvider.otherwise('/');
+
+    $stateProvider.state('settings', {
+        url: '/settings',
+        controller: 'settingsController as settings',
+        templateUrl: 'templates/tpl--settings.html'
+    }).state('configs', {
+        url: '/',
+        controller: 'configsController',
+        templateUrl: 'templates/tpl--profiles.html',
+        resolve: {
+          configs: function(SettingsService) {
+            return SettingsService.getNetworkConfigs({namespace: false});
+            // return ConfigService.load($stateParams.namespace);
+          },
+          profiles: function(ConfigService) {
+            return ConfigService.getProfile({namespace: false, loadConfig: 'soft'});
+            // return ConfigService.load($stateParams.namespace);
+          },
+        }
+    }).state('config', {
+        url: '/config/:namespace',
+        controller: 'configController',
+        templateUrl: 'templates/tpl--profile.html',
+        resolve: {
+          profile: function(ConfigService, $stateParams) {
+            
+            return ConfigService.getProfile({namespace: $stateParams.namespace, loadConfig: true});
+            // return ConfigService.load($stateParams.namespace);
+          },
+          config: function(ConfigService, $stateParams) {
+            // console.log($stateParams);
+            return ConfigService.getConfig($stateParams.namespace);
+          }
+        }
+    });
+}]);
+
 
 app.filter('typeof', function(){
     return function(context){
@@ -45,51 +89,7 @@ app.filter('orderObjectBy', function(){
     });
     return array;
  }
-});
-
-// use unix timestamps in angular views
-app.constant('angularMomentConfig', {
-    preprocess: 'unix', // optional
-}).config(['$urlRouterProvider', '$stateProvider', function($urlRouterProvider, $stateProvider) {
-    $urlRouterProvider.otherwise('/');
-
-    $stateProvider.state('settings', {
-        url: '/settings',
-        controller: 'settingsController as settings',
-        templateUrl: 'templates/tpl--settings.html'
-    }).state('profiles', {
-        url: '/',
-        controller: 'profilesController',
-        templateUrl: 'templates/tpl--profiles.html',
-        resolve: {
-          configs: function(SettingsService) {
-            return SettingsService.getNetworkConfigs({namespace: false});
-            // return ProfileService.load($stateParams.namespace);
-          },
-          profiles: function(ProfileService) {
-            return ProfileService.getProfile({namespace: false, loadConfig: 'soft'});
-            // return ProfileService.load($stateParams.namespace);
-          },
-        }
-    }).state('profile', {
-        url: '/profile/:namespace',
-        controller: 'profileController',
-        templateUrl: 'templates/tpl--profile.html',
-        resolve: {
-          profile: function(ProfileService, $stateParams) {
-            
-            return ProfileService.getProfile({namespace: $stateParams.namespace, loadConfig: true});
-            // return ProfileService.load($stateParams.namespace);
-          },
-          config: function(ProfileService, $stateParams) {
-            console.log($stateParams);
-            return ProfileService.getConfig($stateParams.namespace);
-          }
-        }
-    });
-}]);
-
-    
+});    
 
 var makeParent = function(nodeParent, objParent) {
     // var obj;
@@ -163,8 +163,8 @@ var buildProfile = function(options) {
         }
     };
 
-    var profileConfig = (params.profile.profileConfig) ? params.profile.profileConfig : makeParent(params.profile, {});
-    var postConfig = (params.profile.postConfig) ? params.profile.postConfig : makeParent(params.profile, {});
+    var profileConfig = (params.profile.profileConfig) ? params.profile.profileConfig : makeParent(params.profile.fetchedProfile, {});
+    var postConfig = (params.profile.postConfig) ? params.profile.postConfig : makeParent(params.profile.fetchedProfile, {});
     var profileProperties = (params.profile.profileProperties) ? params.profile.profileProperties : false;
 
     if (params.loadConfig == 'soft'){

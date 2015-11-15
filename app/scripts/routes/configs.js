@@ -1,5 +1,4 @@
 // load the setting model
-var defaultSettings = require('../../../config');
 var Settings = require('../models/Settings');
 var Config = require('../models/Config');
 var merge = require('merge'),
@@ -15,33 +14,35 @@ module.exports = function(app) {
     //*****************************************************************/  
     //    Profiles
     //*****************************************************************/
-    app.get('/api/profiles', function(req, res) {
-        Config.get({}, function(profile){
+    app.get('/api/configs', function(req, res) {
+        Config.get({}, function(config){
             // if (req.body) console.log("jkh")
-            res.json(profile);
+            delete config
+            res.json(config);
         });
         
     });
     //*****************************************************************/  
     //    Profiles
     //*****************************************************************/
-    app.get('/api/profile/:namespace', function(req, res) {
-        Config.get({namespace: req.params.namespace}, function(profile){
-            res.json(profile);
+    app.get('/api/config/:namespace', function(req, res) {
+        Config.get({namespace: req.params.namespace}, function(config){
+
+            res.json(config);
 
         });
 
     });
 
-    app.get('/api/profile/config/:namespace', function(req, res) {
+    app.get('/api/config/config/:namespace', function(req, res) {
         Config.getConfig(req.params.namespace, function(config){
             res.json(config);
         });
 
     });
 
-    // wipe profile -------------------------------------------------------*/
-    app.delete('/api/profiles/:namespace', function(req, res) {
+    // wipe config -------------------------------------------------------*/
+    app.delete('/api/configs/:namespace', function(req, res) {
         // console.log('test');
         // get settings with mongoose, return default settings if !settings.saved
         Settings.findOne({
@@ -50,23 +51,23 @@ module.exports = function(app) {
             if (err) console.log(err);
             Config.remove({
                 name: req.params.namespace
-            }, function(err, profile) {
+            }, function(err, config) {
                 if (err) res.send(err);
-                settings.configs[req.params.namespace]['profile'] = false;
+                settings.configs[req.params.namespace]['config'] = false;
                 Settings.updateConfig(settings.configs);
                 res.json(settings.configs[req.params.namespace]);
             });
         });
     });
-    // add specific properties to profile -------------------------------------------------------*/
-    app.post('/api/profile/update/:namespace', function(req, res) {
+    // add specific properties to config -------------------------------------------------------*/
+    app.post('/api/config/update/:namespace', function(req, res) {
 
 
             Config.update({
                 namespace: req.params.namespace,
                 data: req.body
-            }, function(profile) {
-                res.json(profile);
+            }, function(config) {
+                res.json(config);
             });
     });
 

@@ -37,7 +37,7 @@ mongoose.connection.on('error', function(err){
     // routes ======================================================================
 
 
-    require('./app/scripts/routes/profiles')(app);
+    require('./app/scripts/routes/configs')(app);
     require('./app/scripts/routes/settings')(app);
     require('./app/scripts/routes/connect')(app);
 

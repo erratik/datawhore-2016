@@ -21,7 +21,7 @@
 						<i class="settings icon"></i> admin
 						<i class="dropdown icon"></i>
 						<div class="menu">
-							<a class="item" ui-sref="profiles">
+							<a class="item" ui-sref="configs">
 							<i class="users icon"></i> profiles
 							</a>
 							<a class="item" ui-sref="settings">
@@ -50,9 +50,9 @@
 		<script src="../bower_components/semantic/dist/semantic.js"></script>
 		<!-- endbower -->
 
-		<script src="scripts/controllers/profiles.js"></script>
+		<script src="scripts/controllers/configs.js"></script>
 		<script src="scripts/controllers/settings.js"></script>
-		<script src="scripts/services/profile.js"></script>
+		<script src="scripts/services/config.js"></script>
 		<script src="scripts/services/settings.js"></script>
 		<script src="scripts/controllers/networks.js"></script>
 		<script src="scripts/directives/profile.js"></script>
@@ -60,15 +60,5 @@
 		<script src="scripts/app.js"></script>
 		<!-- endbuild -->
 
-		<script type="text/javascript">
-
-			var init = function() {
-				setTimeout(function(){
-				$('.ui.accordion').accordion();
-
-			}, 5000);
-			};
-
-		</script>
 	</body>
 </html>
