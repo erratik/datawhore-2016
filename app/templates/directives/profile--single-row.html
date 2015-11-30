@@ -9,7 +9,7 @@
             </div>
         </td>
         <td  width="25%">
-            <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span>{{data.label}}</span></div>
+            <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span> {{data.label}}</span></div>
             <div class="ui action input" ng-hide="!show">
               <input type="text" ng-model="data.label">
               <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
@@ -18,7 +18,7 @@
             </div>
         </td>
         <td width="70%" ng-if="values">
-            {{data.value}} 
+            {{data.value}}
             <input type="hidden" ng-model="data.value">
         </td>
     </tr>

@@ -21,8 +21,8 @@
             replace: true,
             restrict: 'E',
             scope: {
-                profiles: "=",
-                configs: "="
+                configs: "=",
+                networks: "="
             },
             templateUrl: 'templates/directives/profile--card.html',
             link: function (scope, element, attrs) {
@@ -106,9 +106,10 @@
             restrict: 'E',
             scope: {
                 done: "&",
-                namespace: "@"
+                namespace: "@",
+                text: '@'
             },
-            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">Clean Profile </div>'
+            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">{{text}}</div>'
         };
     });       
 

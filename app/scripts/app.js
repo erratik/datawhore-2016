@@ -6,9 +6,9 @@ var app = angular.module('app', [
 
     'controllers.Settings',
     'controllers.Config',
-    'controllers.Networks',
-    // 'services.Settings',
-    'services.Settings',
+    //'controllers.Networks',
+     'services.Profile',
+    'services.Core',
     'services.Config'
 
 ]);
@@ -24,34 +24,35 @@ app.constant('angularMomentConfig', {
         url: '/settings',
         controller: 'settingsController as settings',
         templateUrl: 'templates/tpl--settings.html'
-    }).state('configs', {
+    }).state('networks', {
         url: '/',
-        controller: 'configsController',
+        controller: 'networksController',
         templateUrl: 'templates/tpl--profiles.html',
         resolve: {
-          configs: function(SettingsService) {
-            return SettingsService.getNetworkConfigs({namespace: false});
+          networks: function(CoreService) {
+              //console.log(CoreService.getNetworkConfigs({namespace: false}));
+            return CoreService.getNetworks({namespace: false});
             // return ConfigService.load($stateParams.namespace);
           },
-          profiles: function(ConfigService) {
-            return ConfigService.getProfile({namespace: false, loadConfig: 'soft'});
+          configs: function(ConfigService) {
+            return ConfigService.getNetworkConfig({namespace: false, loadConfig: 'soft'});
             // return ConfigService.load($stateParams.namespace);
-          },
+          }
         }
     }).state('config', {
         url: '/config/:namespace',
         controller: 'configController',
         templateUrl: 'templates/tpl--profile.html',
         resolve: {
-          profile: function(ConfigService, $stateParams) {
-            
-            return ConfigService.getProfile({namespace: $stateParams.namespace, loadConfig: true});
+          config: function(ConfigService, $stateParams) {
+            //console.log(ConfigService.getNetworkConfig({namespace: $stateParams.namespace, loadConfig: true}));
+            return ConfigService.getNetworkConfig({namespace: $stateParams.namespace, loadConfig: true});
             // return ConfigService.load($stateParams.namespace);
           },
-          config: function(ConfigService, $stateParams) {
-            // console.log($stateParams);
-            return ConfigService.getConfig($stateParams.namespace);
-          }
+            profile: function(ConfigService, $stateParams) {
+                return ConfigService.getProfileConfig( $stateParams.namespace );
+                // return ConfigService.load($stateParams.namespace);
+            }
         }
     });
 }]);
@@ -113,8 +114,6 @@ var makeParent = function(nodeParent, objParent) {
     };
     return objParent;
 };
-
-
 var makeData = function(val, label){
     var obj = {
             content: {
@@ -129,7 +128,6 @@ var makeData = function(val, label){
 
     return obj;
 };
-
 Object.prototype.countProperties = function(foo) {
     var count = 0;
     for (var k in foo) {
@@ -141,51 +139,56 @@ Object.prototype.countProperties = function(foo) {
 
 };
 
+var buildProfileInfo = function(profile) {
 
-var buildProfile = function(options) {
-    var params = {
-        profile: options.profile || {},
-        loadConfig: options.loadConfig
-    };
-    if (params.loadConfig == 'soft'){
-        console.log('> soft loaded config with profileInfo:'+params.profile.name);
-    } else if (params.loadConfig) {
-        console.log('> loaded config with profileInfo:'+params.profile.name);
-    }
-    // console.log(params.profile);
-
-    var _nfo = {
-        profileInfo: {
-            avatar: params.profile.avatar,
-            last_modified: params.profile.last_modified,
-            name: params.profile.name,
-            username: params.profile.username
-        }
+    var profileInfo = {
+        avatar: profile.avatar,
+        last_modified: profile.last_modified,
+        name: profile.name,
+        username: profile.username
     };
 
-    var profileConfig = (params.profile.profileConfig) ? params.profile.profileConfig : makeParent(params.profile.fetchedProfile, {});
-    var postConfig = (params.profile.postConfig) ? params.profile.postConfig : makeParent(params.profile.fetchedProfile, {});
-    var profileProperties = (params.profile.profileProperties) ? params.profile.profileProperties : false;
+    return profileInfo;
+};
 
-    if (params.loadConfig == 'soft'){
-        _nfo.profileConfig = (params.profile.profileConfig) ? true : false;
-        _nfo.postConfig = (params.profile.postConfig) ? true : false;
-    } else {
-
-        _nfo.profileConfig = profileConfig;
-        var _deletingKeys = Object.keys(_nfo.profileInfo);
-        for (var i = 0; i < _deletingKeys.length; i++) {
-            delete _nfo.profileConfig[_deletingKeys[i]];
-        };
-        delete _nfo.profileConfig['_id'];
+var buildConfig = function(network) {
 
 
-        _nfo.postConfig = postConfig;
-        if (profileProperties) _nfo.profileProperties = profileProperties;
-    }
+    var _nfo = {};
+    //
+    //var profileConfig = (network.profileConfig) ? network.profileConfig : makeParent(network.fetchedProfile, {});
+    ////var postConfig = (network.postConfig) ? network.postConfig : makeParent(network.fetchedProfile, {});
+
+    _nfo.profileConfig = network.profileConfig;
+    _nfo.postConfig = network.postConfig;
 
     return _nfo;
 };
+//
+//var buildProfile = function(options) {
+//    var params = {
+//        profile: options.profile || {},
+//        loadConfig: options.loadConfig
+//    };
+//    // console.log(params.profile);
+//
+//    var _nfo = {};
+//
+//    var profileConfig = (params.profile.profileConfig) ? params.profile.profileConfig : makeParent(params.profile.fetchedProfile, {});
+//    var postConfig = (params.profile.postConfig) ? params.profile.postConfig : makeParent(params.profile.fetchedProfile, {});
+//    var profileProperties = (params.profile.profileProperties) ? params.profile.profileProperties : false;
+//    //
+//    if (params.loadConfig === true) {
+//        _nfo.profileConfig = profileConfig;
+//
+//
+//
+//        _nfo.postConfig = postConfig;
+//        if (profileProperties) _nfo.profileProperties = profileProperties;
+//    }
+//
+//    return _nfo;
+//};
 
 
 Object.prototype.foo = function() {

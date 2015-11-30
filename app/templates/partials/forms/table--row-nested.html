@@ -1,24 +1,25 @@
 
-<table width="100%">
-    <tr>
+<table width="100%" ng-repeat="(label, attribute) in data">
 	
-	    <td>
-	        <div ng-repeat="(label, attribute) in data" >
-	       <!-- -> {{attribute.content.value}} -->
-	       <div ng-switch on="label">
-	           <div ng-switch-when="data">
-	           		<profile-row data="attribute.content[0].content" label="{{label}}"></profile-row>
-	            </div>
-  				<div ng-switch-default>
-		        	<h3 ng-if="!attribute.content.value">{{label}}</h2>
-	       			<!-- <h4 ng-if="attribute.content.value && !subrow">@#$ {{subrow}} {{label}}  ({{countProperties(attribute.content)}})</h2> -->
+	       <tr ng-switch on="attribute.grouped">
+	           <td ng-switch-when="true">
+		        	<h3>{{label}} </h2>--
+	           		<profile-row data="data[label].content" label="{{label}}"></profile-row>
+	            </td>
+	           <td ng-switch-when="false">
+		        	<h3>{{label}}--! </h2>
+		        	<h3 ng-if="label == '0'">{{label}}---∆ </h2>
+
+	           		<profile-row data="data[label].content" label="{{label}}" checkboxes="true" values="true"></profile-row>
+	            </td>
+  				<td ng-switch-default>
+
+		        	 <h3 ng-if="!attribute.content.value">{{label}}Ô </h2>
 	       			
 		            <profile-row data="attribute.content" label="{{label}}" checkboxes="true" values="true"></profile-row>
-	       			<hr ng-if="!attribute.content.value && countProperties(attribute.content) == 3">
-       			</div>
-	       </div>
+	       			<!-- <hr ng-if="!attribute.content.value && countProperties(attribute.content) == 3"> -->
+       			</td>
+  					<!-- <td>-{{attribute.content.label}}:{{attribute.content.value}} ({{attribute.grouped}})-</td> -->
+	       </tr>
 
-	        </div>
-	    </td>
-	</tr>
 </table>

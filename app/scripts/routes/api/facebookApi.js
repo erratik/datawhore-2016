@@ -2,7 +2,7 @@
 var defaultSettings = require('../../../../config');
 var obj = require('../../../../utils/objTools');
 var str = require('../../../../utils/stringTools');
-var Settings = require('../../models/Settings');
+var Settings = require('../../models/Core');
 var Profile = require('../../models/Profile');
 var merge = require('merge'),
     original, cloned;
