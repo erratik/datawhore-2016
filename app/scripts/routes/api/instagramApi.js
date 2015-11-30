@@ -15,52 +15,65 @@ client.use({
 });
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    app.get('/api/' + namespace + '/config', function(req, res) {
 
-                // console.log('result');
-        client.user('self', function(err, result, remaining, limit) {
-            if (err) {
-                console.log(err);
-            } else {
+    var freshPostConfig = function(){
 
-                Config.update({
-                    namespace: namespace,
-                    data: {
-                        fetchedProfile: result,
-                        profileConfig: makeParent(result, {})
-                    }
-                }, function(config) {
-                    
-                    client.user_self_media_recent({count: 1}, function(err, medias, pagination, remaining, limit) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            // console.log(medias);
-                            Config.update({
-                                namespace: namespace,
-                                data: {
-                                    postConfig: makeParent(medias[0], {})
-                                }
-                            }, function(config) {
-                            // console.log(config);
-                                res.json(config);
-                            });
+    };
+
+    app.get('/api/' + namespace + '/fetch/:configType', function(req, res) {
+        console.log('••• '+ req.params.configType);
+        if (req.params.configType == 'profile') {
+
+            client.user('self', function(err, result, remaining, limit) {
+                if (err) {
+                    console.log(err);
+                } else {
+
+                    Config.update({
+                        namespace: namespace,
+                        data: {
+                            fetchedProfile: result,
+                            profileConfig: makeParent(result, {})
                         }
+                    }, function(config) {
+                        console.log(config);
+                        res.json(config);
+
                     });
+                }
+            });
+        } else {
 
-                });
-            }
-        })
+            client.user_self_media_recent({count: 1}, function(err, medias, pagination, remaining, limit) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(medias);
+                    Config.update({
+                        namespace: namespace,
+                        data: {
+                            postConfig: makeParent(medias[0], {})
+                        }
+                    }, function(config) {
 
-        // console.log(post);
+                        res.json(config);
+
+                    });
+                }
+            });
+        }
+
             
     });
 
 
-    app.post('/api/' + namespace + '/posts/:count', function(req, res) {
+
+
+    app.post('/api/' + namespace + '/fetch/posts/:count', function(req, res) {
         // console.log(req.params);
         // console.log(req.body);
         // console.log(req);
+
         client.user_self_media_recent({count: req.body.count}, function(err, medias, pagination, remaining, limit) {
             if (err) {
                 console.log(err);

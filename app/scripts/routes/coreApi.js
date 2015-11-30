@@ -1,7 +1,7 @@
 // load the setting model
-var defaultSettings = require('../../../config');
-var Settings = require('../models/Settings');
-var Profile = require('../models/Profile');
+var defaultCore = require('../../../config');
+var Core = require('../models/Core');
+//var Profile = require('../models/Profile');
 var obj = require('../../../utils/objTools');
 var str = require('../../../utils/stringTools');
 var merge = require('merge'),original, cloned;
@@ -13,20 +13,22 @@ module.exports = function(app) {
     //*****************************************************************/  
     //    timestamp and status
     //*****************************************************************/
-    app.get('/api/settings', function(req, res) {
+    app.get('/api/core', function(req, res) {
         // get settings with mongoose, return default settings if !settings.saved
-        Settings.getNetworkConfigs({}, function(data){
+        Core.getNetworkConfigs({}, function(data){
+            //console.log(data);
+            //console.log('test2');
 
             res.json(data);
         });
     });
 
     app.post('/api/settings', function(req, res) {
-        Settings.findOne({
+        Core.findOne({
             name: 'settings'
         }, function(err, settings) {
             if (!settings) {
-                Settings.create({
+                Core.create({
                     name: 'settings',
                     last_modified: moment().unix(),
                     saved: true
@@ -50,13 +52,13 @@ module.exports = function(app) {
         });
     });
     app.delete('/api/settings/', function(req, res) {
-        Settings.remove({
+        Core.remove({
             name: 'settings'
         }, function(err, docs) {
             if (err) console.log(err);
-            var settings = defaultSettings;
+            var settings = defaultCore;
             settings.last_modified = Date.now() / 1000 | 0;
-            res.json(defaultSettings);
+            res.json(defaultCore);
         });
     });
     //*****************************************************************/  
@@ -64,7 +66,7 @@ module.exports = function(app) {
     //*****************************************************************/
     // create network object -------------------------------------------------------*/
     app.post('/api/settings/network/', function(req, res) {
-        Settings.findOne({
+        Core.findOne({
             name: 'settings'
         }, function(err, settings) {
             if (err) console.log(err);
@@ -75,7 +77,7 @@ module.exports = function(app) {
             };
             if (typeof settings.networks == 'undefined') settings.networks = {};
             settings.networks[req.body.namespace] = data;
-            Settings.updating({
+            Core.updating({
                 networks: settings.networks
             }, function(settings) {
                 res.json(settings);
@@ -84,7 +86,7 @@ module.exports = function(app) {
     });
     // configure network -------------------------------------------------------*/
     app.post('/api/settings/network/:namespace', function(req, res) {
-        Settings.findOne({
+        Core.findOne({
             name: 'settings'
         }, function(err, settings) {
             if (typeof settings.configs[req.params.namespace] == 'undefined') settings.configs[req.params.namespace] = {};
@@ -100,7 +102,7 @@ module.exports = function(app) {
                 }
             }
             settings.networks[req.params.namespace].configured = true;
-            Settings.updating({
+            Core.updating({
                 configs: settings.configs,
                 networks: settings.networks
             }, function(settings) {
@@ -110,12 +112,12 @@ module.exports = function(app) {
     });
     // remove network settings -------------------------------------------------------*/
     app.delete('/api/settings/network/:namespace', function(req, res) {
-            Settings.findOne({
+            Core.findOne({
                 name: 'settings'
             }, function(err, settings) {
                 if (err) console.log(err);
                 delete settings.networks[req.params.namespace];
-                Settings.updating({
+                Core.updating({
                     networks: settings.networks
                 }, function(settings) {
                     res.json(settings);
@@ -124,17 +126,22 @@ module.exports = function(app) {
         })
         // remove network config -------------------------------------------------------*/
     app.delete('/disconnect/network/:namespace', function(req, res) {
-        Settings.findOne({
+        Core.findOne({
             name: 'settings'
         }, function(err, settings) {
             delete settings.configs[req.params.namespace];
             settings.networks[req.params.namespace].connected = false;
-            Settings.updating({
+            Core.updating({
                 configs: settings.configs,
                 networks: settings.networks
             }, function(settings) {
                 res.json(settings);
             });
         });
+    });
+
+    // application -------------------------------------------------------------
+    app.get('/', function(req, res) {
+        res.sendfile('./app/index.html'); // load the single view file (angular will handle the page changes on the front-end)
     });
 };

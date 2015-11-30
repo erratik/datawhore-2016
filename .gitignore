@@ -4,3 +4,12 @@
 bower_components
 node_modules
 data
+.idea/.name
+.idea/datawhore.iml
+.idea/encodings.xml
+.idea/jsLibraryMappings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/libraries/datawhore_node_modules.xml

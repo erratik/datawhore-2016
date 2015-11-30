@@ -37,16 +37,17 @@ mongoose.connection.on('error', function(err){
     // routes ======================================================================
 
 
-    require('./app/scripts/routes/configs')(app);
-    require('./app/scripts/routes/settings')(app);
-    require('./app/scripts/routes/connect')(app);
+    require('./app/scripts/routes/configApi')(app);
+    require('./app/scripts/routes/profileApi')(app);
+    require('./app/scripts/routes/coreApi')(app);
+    require('./app/scripts/routes/connectApi')(app);
 
     // TODO: Tay - require-directory?
-    require('./app/scripts/routes/api/facebook')(app);
-    require('./app/scripts/routes/api/twitter')(app);
-    require('./app/scripts/routes/api/lastfm')(app);
-    require('./app/scripts/routes/api/instagram')(app);
-    require('./app/scripts/routes/api/swarm')(app);
+    require('./app/scripts/routes/api/facebookApi')(app);
+    require('./app/scripts/routes/api/twitterApi')(app);
+    require('./app/scripts/routes/api/lastfmApi')(app);
+    require('./app/scripts/routes/api/instagramApi')(app);
+    require('./app/scripts/routes/api/swarmApi')(app);
 
     // listen (start app with node server.js) ======================================
     app.listen(port);

@@ -1,6 +1,6 @@
 // load the setting model
 var defaultSettings = require('../../../config');
-var Settings = require('../models/Settings');
+var Settings = require('../models/Core');
 var obj = require('../../../utils/objTools');
 var str = require('../../../utils/stringTools');
 var merge = require('merge'),

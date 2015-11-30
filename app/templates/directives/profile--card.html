@@ -1,5 +1,5 @@
 
-<div class="card" ng-repeat="(namespace, config) in configs">
+<div class="card" ng-repeat="(namespace, network) in networks">
 
     <div class="ui accordion content">
         <div class="item">
@@ -7,12 +7,12 @@
             <!-- <i class="dropdown icon"></i> -->
             
             <div class="header">
-                <profile-avatar namespace="namespace" profile="profiles[namespace].profileInfo" styles="ui right floated mini circular image"></profile-avatar>
-                <profile-username namespace="namespace" username="config.username" profile="profiles[namespace].profileInfo" header="true"></profile-username>
+                <profile-avatar namespace="namespace" profile="configs[namespace].profileInfo" styles="ui right floated mini circular image"></profile-avatar>
+                <profile-username namespace="namespace" username="network.username" profile="configs[namespace].profileInfo" header="true"></profile-username>
             </div>
             <div class="meta">
 
-                <profile-updated date="profiles[namespace].profileInfo.last_modified"></profile-updated>
+                <profile-updated date="configs[namespace].profileInfo.last_modified"></profile-updated>
                 
             </div>
 
@@ -20,11 +20,11 @@
 
                 <div class="ui list tiny">
                   <div class="item">
-                    <i class="icon" ng-class="{'check green': profiles[namespace].profileConfig, 'help gray': !profiles[namespace].profileConfig}"></i>
+                    <i class="icon" ng-class="{'check green': configs[namespace].profileConfig, 'help gray': !configs[namespace].profileConfig}"></i>
                     Profile configured
                   </div>
                   <div class="item">
-                    <i class="icon" ng-class="{'check green': profiles[namespace].postConfig, 'help gray': !profiles[namespace].postConfig}"></i>
+                    <i class="icon" ng-class="{'check green': configs[namespace].postConfig, 'help gray': !configs[namespace].postConfig}"></i>
                     Post configured
                   </div>
                 </div>
@@ -33,6 +33,6 @@
     <div class="extra content">
     
         <a class="ui button mini" ng-href="/#/config/{{namespace}}"><i class="icon edit"></i> Edit</a>
-        <!-- <a class="ui button mini" ui-sref="profiles.namespace({namespace: namespace})"><i class="icon edit"></i> Edit</a> -->
+        <!-- <a class="ui button mini" ui-sref="configs.namespace({namespace: namespace})"><i class="icon edit"></i> Edit</a> -->
     </div>
 </div>

@@ -23,13 +23,28 @@ module.exports = function(app) {
         client.get('users/show', params, function(error, docs, response) {
             if (!error) {
 
-                Config.update({
-                    data: {
-                        fetchedProfile: docs,
-                        profileConfig: makeParent(docs, {})
-                    },
-                    function(config) {
-                        res.json(config);
+                        delete docs.entities;
+                        delete docs.urls;
+                        delete docs.status;
+                        delete docs.retweeted_status;
+                client.get('statuses/user_timeline', params, function(error, posts, response) {
+                    if (!error) {
+
+                        delete posts[0].user;
+                        Config.update({
+                            namespace: namespace,
+                            data: {
+                                fetchedProfile: docs,
+                                profileConfig: makeParent(docs, {}),
+                                postConfig: makeParent(posts[0], {})
+                            }
+                        },
+                            function(config) {
+
+                                res.json(config);
+                            });
+                    } else {
+                        console.log(error)
                     }
                 });
 
@@ -37,6 +52,34 @@ module.exports = function(app) {
                 console.log(error)
             }
         });
+            
+    });
+    app.get('/api/' + namespace + '/config/post', function(req, res) {
+
+        // if (err) res.send(err)
+        var params = {
+            screen_name: process.env.TWITTER_USERNAME
+        };
+
+            client.get('statuses/user_timeline', params, function(error, posts, response) {
+                if (!error) {
+
+                    delete posts[0].user;
+                    Config.update({
+                        namespace: namespace,
+                        data: {
+                            postConfig: makeParent(posts[0], {})
+                        }
+                    },
+                        function(config) {
+
+                            res.json(config);
+                        });
+                } else {
+                    console.log(error)
+                }
+            });
+
             
     });
 
