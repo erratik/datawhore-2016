@@ -35,7 +35,7 @@ app.service('ConfigService', function ($http, $q){
                     return configs;
                 }
         });            
-    }
+    };
 
     ConfigService.getProfileConfig = function(namespace){
 
@@ -62,40 +62,8 @@ app.service('ConfigService', function ($http, $q){
             //     return profiles;
             // }
         });
-    }
+    };
 
-    //ConfigService.getProfileProperties = function(namespace){
-    //
-    //    var url = '/api/config/profile/'+namespace;
-    //    // var url = (params.namespace) ? '/api/config/'+params.namespace : '/api/configs' ;
-    //    // console.log(this.getPosts({namespace: 'instagram', count: 1}));
-    //    console.log(url);
-    //    return $http.get(url).
-    //        then(function(response) {
-    //            // if (params.namespace) {
-    //                var data = response.data;
-    //                console.log(':: ConfigService ::  getProfileProperties (single) ');
-    //
-    //                console.log(data);
-    //                return data;
-    //    });
-    //}
-    //
-    //
-    //ConfigService.cleanProfile = function(options){
-    //    var params = {
-    //        namespace: options.namespace
-    //    };
-    //    return $http.get('/api/' + params.namespace + '/fetch/profile').
-    //    then(function(response) {
-    //        var data = response.data;
-    //        // var postConfig = makeParent(response.data.posts[0], {});
-    //
-    //         console.log(data);
-    //        return data;
-    //    });
-    //};
-    
     ConfigService.cleanConfig = function(options){
         var params = {
             namespace: options.namespace,
@@ -109,22 +77,7 @@ app.service('ConfigService', function ($http, $q){
             console.log(data);
             return data;
         });            
-    }
-
-    ConfigService.getPosts = function(options){  
-        var params = {
-            namespace: options.namespace,
-            count: options.count
-        };
-        // console.log(params);
-        return $http.post('/api/' + params.namespace + '/posts/'+ params.count, params).
-        then(function(response) {
-                
-            var postConfig = makeParent(response.data.posts[0], {});
-
-            return postConfig;
-        });            
-    }
+    };
 
     ConfigService.update = function(namespace, formData){   
         return $http.post('/api/config/update/' + namespace, formData).
@@ -137,7 +90,23 @@ app.service('ConfigService', function ($http, $q){
         });            
         return formData;
 
-    }
+    };
+
+
+    //ConfigService.getPosts = function(options){
+    //    var params = {
+    //        namespace: options.namespace,
+    //        count: options.count
+    //    };
+    //    // console.log(params);
+    //    return $http.post('/api/' + params.namespace + '/posts/'+ params.count, params).
+    //    then(function(response) {
+    //
+    //        var postConfig = makeParent(response.data.posts[0], {});
+    //
+    //        return postConfig;
+    //    });
+    //};
 
 
     ConfigService.delete = function(namespace){            
