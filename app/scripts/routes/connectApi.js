@@ -205,13 +205,13 @@ module.exports = function(app) {
     //*****************************************************************/  
     //    MOVES
     //*****************************************************************/
-    var Moves = require('moves');
-    var moves = new Moves({
-        client_id: process.env.MOVES_API_KEY,
-        client_secret: process.env.MOVES_API_SECRET,
-        redirect_uri: process.env.BASE_URI + '/connect/moves/callback'
-    });
     app.get('/connect/moves', function(req, res) {
+        var Moves = require('moves');
+        var moves = new Moves({
+            client_id: process.env.MOVES_API_KEY,
+            client_secret: process.env.MOVES_API_SECRET,
+            redirect_uri: process.env.BASE_URI + '/connect/moves/callback'
+        });
         moves.authorize({
             scope: ['activity', 'location'], //can contain either activity, location or both
             state: 'moves_state' //optional state as per oauth

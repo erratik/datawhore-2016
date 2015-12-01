@@ -88,12 +88,14 @@
                         <div class="item" ng-repeat="(label, attribute) in formData.postProperties">
                             <div class="header">{{attribute.label}}</div>
                             {{attribute.value}} ({{label}})
+                            <!--{{attribute}}-->
+                            <div ng-repeat="stuff in attribute">{{stuff}}</div>
                         </div>
                     </div>
 
                     <table class="ui compact celled definition table" id="profile-properties">
                         <tbody>
-                        <tr ng-repeat="(label, attribute) in formData.postProperties">
+                        <tr ng-repeat="(label, attribute) in formData.postProperties"  ng-if="attribute.value">
                             <td colspan="3">
 
                                 <profile-row data="attribute" label="{{attribute.label}}"></profile-row>
@@ -119,8 +121,9 @@
                         <tr ng-repeat="(label, attribute) in formData.postConfig"
                             ng-if="countProperties(attribute.content)">
                             <td colspan="3">
-                                {{label}} ∂
-                                <profile-row data="formData.postConfig[label].content" label="{{label}}"
+
+                                <!--<span ng-if="attribute.grouped">{{label}}</span>-->
+                                <profile-row data="formData.postConfig[label].content"
                                              grouped="attribute.grouped" checkboxes="true" values="true"></profile-row>
                                 <!-- <tfoot class="full-width">
                                 <td colspan="4">

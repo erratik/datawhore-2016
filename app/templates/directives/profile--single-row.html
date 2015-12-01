@@ -1,7 +1,7 @@
 
-<table width="100%">
+<table width="100%" ng-class="{'grouped': grouped, 'simple': !grouped}">
     
-    <tr ng-if="data.value">      
+    <tr ng-if="!grouped">
         <td class="" width="5%" ng-if="checkboxes">
 
             <div class="ui fitted checkbox">
@@ -22,9 +22,9 @@
             <input type="hidden" ng-model="data.value">
         </td>
     </tr>
-    <tr ng-if="!data.value">
+    <tr ng-if="grouped">
         <td colspan="3">
-            <h2>{{label}}</h2>
+            <h2>{{data.label}}</h2>
             <div ng-include="'templates/partials/forms/table--row-nested.html'"></div>
         </td>
     </tr>

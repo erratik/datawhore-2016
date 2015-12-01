@@ -101,6 +101,7 @@ schema.statics = {
 
                 if (params.data.flatPostConfig) {
                     var props = writeProfileProperties(params.data.flatPostConfig);
+                    //console.log(props);
                     config.postProperties = unflatten(props, {delimiter: '__'});
                 }
 
@@ -228,8 +229,9 @@ function writeProfileProperties(props) {
 
         var _propsKeys = Object.keys(props);
         for (var i = 0; i < _propsKeys.length; i++) {
-            // console.log(_propsKeys[i].indexOf('enabled'));
-            if  (_propsKeys[i].indexOf('enabled') > -1 || _propsKeys[i].indexOf('grouped') > -1 ) { 
+             //console.log(_propsKeys[i]);
+             //console.log('not "enabled"? '+ (_propsKeys[i].indexOf('enabled')> -1));
+            if  (_propsKeys[i].indexOf('enabled') > -1 || _propsKeys[i].indexOf('grouped') > -1 ) {
                 delete props[_propsKeys[i]];
             }
 

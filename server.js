@@ -19,10 +19,10 @@
     // Connect to our mongo database
     mongoose.connect(process.env.MONGO_DB);  
 
-mongoose.connection.on('error', function(err){
-    console.log(process.env.MONGO_DB);
-    console.log(err);
-});
+    mongoose.connection.on('error', function(err){
+        console.log(process.env.MONGO_DB);
+        console.log(err);
+    });
 
     app.use(express.static(__dirname + '/app'));  // set the static files location /app/img will be /img for users
     app.use('/bower_components', express.static(__dirname + '/bower_components'));
@@ -40,7 +40,7 @@ mongoose.connection.on('error', function(err){
     require('./app/scripts/routes/configApi')(app);
     require('./app/scripts/routes/profileApi')(app);
     require('./app/scripts/routes/coreApi')(app);
-    require('./app/scripts/routes/connectApi')(app);
+    //require('./app/scripts/routes/connectApi')(app);
 
     // TODO: Tay - require-directory?
     require('./app/scripts/routes/api/facebookApi')(app);
