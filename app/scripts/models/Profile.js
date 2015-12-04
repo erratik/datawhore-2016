@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var _ = require('lodash');
 var flatten = require('flat');
 var unflatten = require('flat').unflatten;
 var moment = require('moment');
@@ -10,6 +11,7 @@ var schema = new mongoose.Schema({
     postProperties: {},
     profileProperties: {}
 });
+var assignValues = require('../custom-packages/prioritize').assignValues;
 
 
 schema.statics = {
@@ -70,21 +72,33 @@ schema.statics = {
 
                     profile.last_modified = params.data.last_modified;
 
+                    //console.log(makeNetworkProperties(params.data.postConfig));
+
                     switch(params.type) {
                         case 'profile':
+                            // todo: need to write the properties here, with the params.data.postConfig that was sent...
                             profile.profileProperties = params.data.profileProperties;
-                            console.log('+++ profile  properties save');
+                            console.log('+++ profile  properties saved');
                             break;
                         case 'post':
+                            // todo: need to write the properties here, with the params.data.profileConfig that was sent...
                             profile.postProperties = params.data.postProperties;
-                            console.log('+++ post  properties save');
+                            console.log('+++ post  properties saved');
+                            break;
+                        case 'all':
+                            // todo: need to write the properties here, with the params.data.profileConfig that was sent...
+                            profile.postProperties = params.data.postProperties;
+                            profile.profileProperties = params.data.profileProperties;
+                            profile.avatar = params.data.avatar;
+                            profile.username = params.data.username;
+                            console.log('+++ full profile propeties saved');
                             break;
                         default:
                             profile.avatar = params.data.avatar;
                             profile.username = params.data.username;
-                            profile.profileProperties = params.data.profileProperties;
-                            profile.postProperties = params.data.postProperties;
-                            console.log('+++ full config properties save');
+                            //profile.profileProperties = params.data.profileProperties;
+                            //profile.postProperties = params.data.postProperties;
+                            console.log('+++ avatar and username saved in profile properties for '+params.name);
 
                     }
 
@@ -102,5 +116,25 @@ schema.statics = {
             
     }
 };
+
+function makeNetworkProperties(props) {
+
+    var properties = _.filter(props, {content: { 'enabled':  true }});
+    var childProperties = _.filter(props, {grouped: true}, function( property) {
+        _.filter(property, {content: { 'enabled':  true }}, function(content) {
+            if (typeof content.value == 'object') {
+                return content;
+            }
+        });
+
+        //_.pluck(_.filter(property, {content: { 'enabled':  true }}), 'value');
+    });
+
+    console.log(_.pluck(childProperties, 'content'));
+    console.log(childProperties);
+
+    return properties;
+
+}
 
 module.exports = Profile = mongoose.model('Profile', schema);

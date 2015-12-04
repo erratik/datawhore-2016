@@ -2,7 +2,9 @@ var tools = module.exports = makeParent
 var _ = require('lodash');
 makeParent.makeParent = makeParent
 makeParent.makeParentNode = makeParentNode
+makeParent.assignValues = assignValues
 
+// @deprecated!
 function makeParent(nodeParent, objParent) {
     // var obj;
     var _nodeKeys = Object.keys(nodeParent);
@@ -85,6 +87,7 @@ function makeParentNode(nodeParent, objParent) {
                         for (var n = 0; n < _injectedKeys.length; n++) {
                             //console.log(nInjection.content.value[_injectedKeys[n]]);
 
+                            //console.log('ˆ ˆ ˆ ˆ ˆ ˆ ');
                                 if (Array.isArray(nInjection.content.value[_injectedKeys[n]])) {
 
                                     //console.log('i guess this is an array and needs some other shit going on');
@@ -110,42 +113,19 @@ function makeParentNode(nodeParent, objParent) {
                     makeObjParent(objParent, content, _nodeKeys[i]);
 
                 }
-                console.log('val   | nodeParentContentType: '+ typeof content);
+                //console.log('val   | nodeParentContentType: '+ typeof content);
 
                 if (Array.isArray(injected)) {
                     //console.log(injected);
                 } else if (typeof injected == 'object') {
 
-                   /*
-                   console.log('ˆ ˆ ˆ ˆ ˆ ˆ ');
-                    //console.log(injected);
-
-                    // find out if any of the object's values are actually arrays
-                    var _injectedKeys = Object.keys(injected);
-                    //console.log(injected);
-
-                    for (var n = 0; n < _injectedKeys.length; n++) {
-                        if (Array.isArray(injected[_injectedKeys[n]])) {
-
-                            console.log('i guess this is an array and needs some other shit going on');
-                            console.log(_injectedKeys[n]);
-                            console.log(injected[_injectedKeys[n]]);
-                        } else if (typeof injected[_injectedKeys[n]] == 'object') {
-
-                            console.log('i guess this is an object and needs makeData or makeParent?');
-                            console.log(_injectedKeys[n]);
-                            console.log(injected[_injectedKeys[n]]);
-                        }
-                        //console.log(makeData(injected, _injectedKeys[i]));
-                    }
-                    */
                 } else {
                     if (typeof injected == 'boolean' || typeof injected == 'string')  {
 
-                        console.log('injected content ('+injected+') : '+ typeof injected);
+                        //console.log('injected content ('+injected+') : '+ typeof injected);
                     } else {
 
-                        console.log('injected content: '+ typeof injected);
+                        //console.log('injected content: '+ typeof injected);
                     }
 
                 }
@@ -175,7 +155,7 @@ function makeParentNode(nodeParent, objParent) {
         //    }
         //
     };
-    console.log(objParent);
+    //console.log(objParent);
     return objParent;
 };
 
@@ -200,4 +180,62 @@ function makeData(val, label) {
         //obj.content = [];
     }
     return obj;
+};
+
+function makeAttribute(node) {
+    //console.log('∞ make attribute...');
+
+    var obj = {};
+    _.forEach(node, function(n, key) {
+        var attribute = {
+            enabled: false,
+            label: key,
+            value: n
+        };
+        obj[key] = attribute;
+
+    });
+    obj.grouped = false;
+
+    return obj;
+};
+
+
+function assignValues(node) {
+
+    console.log(node);
+    // simple nodes
+
+    //console.log(pickSimple(node));
+    console.log('------------');
+
+
+    topLevelProps = makeAttribute(pickSimple(node));
+    console.log('------------ @end makeAttribute');
+
+    //console.log(pickPlainObject(node));
+    _.forEach(pickPlainObject(node), function(n) {
+        _.reject(n, _.isPlainObject);
+
+        console.log(makeAttribute(topLevelProps));
+    });
+    //console.log(makeAttribute(topLevelProps));
+    //
+
+
+    return topLevelProps;
+
+}
+
+var pickSimple = function(node) {
+
+    var obj = _.pick(node, _.isString);
+    _.merge(obj, _.pick(node, _.isBoolean));
+    _.merge(obj, _.pick(node, _.isArray));
+
+    return obj;
+};
+
+var pickPlainObject = function(node) {
+    return _.pick(node, _.isPlainObject);
 };

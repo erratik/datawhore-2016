@@ -5,8 +5,9 @@ var mongoose = require('mongoose');
 var merge = require('merge'),
     original, cloned;
 var flatten = require('flat');
-var makeParent = require('../../custom-packages/prioritize').makeParent;
+
 var makeParentNode = require('../../custom-packages/prioritize').makeParentNode;
+var assignValues = require('../../custom-packages/prioritize').assignValues;
 
 var mongoose = require('mongoose');
 var namespace = 'instagram';
@@ -59,13 +60,15 @@ module.exports = function(app) {
                     //medias[0].tags = ['shit', 'wiggle', 'stix'];
 
                     //var foo = makeParentNode(medias[0], {});
+                    console.log(assignValues(medias[0]));
 
                     Config.update({
                         namespace: namespace,
                         data: {
-                            postConfig: makeParentNode(medias[0], {}),
-                            postProperties: {}
-                        }
+                            postConfig: makeParentNode(medias[0], {})
+
+                        },
+                        type: 'none'
                     }, function(config) {
 
                         res.json(config);

@@ -83,7 +83,7 @@ module.exports = function(app) {
         Config.update({
             namespace: req.params.namespace,
             data: req.body,
-            type: 'all'
+            type: 'post'
         }, function(config) {
             res.json(config);
         });

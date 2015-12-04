@@ -70,19 +70,19 @@ schema.statics = {
         Config.findOne({name: params.namespace}, function(err, config) {
             if (config) {
 
-
-                if (params.data.profileConfig) {
-                    // if i got postConfig from the formData received, i'll copy it
-                    var flatProfileConfig = JSON.parse(JSON.stringify(params.data.profileConfig));
-                    params.data.flatProfileConfig = flatten(flattenConfig(flatProfileConfig), {delimiter: '$'});
-                }
-
-                if (params.data.postConfig) {
-                    // if i got postConfig from the formData received, i'll copy it
-                    var flatPostConfig = JSON.parse(JSON.stringify(params.data.postConfig));
-                    params.data.flatPostConfig = flatten(flattenConfig(flatPostConfig), {delimiter: '$'});
-
-                }
+                //
+                //if (params.data.profileConfig) {
+                //    // if i got postConfig from the formData received, i'll copy it
+                //    var flatProfileConfig = JSON.parse(JSON.stringify(params.data.profileConfig));
+                //    params.data.flatProfileConfig = flatten(flattenConfig(flatProfileConfig), {delimiter: '$'});
+                //}
+                //
+                //if (params.data.postConfig) {
+                //    // if i got postConfig from the formData received, i'll copy it
+                //    var flatPostConfig = JSON.parse(JSON.stringify(params.data.postConfig));
+                //    params.data.flatPostConfig = flatten(flattenConfig(flatPostConfig), {delimiter: '$'});
+                //
+                //}
 
                 // modify the config to have the updated content
                 config.last_modified = moment().unix();
@@ -93,17 +93,17 @@ schema.statics = {
                     config[_savingKeys[i]] = params.data[_savingKeys[i]];
                 }
 
-                // todo: stop saving the properties in the config before saving the Profile model
-                if (params.data.flatProfileConfig) {
-                    var props = writeProfileProperties(params.data.flatProfileConfig);
-                    config.profileProperties = unflatten(props, {delimiter: '__'});
-                }
-
-                if (params.data.flatPostConfig) {
-                    var props = writeProfileProperties(params.data.flatPostConfig);
-                    //console.log(props);
-                    config.postProperties = unflatten(props, {delimiter: '__'});
-                }
+                //// todo: stop saving the properties in the config before saving the Profile model
+                //if (params.data.flatProfileConfig) {
+                //    var props = writeProfileProperties(params.data.flatProfileConfig);
+                //    config.profileProperties = unflatten(props, {delimiter: '__'});
+                //}
+                //
+                //if (params.data.flatPostConfig) {
+                //    var props = writeProfileProperties(params.data.flatPostConfig);
+                //    //console.log(props);
+                //    config.postProperties = unflatten(props, {delimiter: '__'});
+                //}
 
                 //console.log(config.profileProperties);
                 //console.log('--------------------------------------------------------');
@@ -113,14 +113,18 @@ schema.statics = {
                 config.save(function (err) {
                     if (err) return handleError(err);
                     console.log('config saved');
+                    //if (params.type == 'none') {
+                    //
+                    //} else {
 
-                    // saving the abridged profile, Profile.js
-                    Profile.saveProfile({data: config, type: params.type}, function (profile) {
-                        if (profile) {
-                           // console.log(profile);
-                        }
-                    });
+                        // saving the abridged profile, Profile.js
+                        Profile.saveProfile({data: config, type: params.type}, function (profile) {
+                            if (profile) {
+                                // console.log(profile);
+                            }
+                        });
 
+                    //}
                     callback(config);
                 });
 

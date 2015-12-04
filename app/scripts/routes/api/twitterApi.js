@@ -3,6 +3,7 @@ var Config = require('../../models/Config');
 var merge = require('merge'),original, cloned;
 var mongoose = require('mongoose');
 var makeParent = require('../../custom-packages/prioritize');
+var assignValues = require('../../custom-packages/prioritize').assignValues;
 
 var namespace = 'twitter';
 var Twitter = require('twitter');
@@ -52,6 +53,9 @@ module.exports = function(app) {
                 if (!error) {
 
                     delete posts[0].user;
+
+                    console.log(assignValues(posts[0]));
+
                     Config.update({
                         namespace: namespace,
                         data: {
@@ -81,6 +85,7 @@ module.exports = function(app) {
                 if (!error) {
 
                     delete posts[0].user;
+
                     Config.update({
                         namespace: namespace,
                         data: {
