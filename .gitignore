@@ -1,9 +1,7 @@
-*.log 
-*.txt
-.env
+*.log
+
 bower_components
 node_modules
-data
 .idea/.name
 .idea/datawhore.iml
 .idea/encodings.xml
