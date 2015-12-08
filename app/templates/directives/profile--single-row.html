@@ -1,14 +1,14 @@
 
-<table width="100%" ng-class="{'grouped': grouped, 'simple': !grouped}">
+<table width="100%" ng-class="{'grouped': grouped, 'simple': !grouped}" >
     
-    <tr ng-if="!grouped">
+    <tr ng-if="!grouped && !data.value.grouped">
         <td class="" width="5%" ng-if="checkboxes">
 
             <div class="ui fitted checkbox">
                 <input type="checkbox" ng-model="data.enabled"> <label></label>
             </div>
         </td>
-        <td  width="25%">
+        <td  width="40%">
             <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span> {{data.label}}</span></div>
             <div class="ui action input" ng-hide="!show">
               <input type="text" ng-model="data.label">
@@ -17,14 +17,13 @@
               </button>
             </div>
         </td>
-        <td width="70%" ng-if="values">
+        <td width="85%" ng-if="values">
             {{data.value}}
             <input type="hidden" ng-model="data.value">
         </td>
     </tr>
-    <tr ng-if="grouped">
+    <tr ng-if="grouped || data.value.grouped">
         <td colspan="3">
-            <h2>{{data.label}}</h2>
             <div ng-include="'templates/partials/forms/table--row-nested.html'"></div>
         </td>
     </tr>

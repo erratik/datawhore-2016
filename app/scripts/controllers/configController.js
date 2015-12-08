@@ -33,45 +33,50 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
     function configController($scope, $http, $stateParams, ConfigService, ProfileService,  profile, config) {
         //console.log(profile);
 
-        $scope.hidden = true;
+        //$scope.hidden = true;
         $scope.profileInfo = config.profileInfo;
-        $scope.formData = {};
-        $scope.formData.profileConfig = config.profileConfig;
-        $scope.formData.postConfig = config.postConfig;
-        $scope.formData.profileProperties = profile.profileProperties;
-        $scope.formData.postProperties = profile.postProperties;
+
+        $scope.formData = {
+            profileConfig : config.profileConfig,
+            postConfig : config.postConfig,
+            profileProperties : profile.profileProperties,
+            postProperties : profile.postProperties
+        };
 
         console.log($scope);
 
         // when submitting the add form, send the text to the node API
-        $scope.deleteProfile = function(namespace) {
-            //console.log(':: deleteProfile');
-            $scope.ConfigService.delete(namespace).then(function(data){
-                delete $scope.profile;
-            });
-        };
+        //$scope.deleteProfile = function(namespace) {
+        //    //console.log(':: deleteProfile');
+        //    $scope.ConfigService.delete(namespace).then(function(data){
+        //        delete $scope.profile;
+        //    });
+        //};
 
-        // when submitting the add form, send the text to the node API
-        $scope.getProfile = function(namespace) {
-            ConfigService.getProfileConfig({namespace: $scope.profileInfo.name}).then(function(data){
-                $scope.profileInfo = data.profileInfo;
-            });
-        };
-           
-        $scope.updateProfile = function() {
-            ConfigService.update($scope.profileInfo.name, $scope.formData).then(function(data){
+        //
+        //// when submitting the add form, send the text to the node API
+        //$scope.getProfile = function(namespace) {
+        //    ConfigService.getProfileConfig({namespace: $scope.profileInfo.name}).then(function(data){
+        //        $scope.profileInfo = data.profileInfo;
+        //    });
+        //};
+
+        $scope.updateConfig = function(configType) {
+            ConfigService.update($scope.profileInfo.name, $scope.formData, configType).then(function(data){
                 $scope.profileInfo.last_modified = data.last_modified;
+                //console.log(data);
                 updatedConfigs(data);
+                //$scope.formData[configType+'Properties'] = data[configType+'Properties'];
             });
         };
 
         $scope.updateProperties = function(configType) {
             ProfileService.update($scope.profileInfo.name, $scope.formData, configType).then(function(data){
                 //$scope.profileInfo.last_modified = data.last_modified;
-
                 $scope.formData[configType+'Properties'] = data;
             });
         };
+
         //
         //$scope.updatePostProperties = function() {
         //    ProfileService.update($scope.profileInfo.name, $scope.formData).then(function(data){
@@ -102,7 +107,7 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
             $scope.formData.profileProperties = data.profileProperties;
             $scope.formData.postProperties = data.postProperties;
             //console.log(data.profileProperties);
-            
+
         }
 
 

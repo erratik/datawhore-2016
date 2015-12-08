@@ -13,26 +13,26 @@ var unflatten = require('flat').unflatten;
 
 module.exports = function(app) {
 
-    //*****************************************************************/  
-    //    Profiles
-    //*****************************************************************/
-    app.get('/api/profiles', function(req, res) {
-        Config.get({}, function(profile){
-            // if (req.body) console.log("jkh")
-            res.json(profile);
-        });
-        
-    });
-    //*****************************************************************/  
-    //    Profiles
-    //*****************************************************************/
-    app.get('/api/profile/:namespace', function(req, res) {
-        Config.get({namespace: req.params.namespace}, function(profile){
-            res.json(profile);
-
-        });
-
-    });
+    ////*****************************************************************/
+    ////    Profiles
+    ////*****************************************************************/
+    //app.get('/api/profiles', function(req, res) {
+    //    Config.get({}, function(profile){
+    //        // if (req.body) console.log("jkh")
+    //        res.json(profile);
+    //    });
+    //
+    //});
+    ////*****************************************************************/
+    ////    Profiles
+    ////*****************************************************************/
+    //app.get('/api/profile/:namespace', function(req, res) {
+    //    Config.get({namespace: req.params.namespace}, function(profile){
+    //        res.json(profile);
+    //
+    //    });
+    //
+    //});
 
     // add specific properties to config -------------------------------------------------------*/
     app.post('/api/profile/update/:namespace/:configType', function(req, res) {
@@ -41,7 +41,7 @@ module.exports = function(app) {
         console.log(req.body);
         console.log('>> /@end');
 
-        Config.updateConfig({
+        Profile.updateConfig({
             namespace: req.params.namespace,
             data: req.body,
             type: req.params.configType

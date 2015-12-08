@@ -21,26 +21,22 @@ client.use({
 
 module.exports = function(app) {
 
-    var freshPostConfig = function(){
-
-    };
-
     app.get('/api/' + namespace + '/fetch/:configType', function(req, res) {
-        console.log('••• '+ req.params.configType);
+
         if (req.params.configType == 'profile') {
 
             client.user('self', function(err, result, remaining, limit) {
                 if (err) {
                     console.log(err);
                 } else {
-
-
                     Config.update({
                         namespace: namespace,
                         data: {
                             fetchedProfile: result,
-                            profileConfig: makeParent(result, {})
-                        }
+                            profileConfig: assignValues(result)
+                        },
+                        type: 'profile'
+
                     }, function(config) {
                         //console.log(config);
                         res.json(config);
@@ -52,23 +48,18 @@ module.exports = function(app) {
             });
         } else {
 
-            client.user_self_media_recent({count: 1}, function(err, medias, pagination, remaining, limit) {
+            client.user_self_media_recent({count: 5}, function(err, medias, pagination, remaining, limit) {
                 if (err) {
                     console.log(err);
                 } else {
-                    //console.log(medias);
-                    //medias[0].tags = ['shit', 'wiggle', 'stix'];
-
-                    //var foo = makeParentNode(medias[0], {});
-                    console.log(assignValues(medias[0]));
 
                     Config.update({
                         namespace: namespace,
                         data: {
-                            postConfig: makeParentNode(medias[0], {})
+                            postConfig: assignValues(medias[4])
 
                         },
-                        type: 'none'
+                        type: 'post'
                     }, function(config) {
 
                         res.json(config);

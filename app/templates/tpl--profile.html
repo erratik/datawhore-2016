@@ -9,8 +9,6 @@
                 {{profileInfo.last_modified | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}
             </div>
         </div>
-
-        <!--<profile-remove namespace="{{profileInfo.name}}" done="deleteProfile(profileInfo.name)" class="floated right" style="float: right"></profile-remove>-->
     </div>
     <div class="ui stackable two column vertically divided grid">
         <div class="ui header">
@@ -18,7 +16,7 @@
             <profile-fetch namespace="{{profileInfo.name}}" done="cleanConfig('profile')" style="float: right" text="Clean Profile"></profile-fetch>
         </div>
         <div class="row">
-            <div class="column">
+            <div class="column wide six">
                 <div class="ui segment">
                     <div class="ui list">
                         <div class="item" ng-repeat="(label, attribute) in formData.profileProperties">
@@ -39,39 +37,32 @@
                         <tfoot class="full-width">
                         <td colspan="4">
                             <div class="ui small  button" ng-click="updateProperties('profile')">
-                                Approve
+                                Approve Properties
                             </div>
                         </td>
                         </tfoot>
                     </table>
                 </div>
             </div>
-            <div class="column">
-                <div class="ui segment">
-
+            <div class="column wide ten">
+                <div class="ui segment"><i class="icon user"></i>Profile Properties
                     <table class="ui compact celled definition table">
                         <tbody>
                         <tr ng-repeat="(label, attribute) in formData.profileConfig"
                             ng-if="countProperties(attribute.content)">
                             <td colspan="3">
-                                <div class="title" ng-if="attribute.grouped">{{label}}</div>
-
-                                <profile-row data="formData.profileConfig[label].content" label="{{label}}"
-                                             checkboxes="true" values="true"></profile-row>
-
+                                <profile-row data="formData.profileConfig[label].content" grouped="attribute.grouped" checkboxes="true" values="true" label="{{label}}"></profile-row>
                             </td>
-
                         </tr>
                         </tbody>
                         <tfoot class="full-width">
                         <td colspan="4">
-                            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                            <div class="ui small  button" ng-click="updateConfig('profile')">
                                 Approve
                             </div>
                         </td>
                         </tfoot>
                     </table>
-
                 </div>
             </div>
         </div>
@@ -89,7 +80,6 @@
                             <div class="header">{{attribute.label}}</div>
                             {{attribute.value}} ({{label}})
                             <!--{{attribute}}-->
-                            <div ng-repeat="stuff in attribute">{{stuff}}</div>
                         </div>
                     </div>
 
@@ -115,30 +105,20 @@
                 </div>
             </div>
             <div class="column wide ten">
-                <div class="ui segment">Properties
+                <div class="ui segment"><i class="icon file"></i>Post Properties
                     <table class="ui compact celled definition table">
                         <tbody>
                         <tr ng-repeat="(label, attribute) in formData.postConfig"
                             ng-if="countProperties(attribute.content)">
                             <td colspan="3">
-
-                                <!--<span ng-if="attribute.grouped">{{label}}</span>-->
-                                <profile-row data="formData.postConfig[label].content"
-                                             grouped="attribute.grouped" checkboxes="true" values="true"></profile-row>
-                                <!-- <tfoot class="full-width">
-                                <td colspan="4">
-                                    <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
-                                        Approve
-                                    </div>
-                                </td>
-                                </tfoot> -->
+                                <profile-row data="formData.postConfig[label].content" grouped="attribute.grouped" checkboxes="true" values="true" label="{{label}}"></profile-row>
                             </td>
 
                         </tr>
                         </tbody>
                         <tfoot class="full-width">
                         <td colspan="4">
-                            <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
+                            <div class="ui small  button" ng-click="updateConfig('post')">
                                 Approve
                             </div>
                         </td>
@@ -147,64 +127,19 @@
                 </div>
             </div>
         </div>
-        <!--     <div class="ui bulleted list"  ng-show="hidden">
-                <div class="item" ng-repeat="(key, value) in profile.props">
-                    <div class="content">
-                        <div class="header">
-                            <span ng-if="!value.displayName">{{key}}</span>
-                            <span ng-if="value.displayName">{{value.displayName}}</span>
-                        </div>
-                        {{value.value}}
-                    </div>
-                </div>
-            </div>
-            <table class="ui compact celled definition table" ng-show="!hidden">
-                <thead class="full-width">
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th></th>
-                        <th colspan="4"></th>
-                    </tr>
-                    <tr ng-repeat="(key, value) in profile.fetchedProfile | orderBy:sortType:sortReverse">
-                        <td class="">
-                            <div class="ui fitted checkbox">
-                                <input type="checkbox" ng-model="formData[key].enabled" > <label></label>
-                            </div>
-                        </td>
-                        <td>{{key}}</td>
-                        <td>
-                            {{value}}
-                            <input type="text" ng-model="formData[key].value">
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot class="full-width">
-                <td colspan="4">
-                    <div class="ui small  button" ng-click="updateProfile(profileInfo.name)">
-                        Approve
-                    </div>
-                </td>
-                </tfoot>
-            </table>
-         -->
-
-        <div ng-switch on="profileInfo.name">
-            <div ng-switch-when="instagram">
-                <div>
-
-                    <!-- <img src="{{post.images.thumbnail.url}}"> -->
-                </div>
-                <!-- this is {{postConfig}} -->
 
 
-            </div>
-        </div>
+        <!--<div ng-switch on="profileInfo.name">-->
+            <!--<div ng-switch-when="instagram">-->
+                <!--<div>-->
+
+                    <!--&lt;!&ndash; <img src="{{post.images.thumbnail.url}}"> &ndash;&gt;-->
+                <!--</div>-->
+                <!--&lt;!&ndash; this is {{postConfig}} &ndash;&gt;-->
+
+
+            <!--</div>-->
+        <!--</div>-->
 
 
         <div ng-repeat="config in formData">

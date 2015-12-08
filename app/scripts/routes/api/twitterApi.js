@@ -27,18 +27,18 @@ module.exports = function(app) {
 
             client.get('users/show', params, function (error, docs, response) {
                 if (!error) {
-
-                    delete docs.entities;
-                    delete docs.urls;
-                    delete docs.status;
-                    delete docs.retweeted_status;
+                    //
+                    //delete docs.entities;
+                    //delete docs.urls;
+                    //delete docs.status;
+                    //delete docs.retweeted_status;
 
                     Config.update({
                         namespace: namespace,
                         data: {
-                            fetchedProfile: docs,
-                            profileConfig: makeParent(docs, {})
-                        }
+                            profileConfig: assignValues(docs)
+                        },
+                            type: 'profile'
                     },
                     function (config) {
 
@@ -54,13 +54,14 @@ module.exports = function(app) {
 
                     delete posts[0].user;
 
-                    console.log(assignValues(posts[0]));
+                    //console.log(assignValues(posts[0]));
 
                     Config.update({
                         namespace: namespace,
                         data: {
-                            postConfig: makeParent(posts[0], {})
-                        }
+                            postConfig: assignValues(posts[1])
+                        },
+                            type: 'post'
                     },
                     function (config) {
 
@@ -89,7 +90,7 @@ module.exports = function(app) {
                     Config.update({
                         namespace: namespace,
                         data: {
-                            postConfig: makeParent(posts[0], {})
+                            postConfig: assignValues(posts[0], {})
                         }
                     },
                         function(config) {

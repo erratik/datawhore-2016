@@ -1,8 +1,6 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
-var flatten = require('flat');
-var unflatten = require('flat').unflatten;
-var moment = require('moment');
+
 var schema = new mongoose.Schema({
     name: String,
     last_modified: Number,
@@ -57,7 +55,7 @@ schema.statics = {
             name: options.data.name || options.name // if not saving all, use the name set in updateConfig()
         };
 
-        console.log('<---------- saveProfile()');
+        console.log('<---------- save '+params.type);
 
         //if (params.data.name) {
             // Profile.findOne({name: params.namespace}, function(err, profile) {
@@ -67,49 +65,39 @@ schema.statics = {
                     
                 } else {
                     //
-                    //console.log(params.data.profileProperties);
-                    //console.log(params.type);
 
                     profile.last_modified = params.data.last_modified;
 
-                    //console.log(makeNetworkProperties(params.data.postConfig));
-
                     switch(params.type) {
+                        case 'all':
+                            profile.profileProperties = makeNetworkProperties(params.data.postConfig);
+                            profile.profileProperties = makeNetworkProperties(params.data.profileConfig);
+                            profile.avatar = params.data.avatar;
+                            profile.username = params.data.username;
+                            console.log('+++ full profile propeties saving...');
+                            break;
                         case 'profile':
-                            // todo: need to write the properties here, with the params.data.postConfig that was sent...
-                            profile.profileProperties = params.data.profileProperties;
+                            profile.profileProperties = makeNetworkProperties(params.data.profileConfig);
                             console.log('+++ profile  properties saved');
                             break;
                         case 'post':
-                            // todo: need to write the properties here, with the params.data.profileConfig that was sent...
-                            profile.postProperties = params.data.postProperties;
+
+                            profile.postProperties = makeNetworkProperties(params.data.postConfig);
                             console.log('+++ post  properties saved');
-                            break;
-                        case 'all':
-                            // todo: need to write the properties here, with the params.data.profileConfig that was sent...
-                            profile.postProperties = params.data.postProperties;
-                            profile.profileProperties = params.data.profileProperties;
-                            profile.avatar = params.data.avatar;
-                            profile.username = params.data.username;
-                            console.log('+++ full profile propeties saved');
                             break;
                         default:
                             profile.avatar = params.data.avatar;
                             profile.username = params.data.username;
-                            //profile.profileProperties = params.data.profileProperties;
-                            //profile.postProperties = params.data.postProperties;
                             console.log('+++ avatar and username saved in profile properties for '+params.name);
 
                     }
 
+
                     profile.save(function (err) {
                         if (err) return handleError(err);
                         console.log('+++ abridged profile saved');
-                        //console.log('what am i saving in Profile.js?');
-                        // console.log(profile);
                         callback(profile); // return settings in JSON format
                     });
-                    
                 }
             });
         //}
@@ -118,22 +106,20 @@ schema.statics = {
 };
 
 function makeNetworkProperties(props) {
-
-    var properties = _.filter(props, {content: { 'enabled':  true }});
-    var childProperties = _.filter(props, {grouped: true}, function( property) {
-        _.filter(property, {content: { 'enabled':  true }}, function(content) {
-            if (typeof content.value == 'object') {
-                return content;
-            }
+    var properties = _.pluck(_.filter(props, {content: { 'enabled':  true }}), 'content');
+    var attributeGroup = _.pluck(_.filter(props, 'grouped'), 'content');
+    _.filter(attributeGroup, function(attribute){
+        _.forEach(attribute, function(item, key){
+            if (item.enabled) properties.push(item);
         });
-
-        //_.pluck(_.filter(property, {content: { 'enabled':  true }}), 'value');
     });
 
-    console.log(_.pluck(childProperties, 'content'));
-    console.log(childProperties);
+    savedProps = {};
+    _.forEach(properties, function(item, key){
+        savedProps[item.label] = item;
+    });
 
-    return properties;
+    return savedProps;
 
 }
 

@@ -74,18 +74,7 @@ app.service('ConfigService', function ($http, $q){
             var data = response.data;
             console.log(':: ProfileService ::  getProfileConfig ('+namespace+')');
 
-            //console.log(data);
             return data;
-            // } else {
-            //     console.log(':: ProfileService ::  getProfile (all) ');
-            //     var profiles = {};
-
-            //     for (var i = 0; i < response.data.length; i++) {
-            //         profiles[response.data[i].name] = buildProfile({profile:response.data[i], loadConfig: params.loadConfig});
-            //     };
-
-            //     return profiles;
-            // }
         });
     };
 
@@ -97,20 +86,15 @@ app.service('ConfigService', function ($http, $q){
         return $http.get('/api/' + params.namespace + '/fetch/'+params.configType).
         then(function(response) {
             var data = response.data;
-            // var postConfig = makeParent(response.data.posts[0], {});
-
-            console.log(data);
+            //console.log(data);
             return data;
         });            
     };
 
-    ConfigService.update = function(namespace, formData){   
-        return $http.post('/api/config/update/' + namespace, formData).
+    ConfigService.update = function(namespace, formData, configType){
+        return $http.post('/api/config/update/' + namespace+'/'+configType, formData).
         then(function(response) {
             var data = response.data;
-            // data.formData = formData;
-            // console.log(data);
-
             return data;
         });            
         return formData;
@@ -141,7 +125,7 @@ app.service('ConfigService', function ($http, $q){
             return (response.data);
             // console.log(profileService);
         });            
-    }
+    };
 
 
     return ConfigService;

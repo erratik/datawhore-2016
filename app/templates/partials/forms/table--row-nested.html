@@ -2,17 +2,46 @@
 <table width="100%" >
 
 
-	<tr>
-			<div ng-repeat="attribute in data.value">
+	<tr ng-if="!data.value.grouped">
+		<td>
+			<accordion>
+				<accordion-group title="{{label}}">
+					<!--<i class="icon folder"></i>{{label}}-->
+					<div ng-repeat="(label, attribute) in data">
+						<div ng-if="!attribute.grouped">
+							<profile-row data="attribute" checkboxes="true" values="true"></profile-row>
+						</div>
+						<div ng-if="attribute.grouped">
+							<i class="icon folder open outline"></i> {{attribute.label}}
+							<div ng-repeat="item in attribute.content">
 
-				<profile-row data="attribute.content" checkboxes="true" values="true" ng-if="!attribute.grouped"></profile-row>
+								<profile-row data="item" checkboxes="true" values="true" grouped="item.grouped"></profile-row>
+							</div>
+						</div>
+					</div>
+
+				</accordion-group>
+			</accordion>
+		</td>
+
+	</tr>
+	<tr ng-if="data.value.grouped">
+		<td>
+			<!--{{data.value}}-->
+			<div ng-repeat="(label, attribute) in data.value.content">
+				<!--<i class="icon folder open"></i>{{label}}-->
+				<div ng-if="!attribute.grouped">
+					<profile-row data="attribute" checkboxes="true" values="true"></profile-row>
+				</div>
 				<div ng-if="attribute.grouped">
-					{{attribute.content.value}}
-					<!--<div ng-repeat="attribute in attribute.content.value">-->
-					<!--</div>-->
+					<!--<i class="icon folder open outline"></i> {{attribute.label}}-->
+					<div ng-repeat="item in attribute.content">
+
+						<profile-row data="item" checkboxes="true" values="true" grouped="item.grouped"></profile-row>
+					</div>
 				</div>
 			</div>
-
+		</td>
 	</tr>
 
 </table>

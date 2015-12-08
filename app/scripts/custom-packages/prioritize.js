@@ -160,6 +160,7 @@ function makeParentNode(nodeParent, objParent) {
 };
 
 function makeData(val, label) {
+    //console.log('make data running');
     var obj = {
         content: {
             enabled: false,
@@ -170,59 +171,83 @@ function makeData(val, label) {
     };
     var thisVal = obj.content.value;
 
-    obj.grouped = (typeof thisVal == 'object') ? true : false;
-    if (Array.isArray(val)) {
-        //obj.content.value = JSON.stringify(val);
-        //obj.grouped = false;
-        //console.log(val);
-        //console.log(obj);
-        //obj.content = [];
-        //obj.content = [];
+    //obj.grouped = (typeof thisVal == 'object') ? true : false;
+    if (_.isArray(val)) {
+        obj.content.value = _.first(val);
+        delete obj.content.label;
+        delete obj.content.enabled;
+        obj.content = makeAttribute(obj.content);
+        obj.grouped = true;
+    } else {
+
+        obj.grouped = false;
     }
     return obj;
 };
 
-function makeAttribute(node) {
-    //console.log('∞ make attribute...');
+function makeAttribute(node, child) {
 
     var obj = {};
+
     _.forEach(node, function(n, key) {
-        var attribute = {
-            enabled: false,
-            label: key,
-            value: n
-        };
-        obj[key] = attribute;
+
+
+        if (isSimpleProperty(n)) {
+
+            obj[key] = {
+                content: {
+                    label: key,
+                    value: n,
+                    enabled: false
+                },
+                grouped: false
+            };
+
+        } else {
+
+            var groupedAttr = {
+                grouped: true, content: {}
+            };
+
+
+
+            _.forEach( n, function(item, name) {
+                if (isSimpleProperty(item)) {
+                    groupedAttr.content[name] = makeData(item, name).content;
+
+                } else {
+                    groupedAttr.content[name] = {content: {}, grouped: true, label: name};
+
+                        //console.log('~~~~~~~~~ '+name+' ~~~~~~~~~');
+
+                        _.forEach(item, function(i, k){
+                            if (isSimpleProperty(i)) {
+                                //console.log(i);
+                                groupedAttr.content[name].content[k] = makeData(i, k).content;
+                            } else {
+
+                            }
+                        });
+                    //console.log('....................................');
+                }
+            });
+            obj[key] = groupedAttr;
+
+        }
 
     });
-    obj.grouped = false;
-
+    //obj.grouped = false;
+    //console.log('------------ @end makeAttribute');
     return obj;
 };
 
 
 function assignValues(node) {
 
-    console.log(node);
-    // simple nodes
 
-    //console.log(pickSimple(node));
-    console.log('------------');
-
-
-    topLevelProps = makeAttribute(pickSimple(node));
-    console.log('------------ @end makeAttribute');
-
-    //console.log(pickPlainObject(node));
-    _.forEach(pickPlainObject(node), function(n) {
-        _.reject(n, _.isPlainObject);
-
-        console.log(makeAttribute(topLevelProps));
-    });
-    //console.log(makeAttribute(topLevelProps));
-    //
-
-
+    // first, let's set up the simple arrays, strings and boolean properties
+    var topLevelProps = makeAttribute(node);
+    console.log(topLevelProps);
     return topLevelProps;
 
 }
@@ -232,10 +257,37 @@ var pickSimple = function(node) {
     var obj = _.pick(node, _.isString);
     _.merge(obj, _.pick(node, _.isBoolean));
     _.merge(obj, _.pick(node, _.isArray));
+    _.merge(obj, _.pick(node, _.isNumber));
 
     return obj;
 };
 
+
+var pickSimple = function(node) {
+
+    var obj = _.pick(node, _.isString);
+    _.merge(obj, _.pick(node, _.isBoolean));
+    _.merge(obj, _.pick(node, _.isArray));
+    _.merge(obj, _.pick(node, _.isNumber));
+
+    return obj;
+};
+
+var isSimpleProperty = function(value) {
+
+    //if (_.isString(value)) console.log('('+value+') is a string!');
+    //if (_.isBoolean(value)) console.log('('+value+') is a boolean!');
+    //if (_.isArray(value)) console.log('('+value+') is an array!');
+    //if (_.isNumber(value)) console.log('('+value+') is a number!');
+
+    if (_.isString(value) ||  _.isBoolean(value) || _.isArray(value) || _.isNumber(value) ) {
+        return true;
+    } else {
+        return false;
+    }
+
+};
+
 var pickPlainObject = function(node) {
-    return _.pick(node, _.isPlainObject);
+    return _.pick(node, _.isObject);
 };

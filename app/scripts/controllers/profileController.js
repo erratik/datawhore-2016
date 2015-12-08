@@ -17,13 +17,13 @@ app.controller('profilesController', ['$scope', '$http', 'ProfileService', 'conf
     $scope.profiles = profiles;
 
     // when submitting the add form, send the text to the node API
-    $scope.cleanProfile = function(namespace) {
-        //console.log('cleanProfile');
-        ProfileService.cleanProfile({namespace: namespace}).then(function(data){
-            // $scope.profiles[namespace]
-            console.log(data);
-        });
-    };
+    //$scope.cleanProfile = function(namespace) {
+    //    //console.log('cleanProfile');
+    //    ProfileService.cleanProfile({namespace: namespace}).then(function(data){
+    //        // $scope.profiles[namespace]
+    //        console.log(data);
+    //    });
+    //};
 
 }]);
 
@@ -42,50 +42,45 @@ app.controller('profileController', ['$scope', '$http',  '$stateParams', 'Profil
         $scope.formData.profileProperties = config;
         console.log($scope);
 
-
-        // when submitting the add form, send the text to the node API
-        $scope.deleteProfile = function(namespace) {
-            //console.log(':: deleteProfile');
-            $scope.ProfileService.delete(namespace).then(function(data){
-                delete $scope.profile;
-                $scope.config = data;
-            });
-        };
-
-        // when submitting the add form, send the text to the node API
-        $scope.getProfile = function(namespace) {
-            ProfileService.getProfile({namespace: $scope.profileInfo.name}).then(function(data){
-                $scope.profileInfo = data.profileInfo;
-            });
-        };
-           
-        $scope.updateProfile = function(namespace) {
-            ProfileService.update($scope.profileInfo.name, $scope.formData).then(function(data){
-                $scope.profileInfo.last_modified = data.last_modified;
-                updatedConfigs(data);
-            });
-        
-        };
-
-        // when submitting the add form, send the text to the node API
-        $scope.cleanProfile = function(namespace) {
-            ProfileService.cleanProfile({namespace: namespace}).then(function(data){
-                updatedConfigs(data);
-            });
-        };
-
-        function updatedConfigs(data) {
-            $scope.formData.profileConfig = data.profileConfig;
-            $scope.formData.postConfig = data.postConfig;
-            $scope.formData.profileProperties = data.profileProperties;
-            //console.log(data.profileProperties);
-            
-        }
-
-        $scope.watchAttribute = function(attrPath) {
-
-
-        };
+        //
+        //// when submitting the add form, send the text to the node API
+        //$scope.deleteProfile = function(namespace) {
+        //    //console.log(':: deleteProfile');
+        //    $scope.ProfileService.delete(namespace).then(function(data){
+        //        delete $scope.profile;
+        //        $scope.config = data;
+        //    });
+        //};
+        //
+        //// when submitting the add form, send the text to the node API
+        //$scope.getProfile = function(namespace) {
+        //    ProfileService.getProfile({namespace: $scope.profileInfo.name}).then(function(data){
+        //        $scope.profileInfo = data.profileInfo;
+        //    });
+        //};
+        //
+        //$scope.updateProfile = function(namespace) {
+        //    ProfileService.update($scope.profileInfo.name, $scope.formData).then(function(data){
+        //        $scope.profileInfo.last_modified = data.last_modified;
+        //        updatedConfigs(data);
+        //    });
+        //
+        //};
+        //
+        //// when submitting the add form, send the text to the node API
+        //$scope.cleanProfile = function(namespace) {
+        //    ProfileService.cleanProfile({namespace: namespace}).then(function(data){
+        //        updatedConfigs(data);
+        //    });
+        //};
+        //
+        //function updatedConfigs(data) {
+        //    $scope.formData.profileConfig = data.profileConfig;
+        //    $scope.formData.postConfig = data.postConfig;
+        //    $scope.formData.profileProperties = data.profileProperties;
+        //    //console.log(data.profileProperties);
+        //
+        //}
 
     }
 ]);

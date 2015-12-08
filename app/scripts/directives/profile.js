@@ -85,7 +85,8 @@
                 data: "=",
                 grouped: '=',
                 checkboxes: '@',
-                values: '@'
+                values: '@',
+                label: '@'
             },
             templateUrl: 'templates/directives/profile--single-row.html',
             link: function(scope, element, attrs) {
