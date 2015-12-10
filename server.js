@@ -34,6 +34,13 @@
 
     app.use(methodOverride());
 
+    ///** Angoose bootstraping */
+    //require("angoose").init(app, {
+    //    'module-dirs':'./app/scripts/models',
+    //    'mongo-opts': 'localhost:27017/data/datawhore'
+    //});
+
+
     // routes ======================================================================
 
 

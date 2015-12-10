@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var _ = require('lodash');
 var Profile = require('./Profile');
 
 
@@ -9,8 +10,6 @@ var schema = new mongoose.Schema({
     avatar: String,
     username: String,
     profileConfig: {},
-    profileProperties: {},
-    postProperties: {},
     postConfig: {}
 });
 
@@ -65,7 +64,7 @@ schema.statics = {
             
     },
     update: function(params, callback){
-        console.log(params);
+        //console.log(params);
         Config.findOne({name: params.namespace}, function(err, config) {
             if (config) {
 
@@ -82,9 +81,11 @@ schema.statics = {
                     // saving the abridged profile, Profile.js
                     Profile.saveProfile({data: config, type: params.type}, function (profile) {
                         if (profile) {
-                            console.log(profile);
-                            config[params.type+'Properties'] = profile[params.type+'Properties'];
-                            callback(config);
+
+
+                            console.log(params.type);
+
+                            callback(_.merge(config,profile));
                         } else {
 
                         }

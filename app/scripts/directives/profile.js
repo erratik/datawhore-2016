@@ -86,7 +86,15 @@
                 grouped: '=',
                 checkboxes: '@',
                 values: '@',
-                label: '@'
+                label: '@',
+                entityName: "=",
+                groupedParent: "@",
+                model: '=',
+                isChild: "=",
+                prefix: "@"
+            },
+            controller: function($scope){
+                //console.log($scope.parent);
             },
             templateUrl: 'templates/directives/profile--single-row.html',
             link: function(scope, element, attrs) {

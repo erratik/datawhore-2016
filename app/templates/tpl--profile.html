@@ -111,7 +111,7 @@
                         <tr ng-repeat="(label, attribute) in formData.postConfig"
                             ng-if="countProperties(attribute.content)">
                             <td colspan="3">
-                                <profile-row data="formData.postConfig[label].content" grouped="attribute.grouped" checkboxes="true" values="true" label="{{label}}"></profile-row>
+                                <profile-row data="formData.postConfig[label].content" grouped="attribute.grouped" checkboxes="true" values="true" label="{{label}}" model="formData.postConfig"></profile-row>
                             </td>
 
                         </tr>

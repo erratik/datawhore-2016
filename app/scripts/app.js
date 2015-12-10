@@ -1,5 +1,6 @@
 var app = angular.module('app', [
     'ui.router',
+    //'angoose.client',
     'angularMoment',
     'angular.filter',
     'angularify.semantic',
@@ -12,7 +13,6 @@ var app = angular.module('app', [
     'services.Config'
 
 ]);
-
 
 // use unix timestamps in angular views
 app.constant('angularMomentConfig', {

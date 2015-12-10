@@ -1,11 +1,15 @@
 
 <table width="100%" ng-class="{'grouped': grouped, 'simple': !grouped}" >
     
-    <tr ng-if="!grouped && !data.value.grouped">
+    <tr ng-if="!grouped && data.value">
         <td class="" width="5%" ng-if="checkboxes">
 
             <div class="ui fitted checkbox">
                 <input type="checkbox" ng-model="data.enabled"> <label></label>
+                <!--<div ng-if="isChild">-->
+                    <!--<input type="checkbox" ng-model="model[prefix].enabled"> <label></label>-->
+                    <!--child checkbox!-->
+                <!--</div>-->
             </div>
         </td>
         <td  width="40%">
@@ -22,9 +26,17 @@
             <input type="hidden" ng-model="data.value">
         </td>
     </tr>
-    <tr ng-if="grouped || data.value.grouped">
+    <tr ng-if="grouped">
         <td colspan="3">
             <div ng-include="'templates/partials/forms/table--row-nested.html'"></div>
+        </td>
+    </tr>
+    <tr ng-if="!data.value" ng-hide="!entityName">
+        <td>
+            <button class="ui basic button mini" create="createEntity(entityName)">
+                <i class="icon external square"></i>
+                Create <strong>{{entityName}}</strong> entity
+            </button>
         </td>
     </tr>
 

@@ -37,14 +37,15 @@ module.exports = function(app) {
     // add specific properties to config -------------------------------------------------------*/
     app.post('/api/profile/update/:namespace/:configType', function(req, res) {
 
-        console.log('>> @start Config.updateConfig({namespace: '+req.params.namespace+', type: '+req.params.configType+'}), '+req.params.configType+'Properties update');
-        console.log(req.body);
+        console.log('>> @start profileApi > Config.saveProfile({name: '+req.params.namespace+', type: '+req.params.configType+'}), '+req.params.configType+'Properties update');
+        console.log(req.body[req.params.configType+'Properties']);
         console.log('>> /@end');
 
-        Profile.updateConfig({
-            namespace: req.params.namespace,
-            data: req.body,
-            type: req.params.configType
+        Profile.saveProfile({
+            name: req.params.namespace,
+            data: req.body[req.params.configType+'Properties'],
+            type: req.params.configType,
+            updating: true
         }, function(config) {
             res.json(config);
         });

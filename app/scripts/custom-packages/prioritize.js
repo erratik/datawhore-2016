@@ -173,7 +173,7 @@ function makeData(val, label) {
 
     //obj.grouped = (typeof thisVal == 'object') ? true : false;
     if (_.isArray(val)) {
-        obj.content.value = _.first(val);
+        obj.content = _.first(val);
         delete obj.content.label;
         delete obj.content.enabled;
         obj.content = makeAttribute(obj.content);

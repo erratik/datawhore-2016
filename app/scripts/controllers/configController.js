@@ -64,9 +64,9 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
         $scope.updateConfig = function(configType) {
             ConfigService.update($scope.profileInfo.name, $scope.formData, configType).then(function(data){
                 $scope.profileInfo.last_modified = data.last_modified;
-                //console.log(data);
+                console.log(data);
                 updatedConfigs(data);
-                //$scope.formData[configType+'Properties'] = data[configType+'Properties'];
+                //$scope.formData[configType+'Properties'] = data;
             });
         };
 
@@ -99,6 +99,11 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
             ConfigService.cleanPost({namespace: namespace}).then(function(data){
                 updatedConfigs(data);
             });
+        };
+        // when submitting the add form, send the text to the node API
+        $scope.createEntity = function(label) {
+            console.log('createEntity?');
+            console.log(label);
         };
 
         function updatedConfigs(data) {
