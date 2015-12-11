@@ -75,19 +75,19 @@ schema.statics = {
 
                     switch(params.type) {
                         case 'all':
-                            profile.profileProperties = writeProperties(params.data.postConfig);
-                            profile.profileProperties = writeProperties(params.data.profileConfig);
+                            profile.profileProperties = writeProperties(params.data.postConfig, profile.profileProperties);
+                            profile.profileProperties = writeProperties(params.data.profileConfig, profile.postProperties);
                             profile.avatar = params.data.avatar;
                             profile.username = params.data.username;
                             console.log('+++ full profile propeties saving...');
                             break;
                         case 'profile':
-                            profile.profileProperties = params.updating ? params.data : writeProperties(params.data.profileConfig);
+                            profile.profileProperties = params.updating ? params.data : writeProperties(params.data.profileConfig, profile.profileProperties);
                             console.log('+++ profile  properties saved');
                             break;
                         case 'post':
-                            console.log(params.updating);
-                            console.log(params.data);
+                            //console.log(params.updating);
+                            //console.log(params.data);
                             profile.postProperties = params.updating ? params.data : writeProperties(params.data.postConfig, profile.postProperties);
                             profile.post = profile.postProperties;
                             console.log('+++ post  properties saved');
@@ -115,7 +115,8 @@ schema.statics = {
             
     }
 };
-function mapAttributeKeys(item, prefix, query) {
+
+function mapAttributeKeys(item, prefix) {
     var keys = {};
     var attributeName = prefix+"__"+item.label;
     keys[attributeName] = {
@@ -144,19 +145,23 @@ function writeProperties(props, current) {
             //third level
             if (item.grouped) {
                 var innerGroup = _.filter(item.content, 'enabled');
-                var groupKey = _.findKey(item.content, _.first(innerGroup));
-                var query = {};
-                query[key] = {content: {}};
-                query[key].content[groupKey] = _.first(innerGroup);
+                _.forEach(innerGroup, function(group){
+                    console.log(group);
+                    var groupKey = _.findKey(item.content, group);
+                    var query = {};
+                    query[key] = {content: {}};
+                    query[key].content[groupKey] = group;
 
-                if (innerGroup.length) {
+                    if (group !== undefined) {
 
-                    //console.log(query);
-                    //console.log(findKey(props, {content: query})+'__'+key);
-                    //console.log(mapAttributeKeys(_.first(innerGroup), findKey(props, {content: query})+'__'+key));
-                    //
-                    properties.push(mapAttributeKeys(_.first(innerGroup), _.findKey(props, {content: query})+'__'+key,  {content: query}));
-                }
+                        console.log(query);
+                        //console.log(findKey(props, {content: query})+'__'+key);
+                        //console.log(mapAttributeKeys(_.first(innerGroup), _.findKey(props, {content: query})+'__'+key));
+
+                        properties.push(mapAttributeKeys(group, _.findKey(props, {content: query})+'__'+key,  {content: query}));
+                    }
+
+                });
 
                 var disabledGroups = _.filter(item.content, 'enabled', false);
                 var disabledGroupKey = _.findKey(item.content, _.first(innerGroup));
