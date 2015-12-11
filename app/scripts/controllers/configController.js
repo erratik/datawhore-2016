@@ -71,20 +71,12 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
         };
 
         $scope.updateProperties = function(configType) {
-            ProfileService.update($scope.profileInfo.name, $scope.formData, configType).then(function(data){
+            ProfileService.update($scope.profileInfo.name, $scope.formData[configType+'Properties'], configType).then(function(data){
                 //$scope.profileInfo.last_modified = data.last_modified;
                 $scope.formData[configType+'Properties'] = data;
             });
         };
 
-        //
-        //$scope.updatePostProperties = function() {
-        //    ProfileService.update($scope.profileInfo.name, $scope.formData).then(function(data){
-        //        //$scope.profileInfo.last_modified = data.last_modified;
-        //
-        //        $scope.formData.postProperties = data;
-        //    });
-        //};
 
         // when submitting the add form, send the text to the node API
         $scope.cleanConfig = function(configType) {

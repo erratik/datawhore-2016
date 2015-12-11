@@ -12,12 +12,14 @@
     </div>
     <div class="ui stackable two column vertically divided grid">
         <div class="ui header">
-            <div class="content">Profile Properties</div>
+            <div class="content"><i class="icon file"></i>Profile Properties</div>
             <profile-fetch namespace="{{profileInfo.name}}" done="cleanConfig('profile')" style="float: right" text="Clean Profile"></profile-fetch>
         </div>
         <div class="row">
             <div class="column wide six">
                 <div class="ui segment">
+
+                    <div class="header ui"><i class="icon file outline"></i>Profile Properties</div>
                     <div class="ui list">
                         <div class="item" ng-repeat="(label, attribute) in formData.profileProperties">
                             <div class="header">{{attribute.label}}</div>
@@ -45,7 +47,9 @@
                 </div>
             </div>
             <div class="column wide ten">
-                <div class="ui segment"><i class="icon user"></i>Profile Properties
+                <div class="ui segment">
+
+                    <div class="header ui"><i class="icon settings outline"></i>Profile Configuration</div>
                     <table class="ui compact celled definition table">
                         <tbody>
                         <tr ng-repeat="(label, attribute) in formData.profileConfig"
@@ -67,45 +71,42 @@
             </div>
         </div>
         <div class="ui header">
-            <div class="content">Post Design</div>
+            <div class="content"><i class="icon file"></i>Post Design</div>
             <profile-fetch namespace="{{profileInfo.name}}" done="cleanConfig('post')" style="float: right"
                            text="Clean Post"></profile-fetch>
         </div>
         <div class="row">
             <div class="column wide six">
                 <div class="ui segment">
+                    <div class="header ui"><i class="icon file outline"></i>Post Properties</div>
                     <div class="ui list">
 
                         <div class="item" ng-repeat="(label, attribute) in formData.postProperties">
-                            <div class="header">{{attribute.label}}</div>
-                            {{attribute.value}} ({{label}})
                             <!--{{attribute}}-->
+                            <!--<div class="header">{{attribute.friendlyName}}</div>-->
+                            <!--{{attribute.path}}-->
+
+                            <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span> {{attribute.friendlyName}}</span></div>
+                            <div class="ui action input" ng-hide="!show">
+                                <input type="text" ng-model="attribute.friendlyName">
+                                <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
+                                    <i class="checkmark icon"></i>
+                                </button>
+                                <span>({{label}})</span>
+                            </div>
+
+                        </div>
+                        <div class="ui small  button" ng-click="updateProperties('post')">
+                            Approve
                         </div>
                     </div>
 
-                    <table class="ui compact celled definition table" id="profile-properties">
-                        <tbody>
-                        <tr ng-repeat="(label, attribute) in formData.postProperties"  ng-if="attribute.value">
-                            <td colspan="3">
-
-                                <profile-row data="attribute" label="{{attribute.label}}"></profile-row>
-
-                            </td>
-
-                        </tr>
-                        </tbody>
-                        <tfoot class="full-width">
-                        <td colspan="4">
-                            <div class="ui small  button" ng-click="updateProperties('post')">
-                                Approve
-                            </div>
-                        </td>
-                        </tfoot>
-                    </table>
                 </div>
             </div>
             <div class="column wide ten">
-                <div class="ui segment"><i class="icon file"></i>Post Properties
+                <div class="ui segment">
+                    <div class="header ui"><i class="icon settings outline"></i>Post Configuration</div>
+
                     <table class="ui compact celled definition table">
                         <tbody>
                         <tr ng-repeat="(label, attribute) in formData.postConfig"

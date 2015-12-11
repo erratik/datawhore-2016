@@ -41,9 +41,10 @@ module.exports = function(app) {
         console.log(req.body[req.params.configType+'Properties']);
         console.log('>> /@end');
 
+
         Profile.saveProfile({
             name: req.params.namespace,
-            data: req.body[req.params.configType+'Properties'],
+            data: req.body,
             type: req.params.configType,
             updating: true
         }, function(config) {

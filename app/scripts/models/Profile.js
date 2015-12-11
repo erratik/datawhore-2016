@@ -75,24 +75,21 @@ schema.statics = {
 
                     switch(params.type) {
                         case 'all':
-                            profile.profileProperties = makeNetworkProperties(params.data.postConfig);
-                            profile.profileProperties = makeNetworkProperties(params.data.profileConfig);
+                            profile.profileProperties = writeProperties(params.data.postConfig);
+                            profile.profileProperties = writeProperties(params.data.profileConfig);
                             profile.avatar = params.data.avatar;
                             profile.username = params.data.username;
                             console.log('+++ full profile propeties saving...');
                             break;
                         case 'profile':
-                            profile.profileProperties = params.updating ? params.data : makeNetworkProperties(params.data.profileConfig);
-                            //console.log(params.updating);
-                            //console.log(params.data);
+                            profile.profileProperties = params.updating ? params.data : writeProperties(params.data.profileConfig);
                             console.log('+++ profile  properties saved');
                             break;
                         case 'post':
-
-                            profile.postProperties = makeNetworkProperties(params.data.postConfig);
+                            console.log(params.updating);
+                            console.log(params.data);
+                            profile.postProperties = params.updating ? params.data : writeProperties(params.data.postConfig, profile.postProperties);
                             profile.post = profile.postProperties;
-                            console.log('test')
-                            console.log(profile.post)
                             console.log('+++ post  properties saved');
                             break;
                         default:
@@ -118,80 +115,89 @@ schema.statics = {
             
     }
 };
-function mapAttributeKeys(item, props) {
+function mapAttributeKeys(item, prefix, query) {
     var keys = {};
-    var query = {};
-    query.content = {};
-    query.content[item.label] = {'value' : item.value };
-    console.log('label: '+item.label);
-    console.log('value: '+item.value);
-    console.log('query is:');
-    console.log(query);
-
-    var groupKey = _.findKey(props, query);
-    keys[groupKey] = {};
+    var attributeName = prefix+"__"+item.label;
+    keys[attributeName] = {
+        friendlyName: item.label
+    };
+    keys[attributeName].path = prefix+"__"+item.label;
     return keys;
 }
-function makeNetworkProperties(props) {
 
+function writeProperties(props, current) {
+    var deleting = {};
     var savedProps = {};
     var properties = _.pluck(_.filter(props, {content: { 'enabled':  true }}), 'content');
 
     var attributeGroup = _.pluck(_.filter(props, 'grouped'), 'content');
-    _.filter(attributeGroup, function(attribute){
-        //console.log(attribute);
+    _.forEach(attributeGroup, function(attribute, cle){
         _.forEach(attribute, function(item, key){
-            if (item.grouped) {
-                console.log( _.pluck(_.filter(item, 'grouped'), 'content'));
-
-            }
+            // second level
             if (item.enabled) {
-                properties.push(item);
-                console.log(mapAttributeKeys(item, props));
+                properties.push(mapAttributeKeys(item, _.findKey(props, {content: attribute}),  {content: attribute}));
+            } else if (!item.grouped && !item.enabled){
+                //console.log(item.label+' is disabled');
+                delete current[item.label];
             }
 
-            //var childNodes = _.pluck(_.filter(item, 'grouped'), 'content');
-            //_.filter(childNodes, function(attr){
-            //    _.forEach(attr, function(n, k) {
-            //        if (n.enabled) {
-            //            console.log( key);
-            //            properties.push(n);
-            //
-            //            _.forEach(props, function (thang, label){
-            //                //console.log(thang);
-            //                if (_.has(thang, 'content.'+key+'.value.content.'+ n.label)) {
-            //                    console.log(_.has(thang, 'content.'+key+'.value.content.'+ n.label) + ' -> '+label);
-            //                    savedProps[label+'__'+key+'__'+ n.label] = n;
-            //
-            //                }
-            //            });
-            //        }
-            //    });
-            //
-            //});
+            //third level
+            if (item.grouped) {
+                var innerGroup = _.filter(item.content, 'enabled');
+                var groupKey = _.findKey(item.content, _.first(innerGroup));
+                var query = {};
+                query[key] = {content: {}};
+                query[key].content[groupKey] = _.first(innerGroup);
+
+                if (innerGroup.length) {
+
+                    //console.log(query);
+                    //console.log(findKey(props, {content: query})+'__'+key);
+                    //console.log(mapAttributeKeys(_.first(innerGroup), findKey(props, {content: query})+'__'+key));
+                    //
+                    properties.push(mapAttributeKeys(_.first(innerGroup), _.findKey(props, {content: query})+'__'+key,  {content: query}));
+                }
+
+                var disabledGroups = _.filter(item.content, 'enabled', false);
+                var disabledGroupKey = _.findKey(item.content, _.first(innerGroup));
+                var disabledQuery = {};
+                disabledQuery[key] = {content: {}};
+                disabledQuery[key].content[disabledGroupKey] = _.first(disabledGroups);
+
+                deleting[_.findKey(props, {content: disabledQuery})+'__'+key+'__'+disabledGroupKey] = true;
+                //console.log(_.findKey(props, {content: disabledQuery})+'__'+key+'__'+disabledGroupKey);
+                //console.log(disabledGroups);
+
+
+
+            }
+
         });
     });
-    //console.log(_.findKey(props, {content: { 'label':  'caption' }}));
-    //console.log('props!');
-    //console.log(props);
+
     _.forEach(properties, function(item, key){
-        var query = {};
-            query.content = {};
-            query.content[item.label] = {'value' : item.value };
-        //console.log('label: '+item.label);
-        //console.log('value: '+item.value);
-        //console.log('query is:');
-        //console.log(query);
 
-        var groupKey = _.findKey(props, query);
-        //console.log('key: '+groupKey);
-        var prefix = groupKey+"__"+item.label;
-        var label = !groupKey ? item.label : prefix;
-        savedProps[label] = item;
+        if (item.label !== undefined) {
+            //first & second level
+            if (current[item.label] !== undefined) {
+                //console.log(current);
+                savedProps[item.label] = current[item.label];
+            } else {
 
+                savedProps[item.label] = {
+                    friendlyName: item.label,
+                    path: item.label
+                };
+            }
+        } else {
+            // third level
+            _.merge(savedProps, item);
+            if (_.filter(current, item)) _.merge(savedProps, current);
+            if (_.filter(deleting, item)) _.reject(savedProps, item);
+        }
     });
-    console.log(savedProps);
-    return properties;
+
+    return savedProps;
 
 }
 
