@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-.idea
-bower_components/
-node_modules/
-=======
+
 *.log
 
 bower_components
@@ -16,4 +12,3 @@ node_modules
 .idea/vcs.xml
 .idea/workspace.xml
 .idea/libraries/datawhore_node_modules.xml
->>>>>>> profiles
