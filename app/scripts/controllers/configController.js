@@ -7,7 +7,8 @@ var app = angular.module('controllers.Config', [
     'directives.profileAvatar',
     'directives.profileFetch',
     'directives.profileCard',
-    'directives.profileRow'
+    'directives.profileRow',
+    'tabs'
 ]);
 
 

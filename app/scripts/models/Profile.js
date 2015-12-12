@@ -173,8 +173,6 @@ function writeProperties(props, current) {
                 //console.log(_.findKey(props, {content: disabledQuery})+'__'+key+'__'+disabledGroupKey);
                 //console.log(disabledGroups);
 
-
-
             }
 
         });

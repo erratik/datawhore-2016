@@ -1,0 +1,25 @@
+
+<div class="ui segment">
+    <div class="header ui"><i class="icon settings outline"></i>Post Configuration
+        <profile-fetch namespace="{{profileInfo.name}}" done="cleanConfig('post')" style="float: right" text="Clean profile"></profile-fetch>
+    </div>
+
+    <table class="ui compact celled definition table">
+        <tbody>
+        <tr ng-repeat="(label, attribute) in formData.postConfig"
+            ng-if="countProperties(attribute.content)">
+            <td colspan="3">
+                <profile-row data="formData.postConfig[label].content" grouped="attribute.grouped" checkboxes="true" values="true" label="{{label}}" model="formData.postConfig"></profile-row>
+            </td>
+
+        </tr>
+        </tbody>
+        <tfoot class="full-width">
+        <td colspan="4">
+            <div class="ui small  button" ng-click="updateConfig('post')">
+                Approve
+            </div>
+        </td>
+        </tfoot>
+    </table>
+</div>
