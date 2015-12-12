@@ -6,3 +6,17 @@
   margin: -4px 5px -4px -3px;
   border-radius: 500rem;
 }
+@media only screen and (min-width: 1200px) {
+  .ui.container {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 90%;
+  }
+}
+td td {
+  padding-left: 0!important;
+  padding-right: 0!important;
+}
+.tab-pane {
+  display: none;
+}

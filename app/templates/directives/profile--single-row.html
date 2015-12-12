@@ -1,0 +1,43 @@
+
+<table width="100%" ng-class="{'grouped': grouped, 'simple': !grouped}" >
+    
+    <tr ng-if="!grouped && data.value">
+        <td class="" width="5%" ng-if="checkboxes">
+
+            <div class="ui fitted checkbox">
+                <input type="checkbox" ng-model="data.enabled"> <label></label>
+                <!--<div ng-if="isChild">-->
+                    <!--<input type="checkbox" ng-model="model[prefix].enabled"> <label></label>-->
+                    <!--child checkbox!-->
+                <!--</div>-->
+            </div>
+        </td>
+        <td  width="40%">
+            <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span> {{data.label}}</span></div>
+            <div class="ui action input" ng-hide="!show">
+              <input type="text" ng-model="data.label">
+              <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
+                <i class="checkmark icon"></i>
+              </button>
+            </div>
+        </td>
+        <td width="85%" ng-if="values">
+            {{data.value}}
+            <input type="hidden" ng-model="data.value">
+        </td>
+    </tr>
+    <tr ng-if="grouped">
+        <td colspan="3">
+            <div ng-include="'templates/partials/forms/table--row-nested.html'"></div>
+        </td>
+    </tr>
+    <tr ng-if="!data.value" ng-hide="!entityName">
+        <td>
+            <button class="ui basic button mini" create="createEntity(entityName)">
+                <i class="icon external square"></i>
+                Create <strong>{{entityName}}</strong> entity
+            </button>
+        </td>
+    </tr>
+
+</table>

@@ -12,6 +12,8 @@
     "install": "~1.0.4",
     "angular-formly": "~6.20.1",
     "angular-formly-templates-bootstrap": "~6.0.0",
-    "api-check": "~7.5.0"
+    "api-check": "~7.5.0",
+    "angular-filter": "~0.5.8",
+    "angular-semantic-ui": "~0.0.3"
   }
 }

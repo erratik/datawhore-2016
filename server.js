@@ -19,6 +19,11 @@
     // Connect to our mongo database
     mongoose.connect(process.env.MONGO_DB);  
 
+    mongoose.connection.on('error', function(err){
+        console.log(process.env.MONGO_DB);
+        console.log(err);
+    });
+
     app.use(express.static(__dirname + '/app'));  // set the static files location /app/img will be /img for users
     app.use('/bower_components', express.static(__dirname + '/bower_components'));
     app.use(morgan('dev'));                                         // log every request to the console
@@ -29,19 +34,27 @@
 
     app.use(methodOverride());
 
+    ///** Angoose bootstraping */
+    //require("angoose").init(app, {
+    //    'module-dirs':'./app/scripts/models',
+    //    'mongo-opts': 'localhost:27017/data/datawhore'
+    //});
+
+
     // routes ======================================================================
 
 
-    require('./app/scripts/routes/profiles')(app);
-    require('./app/scripts/routes/settings')(app);
-    require('./app/scripts/routes/connect')(app);
+    require('./app/scripts/routes/configApi')(app);
+    require('./app/scripts/routes/profileApi')(app);
+    require('./app/scripts/routes/coreApi')(app);
+    //require('./app/scripts/routes/connectApi')(app);
 
     // TODO: Tay - require-directory?
-    require('./app/scripts/routes/api/facebook')(app);
-    require('./app/scripts/routes/api/twitter')(app);
-    require('./app/scripts/routes/api/lastfm')(app);
-    require('./app/scripts/routes/api/instagram')(app);
-    require('./app/scripts/routes/api/swarm')(app);
+    require('./app/scripts/routes/api/facebookApi')(app);
+    require('./app/scripts/routes/api/twitterApi')(app);
+    require('./app/scripts/routes/api/lastfmApi')(app);
+    require('./app/scripts/routes/api/instagramApi')(app);
+    require('./app/scripts/routes/api/swarmApi')(app);
 
     // listen (start app with node server.js) ======================================
     app.listen(port);
