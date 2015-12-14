@@ -30,8 +30,8 @@ app.controller('networksController', ['$scope', '$http', 'CoreService', 'network
 }]);
 
 
-app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config',
-    function configController($scope, $http, $stateParams, ConfigService, ProfileService,  profile, config) {
+app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config', 'sample',
+    function configController($scope, $http, $stateParams, ConfigService, ProfileService,  profile, config, sample) {
         //console.log(profile);
 
         //$scope.hidden = true;
@@ -43,6 +43,8 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
             profileProperties : profile.profileProperties,
             postProperties : profile.postProperties
         };
+
+        $scope.samplePost = sample;
 
         console.log($scope);
 

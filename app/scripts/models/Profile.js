@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
 
+var writeProperties = require('../custom-packages/prioritize').writeProperties;
+
 var schema = new mongoose.Schema({
     name: String,
     last_modified: Number,
@@ -13,7 +15,6 @@ var schema = new mongoose.Schema({
         entities: {}
     }
 }, {strict: false});
-var assignValues = require('../custom-packages/prioritize').assignValues;
 
 
 schema.statics = {
@@ -116,92 +117,5 @@ schema.statics = {
     }
 };
 
-function mapAttributeKeys(item, prefix) {
-    var keys = {};
-    var attributeName = prefix+"__"+item.label;
-    keys[attributeName] = {
-        friendlyName: item.label
-    };
-    keys[attributeName].path = prefix+"__"+item.label;
-    return keys;
-}
-
-function writeProperties(props, current) {
-    var deleting = {};
-    var savedProps = {};
-    var properties = _.pluck(_.filter(props, {content: { 'enabled':  true }}), 'content');
-
-    var attributeGroup = _.pluck(_.filter(props, 'grouped'), 'content');
-    _.forEach(attributeGroup, function(attribute, cle){
-        _.forEach(attribute, function(item, key){
-            // second level
-            if (item.enabled) {
-                properties.push(mapAttributeKeys(item, _.findKey(props, {content: attribute}),  {content: attribute}));
-            } else if (!item.grouped && !item.enabled){
-                //console.log(item.label+' is disabled');
-                delete current[item.label];
-            }
-
-            //third level
-            if (item.grouped) {
-                var innerGroup = _.filter(item.content, 'enabled');
-                _.forEach(innerGroup, function(group){
-                    console.log(group);
-                    var groupKey = _.findKey(item.content, group);
-                    var query = {};
-                    query[key] = {content: {}};
-                    query[key].content[groupKey] = group;
-
-                    if (group !== undefined) {
-
-                        console.log(query);
-                        //console.log(findKey(props, {content: query})+'__'+key);
-                        //console.log(mapAttributeKeys(_.first(innerGroup), _.findKey(props, {content: query})+'__'+key));
-
-                        properties.push(mapAttributeKeys(group, _.findKey(props, {content: query})+'__'+key,  {content: query}));
-                    }
-
-                });
-
-                var disabledGroups = _.filter(item.content, 'enabled', false);
-                var disabledGroupKey = _.findKey(item.content, _.first(innerGroup));
-                var disabledQuery = {};
-                disabledQuery[key] = {content: {}};
-                disabledQuery[key].content[disabledGroupKey] = _.first(disabledGroups);
-
-                deleting[_.findKey(props, {content: disabledQuery})+'__'+key+'__'+disabledGroupKey] = true;
-                //console.log(_.findKey(props, {content: disabledQuery})+'__'+key+'__'+disabledGroupKey);
-                //console.log(disabledGroups);
-
-            }
-
-        });
-    });
-
-    _.forEach(properties, function(item, key){
-
-        if (item.label !== undefined) {
-            //first & second level
-            if (current[item.label] !== undefined) {
-                //console.log(current);
-                savedProps[item.label] = current[item.label];
-            } else {
-
-                savedProps[item.label] = {
-                    friendlyName: item.label,
-                    path: item.label
-                };
-            }
-        } else {
-            // third level
-            _.merge(savedProps, item);
-            if (_.filter(current, item)) _.merge(savedProps, current);
-            if (_.filter(deleting, item)) _.reject(savedProps, item);
-        }
-    });
-
-    return savedProps;
-
-}
 
 module.exports = Profile = mongoose.model('Profile', schema);

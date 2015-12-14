@@ -52,6 +52,10 @@ app.constant('angularMomentConfig', {
             profile: function(ConfigService, $stateParams) {
                 return ConfigService.getProfileConfig( $stateParams.namespace );
                 // return ConfigService.load($stateParams.namespace);
+            },
+            sample: function(ProfileService, $stateParams) {
+                return ProfileService.getPosts( {namespace: $stateParams.namespace, count: 1}, true);
+                // return ConfigService.load($stateParams.namespace);
             }
         }
     });
@@ -139,32 +143,6 @@ Object.prototype.countProperties = function(foo) {
     }
     return count;
 
-};
-
-var buildProfileInfo = function(profile) {
-
-    var profileInfo = {
-        avatar: profile.avatar,
-        last_modified: profile.last_modified,
-        name: profile.name,
-        username: profile.username
-    };
-
-    return profileInfo;
-};
-
-var buildConfig = function(network) {
-
-
-    var _nfo = {};
-    //
-    //var profileConfig = (network.profileConfig) ? network.profileConfig : makeParent(network.fetchedProfile, {});
-    ////var postConfig = (network.postConfig) ? network.postConfig : makeParent(network.fetchedProfile, {});
-
-    _nfo.profileConfig = network.profileConfig;
-    _nfo.postConfig = network.postConfig;
-
-    return _nfo;
 };
 
 

@@ -1,188 +1,22 @@
-var tools = module.exports = makeParent
+var tools = module.exports = makeData
 var _ = require('lodash');
-makeParent.makeParent = makeParent
-makeParent.makeParentNode = makeParentNode
-makeParent.assignValues = assignValues
 
-// @deprecated!
-function makeParent(nodeParent, objParent) {
-    // var obj;
-    var _nodeKeys = Object.keys(nodeParent);
-    for (var i = 0; i < _nodeKeys.length; i++) {
+makeData.assignValues = assignValues
+makeData.writeProperties = writeProperties
 
-        var content = nodeParent[_nodeKeys[i]];
-        if (content !== null) {
-            var that = nodeParent[_nodeKeys[i]];
-            var array = !isNaN( Number(_nodeKeys[i]));
+var isSimpleProperty = function(value) {
 
-            objParent[_nodeKeys[i]] = makeData(that, _nodeKeys[i]);
+    //if (_.isString(value)) console.log('('+value+') is a string!');
+    //if (_.isBoolean(value)) console.log('('+value+') is a boolean!');
+    //if (_.isArray(value)) console.log('('+value+') is an array!');
+    //if (_.isNumber(value)) console.log('('+value+') is a number!');
 
-            var _label = [];
-            if (array) {
-                //console.log(_nodeKeys[i] + "...x    ");
-                //console.log(_nodeKeys[i-1]);
-                _label.push(_nodeKeys[i]);
-            }
-
-            //console.log(_label);
-
-            var injected = objParent[_nodeKeys[i]];
-            if (injected.grouped
-                && typeof injected.content.value == 'object'
-                || typeof injected.content.value == 'boolean') {
-                objParent[_nodeKeys[i]].content = makeParent(injected.content.value, {});
-
-            } else {
-
-            //console.log(typeof injected.content.value);
-                //console.log(!isNaN(Number(injected.content.label)));
-                //console.log(typeof injected.content.value);
-                //if (typeof injected.content.value == 'boolean') {
-                //
-                //    console.log(typeof injected.content.value);
-                //}
-                if (!isNaN(Number(injected.content.label))) {
-                    //console.log(typeof injected.content.value);
-                    //console.log(injected);
-
-                }
-            }
-
-        }
-    }
-    ;
-    return objParent;
-};
-
-function makeParentNode(nodeParent, objParent) {
-    // var obj;
-    var _nodeKeys = Object.keys(nodeParent);
-    for (var i = 0; i < _nodeKeys.length; i++) {
-        //console.log('label | nodeParentLabel: '+ _nodeKeys[i]);
-
-        var content = nodeParent[_nodeKeys[i]];
-        if (content !== null) {
-
-            if (Array.isArray(content)) {
-
-                //console.log('val   | nodeParentContentType: array');
-                //console.log(content);
-            } else {
-
-
-                if (typeof content == 'boolean' || typeof content == 'string') {
-
-                    objParent[_nodeKeys[i]] = makeData(content, _nodeKeys[i]);
-                    var injected = objParent[_nodeKeys[i]].content.value;
-
-
-                } else {
-                    var makeObjParent = function(objParent, content, _nodeKeys) {
-
-                        objParent[_nodeKeys] = makeData(content, _nodeKeys);
-                        var nInjection = objParent[_nodeKeys];
-                        var _injectedKeys = Object.keys(nInjection.content.value);
-
-
-                        for (var n = 0; n < _injectedKeys.length; n++) {
-                            //console.log(nInjection.content.value[_injectedKeys[n]]);
-
-                            //console.log('ˆ ˆ ˆ ˆ ˆ ˆ ');
-                                if (Array.isArray(nInjection.content.value[_injectedKeys[n]])) {
-
-                                    //console.log('i guess this is an array and needs some other shit going on');
-                                    //console.log(_injectedKeys[n]);
-                                    //console.log(nInjection.content.value[_injectedKeys[n]]);
-                                } else if (typeof nInjection.content.value[_injectedKeys[n]] == 'object') {
-
-                                    //console.log('i guess this is an object and needs makeData or makeParent?');
-                                    //console.log(_injectedKeys[n]);
-                                    //console.log(nInjection.content.value[_injectedKeys[n]]);
-                                    //console.log(objParent[_nodeKeys]);
-                                    //console.log(makeObjParent(nInjection, nInjection.content.value[_injectedKeys[n]], _injectedKeys[n]));
-
-                                }
-
-                            nInjection.content.value[_injectedKeys[n]] = makeData(nInjection.content.value[_injectedKeys[n]], _injectedKeys[n]);
-
-                            //console.log(nInjection[_injectedKeys[n]]);
-
-                        }
-                    };
-
-                    makeObjParent(objParent, content, _nodeKeys[i]);
-
-                }
-                //console.log('val   | nodeParentContentType: '+ typeof content);
-
-                if (Array.isArray(injected)) {
-                    //console.log(injected);
-                } else if (typeof injected == 'object') {
-
-                } else {
-                    if (typeof injected == 'boolean' || typeof injected == 'string')  {
-
-                        //console.log('injected content ('+injected+') : '+ typeof injected);
-                    } else {
-
-                        //console.log('injected content: '+ typeof injected);
-                    }
-
-                }
-
-
-            }
-            //console.log('val   | nodeParentContent exists');
-        } else {
-
-            //console.log('nodeParentContent does not exist');
-        }
-
-        //console.log('- - - - - - - - - - - - - - - - - - - - - - -');
-        //    var that = nodeParent[_nodeKeys[i]];
-        //    var array = !isNaN( Number(_nodeKeys[i]));
-        //
-        //    objParent[_nodeKeys[i]] = makeData(that, _nodeKeys[i]);
-        //
-        //    var injected = objParent[_nodeKeys[i]];
-        //    if (injected.grouped
-        //        && typeof injected.content.value == 'object'
-        //        || typeof injected.content.value == 'boolean') {
-        //        objParent[_nodeKeys[i]].content = makeParent(injected.content.value, {});
-        //
-        //    } else {
-        //
-        //    }
-        //
-    };
-    //console.log(objParent);
-    return objParent;
-};
-
-function makeData(val, label) {
-    //console.log('make data running');
-    var obj = {
-        content: {
-            enabled: false,
-            label: label,
-            value: val
-        }
-
-    };
-    var thisVal = obj.content.value;
-
-    //obj.grouped = (typeof thisVal == 'object') ? true : false;
-    if (_.isArray(val)) {
-        obj.content = _.first(val);
-        delete obj.content.label;
-        delete obj.content.enabled;
-        obj.content = makeAttribute(obj.content);
-        obj.grouped = true;
+    if (_.isString(value) ||  _.isBoolean(value) || _.isArray(value) || _.isNumber(value) ) {
+        return true;
     } else {
-
-        obj.grouped = false;
+        return false;
     }
-    return obj;
+
 };
 
 function makeAttribute(node, child) {
@@ -218,16 +52,16 @@ function makeAttribute(node, child) {
                 } else {
                     groupedAttr.content[name] = {content: {}, grouped: true, label: name};
 
-                        //console.log('~~~~~~~~~ '+name+' ~~~~~~~~~');
+                    //console.log('~~~~~~~~~ '+name+' ~~~~~~~~~');
 
-                        _.forEach(item, function(i, k){
-                            if (isSimpleProperty(i)) {
-                                //console.log(i);
-                                groupedAttr.content[name].content[k] = makeData(i, k).content;
-                            } else {
+                    _.forEach(item, function(i, k){
+                        if (isSimpleProperty(i)) {
+                            //console.log(i);
+                            groupedAttr.content[name].content[k] = makeData(i, k).content;
+                        } else {
 
-                            }
-                        });
+                        }
+                    });
                     //console.log('....................................');
                 }
             });
@@ -241,53 +75,131 @@ function makeAttribute(node, child) {
     return obj;
 };
 
+function makeData(val, label) {
+    //console.log('make data running');
+    var obj = {
+        content: {
+            enabled: false,
+            label: label,
+            value: val
+        }
+
+    };
+    var thisVal = obj.content.value;
+
+    //obj.grouped = (typeof thisVal == 'object') ? true : false;
+    if (_.isArray(val)) {
+        obj.content = _.first(val);
+        delete obj.content.label;
+        delete obj.content.enabled;
+        obj.content = makeAttribute(obj.content);
+        obj.grouped = true;
+    } else {
+
+        obj.grouped = false;
+    }
+    return obj;
+};
+
 
 function assignValues(node) {
-
-
+    // todo: this is redundant, you can compress makeAttribute into this?!
     // first, let's set up the simple arrays, strings and boolean properties
     var topLevelProps = makeAttribute(node);
-    console.log(topLevelProps);
+    //console.log(topLevelProps);
     return topLevelProps;
 
 }
 
-var pickSimple = function(node) {
+function mapAttributeKeys(item, prefix) {
+    var keys = {};
+    var attributeName = prefix+"__"+item.label;
+    keys[attributeName] = {
+        friendlyName: item.label
+    };
+    keys[attributeName].path = prefix+"__"+item.label;
+    return keys;
+}
 
-    var obj = _.pick(node, _.isString);
-    _.merge(obj, _.pick(node, _.isBoolean));
-    _.merge(obj, _.pick(node, _.isArray));
-    _.merge(obj, _.pick(node, _.isNumber));
 
-    return obj;
-};
+function writeProperties(props, current) {
+    if (current === undefined) {current = false;}
+    var deleting = {};
+    var savedProps = {};
+    var properties = _.pluck(_.filter(props, {content: { 'enabled':  true }}), 'content');
 
+    var attributeGroup = _.pluck(_.filter(props, 'grouped'), 'content');
+    _.forEach(attributeGroup, function(attribute, cle){
+        _.forEach(attribute, function(item, key){
+            // second level
+            if (item.enabled) {
+                properties.push(mapAttributeKeys(item, _.findKey(props, {content: attribute}),  {content: attribute}));
+            } else if (!item.grouped && !item.enabled){
+                //console.log(item.label+' is disabled');
+                if (current !== false)
+                    delete current[item.label];
+            }
 
-var pickSimple = function(node) {
+            //third level
+            if (item.grouped) {
+                var innerGroup = _.filter(item.content, 'enabled');
+                _.forEach(innerGroup, function(group){
+                    console.log(group);
+                    var groupKey = _.findKey(item.content, group);
+                    var query = {};
+                    query[key] = {content: {}};
+                    query[key].content[groupKey] = group;
 
-    var obj = _.pick(node, _.isString);
-    _.merge(obj, _.pick(node, _.isBoolean));
-    _.merge(obj, _.pick(node, _.isArray));
-    _.merge(obj, _.pick(node, _.isNumber));
+                    if (group !== undefined) {
 
-    return obj;
-};
+                        console.log(query);
+                        //console.log(findKey(props, {content: query})+'__'+key);
+                        //console.log(mapAttributeKeys(_.first(innerGroup), _.findKey(props, {content: query})+'__'+key));
 
-var isSimpleProperty = function(value) {
+                        properties.push(mapAttributeKeys(group, _.findKey(props, {content: query})+'__'+key,  {content: query}));
+                    }
 
-    //if (_.isString(value)) console.log('('+value+') is a string!');
-    //if (_.isBoolean(value)) console.log('('+value+') is a boolean!');
-    //if (_.isArray(value)) console.log('('+value+') is an array!');
-    //if (_.isNumber(value)) console.log('('+value+') is a number!');
+                });
+                if (current !== false) {
 
-    if (_.isString(value) ||  _.isBoolean(value) || _.isArray(value) || _.isNumber(value) ) {
-        return true;
-    } else {
-        return false;
-    }
+                    var disabledGroups = _.filter(item.content, 'enabled', false);
+                    var disabledGroupKey = _.findKey(item.content, _.first(innerGroup));
+                    var disabledQuery = {};
+                    disabledQuery[key] = {content: {}};
+                    disabledQuery[key].content[disabledGroupKey] = _.first(disabledGroups);
 
-};
+                    deleting[_.findKey(props, {content: disabledQuery})+'__'+key+'__'+disabledGroupKey] = true;
+                    //console.log(_.findKey(props, {content: disabledQuery})+'__'+key+'__'+disabledGroupKey);
+                    //console.log(disabledGroups);
+                }
 
-var pickPlainObject = function(node) {
-    return _.pick(node, _.isObject);
-};
+            }
+
+        });
+    });
+
+    _.forEach(properties, function(item, key){
+
+        if (item.label !== undefined) {
+            //first & second level
+            if (current[item.label] !== undefined) {
+                //console.log(current);
+                savedProps[item.label] = current[item.label];
+            } else {
+
+                savedProps[item.label] = {
+                    friendlyName: item.label,
+                    path: item.label
+                };
+            }
+        } else {
+            // third level
+            _.merge(savedProps, item);
+            if (_.filter(current, item)) _.merge(savedProps, current);
+            if (_.filter(deleting, item) && current !== false) _.reject(savedProps, item);
+        }
+    });
+
+    return savedProps;
+
+}

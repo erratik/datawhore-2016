@@ -6,6 +6,26 @@ var app = angular.module('services.Config', []);
 app.service('ConfigService', function ($http, $q){
     var ConfigService = {};
 
+    var buildProfileInfo = function(profile) {
+
+        var profileInfo = {
+            avatar: profile.avatar,
+            last_modified: profile.last_modified,
+            name: profile.name,
+            username: profile.username
+        };
+
+        return profileInfo;
+    };
+
+    var buildConfig = function(network) {
+        var _nfo = {};
+        _nfo.profileConfig = network.profileConfig;
+        _nfo.postConfig = network.postConfig;
+
+        return _nfo;
+    };
+
     ConfigService.getNetworkConfig = function(options){
         var params = {
             namespace: options.namespace,
@@ -32,7 +52,8 @@ app.service('ConfigService', function ($http, $q){
                     console.log(config);
 
                     return config;
-                } else {
+                }
+                else {
                     console.log(':: ConfigService ::  getNetworkConfig (all) ');
                     var configs = {};
 
@@ -65,15 +86,11 @@ app.service('ConfigService', function ($http, $q){
     ConfigService.getProfileConfig = function(namespace){
 
         var url = '/api/config/profile/'+namespace;
-        // var url = (params.namespace) ? '/api/profile/'+params.namespace : '/api/profiles' ;
-        // console.log(this.getPosts({namespace: 'instagram', count: 1}));
-        //console.log('testjkjkljkjl');
         return $http.get(url).
         then(function(response) {
             // if (params.namespace) {
             var data = response.data;
             console.log(':: ProfileService ::  getProfileConfig ('+namespace+')');
-
             return data;
         });
     };

@@ -1,6 +1,6 @@
 // public/core.js
 var app = angular.module('services.Profile', [
-    'angularMoment', 
+    'angularMoment'
 ]);
 
 
@@ -39,6 +39,20 @@ app.service('ProfileService', function ($http, $q){
      //}
 
 
+    ProfileService.getPosts = function(options, sample){
+        sample = (sample !== undefined) ? true : false;
+        var params = {
+            namespace: options.namespace,
+            count: options.count
+        };
+        return $http.post('/api/' + params.namespace + '/fetch/posts/'+params.count+'/'+sample).
+        then(function(response) {
+            var data = response.data;
+            //console.log(data);
+            return data;
+        });
+    };
+
     ProfileService.update = function(namespace, formData, configType){
 
         return $http.post('/api/profile/update/' + namespace+ '/'+configType, formData).
@@ -46,9 +60,9 @@ app.service('ProfileService', function ($http, $q){
             var data = response.data;
             // data.formData = formData;
              console.log(data);
-            
+
             return data;
-        });            
+        });
         //return formData;
 
     };

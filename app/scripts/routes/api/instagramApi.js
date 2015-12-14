@@ -1,15 +1,15 @@
-// load the setting model
-var Config = require('../../models/Config');
-var merge = require('merge'),original, cloned;
+// required packages
 var mongoose = require('mongoose');
-var merge = require('merge'),
-    original, cloned;
-var flatten = require('flat');
+var _ = require('lodash');
 
-var makeParentNode = require('../../custom-packages/prioritize').makeParentNode;
+// models
+var Config = require('../../models/Config');
+var Drop = require('../../models/Drop');
+
+// custom packages
 var assignValues = require('../../custom-packages/prioritize').assignValues;
 
-var mongoose = require('mongoose');
+// route config
 var namespace = 'instagram';
 var client = require('instagram-node').instagram();
 client.use({
@@ -75,16 +75,30 @@ module.exports = function(app) {
 
 
 
-    app.post('/api/' + namespace + '/fetch/posts/:count', function(req, res) {
+    app.post('/api/' + namespace + '/fetch/posts/:count/:sample', function(req, res) {
         // console.log(req.params);
         // console.log(req.body);
         // console.log(req);
 
-        client.user_self_media_recent({count: req.body.count}, function(err, medias, pagination, remaining, limit) {
+        client.user_self_media_recent({count: req.params.count}, function(err, medias, pagination, remaining, limit) {
             if (err) {
                 console.log(err);
             } else {
-                res.json({posts:medias, flat: flatten(medias, {delimiter: '__'})});
+                //console.log('req.body > '+ req.body);
+                var posts = _.filter(medias, function(media){
+                    return assignValues(media);
+                });
+
+                Drop.storeRain({
+                    namespace: namespace,
+                    posts: posts,
+                    sample: req.params.sample
+                }, function(drops) {
+
+                    res.json(drops);
+
+                });
+                //res.json({posts:medias, flat: flatten(medias, {delimiter: '__'})});
             }
         });
 
