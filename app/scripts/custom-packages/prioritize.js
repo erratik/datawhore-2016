@@ -21,16 +21,7 @@ function isSimpleProperty(value) {
 
 };
 
-function assignValues(node) {
-    // todo: this is redundant, you can compress makeAttribute into this?!
-    // first, let's set up the simple arrays, strings and boolean properties
-    var topLevelProps = makeAttribute(node);
-    //console.log(topLevelProps);
-    return topLevelProps;
-
-}
-
-function makeAttribute(node, child) {
+function assignValues(node, child) {
 
     var obj = {};
 
@@ -82,7 +73,7 @@ function makeAttribute(node, child) {
 
     });
     //obj.grouped = false;
-    //console.log('------------ @end makeAttribute');
+    //console.log('------------ @end assignValues');
     return obj;
 };
 
@@ -99,7 +90,7 @@ function makeData(val, label) {
 
     if (_.isArray(val)) {
         obj.content = _.first(val);
-        obj.content = makeAttribute(obj.content);
+        obj.content = assignValues(obj.content);
         obj.grouped = true;
     } else {
 
