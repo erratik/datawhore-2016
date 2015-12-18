@@ -63,8 +63,7 @@ schema.statics = {
 
         console.log('<---------- save '+params.type);
 
-        //if (params.data.name) {
-            // Profile.findOne({name: params.namespace}, function(err, profile) {
+
             Profile.findOne({name: params.name}).select().exec(function(err, profile) {
                 if (!profile) {
                     console.log('abridged profile not saved, not found');
@@ -87,10 +86,10 @@ schema.statics = {
                             console.log('+++ profile  properties saved');
                             break;
                         case 'post':
-                            //console.log(params.updating);
-                            //console.log(params.data);
+                            console.log(params.updating);
+                            console.log(params.data);
                             profile.postProperties = params.updating ? params.data : writeProperties(params.data.postConfig, profile.postProperties);
-                            profile.post = profile.postProperties;
+                            //profile.post = profile.postProperties;
                             console.log('+++ post  properties saved');
                             break;
                         default:
@@ -105,14 +104,17 @@ schema.statics = {
                         if (err) return handleError(err);
                         console.log('+++ abridged profile saved');
                         if (params.updating) {
-                            callback(profile[params.type+'Properties'])
+                            console.log(profile);
+                            console.log('+++ updating: '+params.type);
+
+                            callback(profile[params.type+'Properties']);
                         } else {
+                            //console.log(profile);
                             callback(profile); // return settings in JSON format
                         }
                     });
                 }
             });
-        //}
             
     }
 };

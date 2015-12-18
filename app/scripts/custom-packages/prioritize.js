@@ -1,10 +1,12 @@
-var tools = module.exports = makeData
+var tools = module.exports = makeData;
 var _ = require('lodash');
 
-makeData.assignValues = assignValues
-makeData.writeProperties = writeProperties
+makeData.assignValues = assignValues;
+makeData.writeProperties = writeProperties;
+makeData.isSimpleProperty = isSimpleProperty;
+makeData.findValues = findValues;
 
-var isSimpleProperty = function(value) {
+function isSimpleProperty(value) {
 
     //if (_.isString(value)) console.log('('+value+') is a string!');
     //if (_.isBoolean(value)) console.log('('+value+') is a boolean!');
@@ -18,6 +20,15 @@ var isSimpleProperty = function(value) {
     }
 
 };
+
+function assignValues(node) {
+    // todo: this is redundant, you can compress makeAttribute into this?!
+    // first, let's set up the simple arrays, strings and boolean properties
+    var topLevelProps = makeAttribute(node);
+    //console.log(topLevelProps);
+    return topLevelProps;
+
+}
 
 function makeAttribute(node, child) {
 
@@ -85,13 +96,9 @@ function makeData(val, label) {
         }
 
     };
-    var thisVal = obj.content.value;
 
-    //obj.grouped = (typeof thisVal == 'object') ? true : false;
     if (_.isArray(val)) {
         obj.content = _.first(val);
-        delete obj.content.label;
-        delete obj.content.enabled;
         obj.content = makeAttribute(obj.content);
         obj.grouped = true;
     } else {
@@ -100,16 +107,6 @@ function makeData(val, label) {
     }
     return obj;
 };
-
-
-function assignValues(node) {
-    // todo: this is redundant, you can compress makeAttribute into this?!
-    // first, let's set up the simple arrays, strings and boolean properties
-    var topLevelProps = makeAttribute(node);
-    //console.log(topLevelProps);
-    return topLevelProps;
-
-}
 
 function mapAttributeKeys(item, prefix) {
     var keys = {};
@@ -121,8 +118,9 @@ function mapAttributeKeys(item, prefix) {
     return keys;
 }
 
-
 function writeProperties(props, current) {
+    console.log('..........writeProperties...')
+
     if (current === undefined) {current = false;}
     var deleting = {};
     var savedProps = {};
@@ -144,7 +142,7 @@ function writeProperties(props, current) {
             if (item.grouped) {
                 var innerGroup = _.filter(item.content, 'enabled');
                 _.forEach(innerGroup, function(group){
-                    console.log(group);
+                    //console.log(group);
                     var groupKey = _.findKey(item.content, group);
                     var query = {};
                     query[key] = {content: {}};
@@ -152,7 +150,7 @@ function writeProperties(props, current) {
 
                     if (group !== undefined) {
 
-                        console.log(query);
+                        //console.log(query);
                         //console.log(findKey(props, {content: query})+'__'+key);
                         //console.log(mapAttributeKeys(_.first(innerGroup), _.findKey(props, {content: query})+'__'+key));
 
@@ -161,7 +159,7 @@ function writeProperties(props, current) {
 
                 });
                 if (current !== false) {
-
+                    // when i update the properties, if some do not exist anymore, I need to delete them
                     var disabledGroups = _.filter(item.content, 'enabled', false);
                     var disabledGroupKey = _.findKey(item.content, _.first(innerGroup));
                     var disabledQuery = {};
@@ -191,15 +189,51 @@ function writeProperties(props, current) {
                     friendlyName: item.label,
                     path: item.label
                 };
+
             }
         } else {
             // third level
             _.merge(savedProps, item);
             if (_.filter(current, item)) _.merge(savedProps, current);
+
+            // when i update the properties, if some do not exist anymore, I need to delete them
             if (_.filter(deleting, item) && current !== false) _.reject(savedProps, item);
         }
     });
 
+    //console.log(savedProps);
+
     return savedProps;
 
 }
+
+
+function findValues(post, split, prop, obj){
+
+    _.forEach(split, function(dataProperty, cle){
+        if (isSimpleProperty(post[dataProperty])) {
+            //console.log(post[dataProperty]);
+            obj[prop.friendlyName] = post[dataProperty];
+        } else {
+            //console.log(dataProperty, split[cle+1]);
+            var query = '';
+
+            _.forEach(split, function(part, i){
+                query += part;
+                if (i != split.length-1) query += '.';
+            });
+
+            //console.log(query);
+            var objects = [];
+            objects.push(post);
+            var mapped = _.map(objects, _.property(query));
+
+            //console.log(mapped);
+            //console.log( prop.friendlyName);
+
+            obj[prop.friendlyName] = _.first(mapped);
+
+        }
+    });
+
+};

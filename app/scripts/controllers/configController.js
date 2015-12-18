@@ -44,7 +44,7 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
             postProperties : profile.postProperties
         };
 
-        $scope.samplePost = sample;
+        $scope.post = sample;
 
         console.log($scope);
 
@@ -83,8 +83,9 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
 
         // when submitting the add form, send the text to the node API
         $scope.cleanConfig = function(configType) {
+            //$scope.show_modal = true;
             ConfigService.cleanConfig({namespace: $scope.profileInfo.name, configType: configType}).then(function(data){
-                //console.log(data);
+                //console.log('test');
                 updatedConfigs(data);
 
             });
@@ -110,6 +111,15 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
 
         }
 
+        $scope.show_modal = false;
+
+        $scope.close_modal = function(){
+            $scope.show_modal = false;
+        };
+
+        $scope.open_modal = function(){
+            $scope.show_modal = true;
+        };
 
     }
 ]);

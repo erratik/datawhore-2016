@@ -134,7 +134,7 @@ var makeData = function(val, label){
     return obj;
 };
 
-Object.prototype.countProperties = function(foo) {
+countProperties = function(foo) {
     var count = 0;
     for (var k in foo) {
         if (foo.hasOwnProperty(k)) {
@@ -145,7 +145,3 @@ Object.prototype.countProperties = function(foo) {
 
 };
 
-
-Object.prototype.foo = function() {
-    console.log('fooooo');
-}

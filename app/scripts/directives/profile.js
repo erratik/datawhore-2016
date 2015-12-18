@@ -118,7 +118,15 @@
                 namespace: "@",
                 text: '@'
             },
-            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">{{text}}</div>'
+            template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">{{text}}</div>',
+            link: function() {
+                //$('.ui.basic.modal')
+                ////;
+                //console.log( );
+                //if ($('.ui.basic.modal').length) {
+                //    $('.ui.basic.modal').modal('show');
+                //}
+            }
         };
     });       
 

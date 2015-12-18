@@ -83,7 +83,7 @@ schema.statics = {
                         if (profile) {
 
 
-                            console.log(params.type);
+                            console.log(_.merge(config,profile));
 
                             callback(_.merge(config,profile));
                         } else {
