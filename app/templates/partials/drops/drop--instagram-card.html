@@ -1,0 +1,22 @@
+
+<div class="ui card">
+    <div class="content">
+        <div class="right floated meta">{{post.created_time }}</div>
+        <img class="ui avatar image" src="{{profileInfo.avatar}}"> {{profileInfo.username}}
+        <div ng-if="post.location_name"><i class="icon location arrow"></i>{{post.location_name}}</div>
+    </div>
+    <div class="image">
+        <img src="{{post.url}}">
+    </div>
+    <div class="content">
+        {{post.caption}}
+    </div>
+    <div class="content">
+            <span class="right floated">
+              <i class="heart like icon"></i>
+        {{post.likes_count}} likes
+        </span>
+        <i class="comment icon"></i>
+        {{post.comments_count}} comments
+    </div>
+</div>
