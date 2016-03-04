@@ -32,7 +32,6 @@ module.exports = function(app) {
                     Config.update({
                         namespace: namespace,
                         data: {
-                            fetchedProfile: result,
                             profileConfig: assignValues(result)
                         },
                         type: 'profile'

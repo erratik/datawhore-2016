@@ -87,7 +87,7 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
             ConfigService.cleanConfig({namespace: $scope.profileInfo.name, configType: configType}).then(function(data){
                 //console.log('test');
                 updatedConfigs(data);
-
+                $scope.show_modal = false;
             });
         };
         // when submitting the add form, send the text to the node API
@@ -96,7 +96,7 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
                 updatedConfigs(data);
             });
         };
-        // when submitting the add form, send the text to the node API
+        //
         $scope.createEntity = function(label) {
             console.log('createEntity?');
             console.log(label);

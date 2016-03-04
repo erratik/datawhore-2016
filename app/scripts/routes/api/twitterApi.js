@@ -1,10 +1,15 @@
-// load the setting model
-var Config = require('../../models/Config');
-var merge = require('merge'),original, cloned;
+// required packages
 var mongoose = require('mongoose');
-var makeParent = require('../../custom-packages/prioritize');
+var _ = require('lodash');
+
+// models
+var Config = require('../../models/Config');
+var Drop = require('../../models/Drop');
+
+// custom packages
 var assignValues = require('../../custom-packages/prioritize').assignValues;
 
+// network config
 var namespace = 'twitter';
 var Twitter = require('twitter');
 var client = new Twitter({
@@ -14,31 +19,28 @@ var client = new Twitter({
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
+var params = {
+    // screen_name: 'wptweeto'
+    screen_name: process.env.TWITTER_USERNAME
+};
 // expose the routes to our app with module.exports
 module.exports = function(app) {
     app.get('/api/' + namespace + '/fetch/:configType', function(req, res) {
         console.log('••• '+ req.params.configType);
         // if (err) res.send(err)
-        var params = {
-            screen_name: process.env.TWITTER_USERNAME
-        };
         if (req.params.configType == 'profile') {
 
 
             client.get('users/show', params, function (error, docs, response) {
                 if (!error) {
-                    //
-                    //delete docs.entities;
-                    //delete docs.urls;
-                    //delete docs.status;
-                    //delete docs.retweeted_status;
+
 
                     Config.update({
                         namespace: namespace,
                         data: {
                             profileConfig: assignValues(docs)
                         },
-                            type: 'profile'
+                        type: 'profile'
                     },
                     function (config) {
 
@@ -59,9 +61,9 @@ module.exports = function(app) {
                     Config.update({
                         namespace: namespace,
                         data: {
-                            postConfig: assignValues(posts[1])
+                            postConfig: assignValues(posts[0])
                         },
-                            type: 'post'
+                        type: 'post'
                     },
                     function (config) {
 
@@ -75,41 +77,37 @@ module.exports = function(app) {
         }
             
     });
-    app.get('/api/' + namespace + '/config/post', function(req, res) {
 
-        // if (err) res.send(err)
-        var params = {
-            screen_name: process.env.TWITTER_USERNAME
-        };
+    app.post('/api/' + namespace + '/fetch/posts/:count/:sample', function(req, res) {
+        // console.log(req.params);
+        // console.log(req.body);
+        // console.log(req);
 
-            client.get('statuses/user_timeline', params, function(error, posts, response) {
-                if (!error) {
+        client.get('statuses/user_timeline', params, function(error, posts, response) {
+            if (error) {
+                console.log(err);
+            } else {
+                //console.log('req.body > '+ req.body);
+                var posts = _.filter(posts, function(post){
+                    return assignValues(post);
+                });
 
-                    delete posts[0].user;
+                Drop.storeRain({
+                    namespace: namespace,
+                    posts: posts,
+                    sample: req.params.sample
+                },
+                function(drops) {
 
-                    Config.update({
-                        namespace: namespace,
-                        data: {
-                            postConfig: assignValues(posts[0], {})
-                        }
-                    },
-                        function(config) {
+                    res.json(drops);
 
-                            res.json(config);
-                        });
-                } else {
-                    console.log(error)
-                }
-            });
+                });
+                //res.json({posts:medias, flat: flatten(medias, {delimiter: '__'})});
+            }
+        });
 
-            
     });
 
-
-    app.get('/api/' + namespace + '/posts/:count', function(req, res) { 
-
-        
-    });
 
 
 };

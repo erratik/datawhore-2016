@@ -79,17 +79,30 @@ schema.statics = {
                     console.log('config saved');
 
                     // saving the abridged profile, Profile.js
-                    Profile.saveProfile({data: config, type: params.type}, function (profile) {
-                        if (profile) {
 
+                    //Profile.saveProfile({data: config, type: params.type}, function (profile) {
+                    //    if (profile) {
+                    //
+                    //
+                    //        //console.log(_.merge(config,profile));
+                    //
+                    //        callback(_.merge(config,profile));
+                    //    } else {
+                    //
+                    //    }
+                    //});
 
-                            console.log(_.merge(config,profile));
-
-                            callback(_.merge(config,profile));
+                    Profile.get(config,function(profile) {
+                        if (!profile) {
+                            console.log('no abridged config found');
                         } else {
-
+                            // console.log(profile);
+                            //console.log(_.merge(config,profile));
+                            callback(_.merge(config,profile));
                         }
                     });
+
+
 
 
                 });

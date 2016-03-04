@@ -21,7 +21,7 @@ function isSimpleProperty(value) {
 
 };
 
-function assignValues(node, child) {
+function assignValues(node) {
 
     var obj = {};
 
