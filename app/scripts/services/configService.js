@@ -6,26 +6,18 @@ var app = angular.module('services.Config', []);
 app.service('ConfigService', function ($http, $q){
     var ConfigService = {};
 
-    var buildProfileInfo = function(profile) {
+    ConfigService.getConfig = function(name) {
 
-        var profileInfo = {
-            avatar: profile.avatar,
-            last_modified: profile.last_modified,
-            name: profile.name,
-            username: profile.username
-        };
+        return $http.get('/api/profile/config/'+ name).
+            then(function(response) {
+                var data = response.data;
+                console.log(':: ConfigService ::  getConfig ('+name+') ');
+                console.log(data);
 
-        return profileInfo;
+                return data;
+            });
     };
-
-    var buildConfig = function(network) {
-        var _nfo = {};
-        _nfo.profileConfig = network.profileConfig;
-        _nfo.postConfig = network.postConfig;
-
-        return _nfo;
-    };
-
+    /*
     ConfigService.getNetworkConfig = function(options){
         var params = {
             namespace: options.namespace,
@@ -33,12 +25,13 @@ app.service('ConfigService', function ($http, $q){
         };
 
         var url = (params.namespace) ? '/api/config/network/'+params.namespace : '/api/configs/network' ;
-        // console.log(this.getPosts({namespace: 'instagram', count: 1}));
+        // //console.log(this.getPosts({namespace: 'instagram', count: 1}));
         return $http.get(url).
             then(function(response) {
                 if (params.namespace) {
                     console.log(':: ConfigService ::  getNetworkConfig ('+params.namespace+') ');
                     var data = response.data;
+                    console.log(data);
 
                     var config = {};
                     //var config = buildProfile({profile: data, loadConfig: params.loadConfig});
@@ -54,7 +47,7 @@ app.service('ConfigService', function ($http, $q){
                     return config;
                 }
                 else {
-                    console.log(':: ConfigService ::  getNetworkConfig (all) ');
+                    //console.log(':: ConfigService ::  getNetworkConfig (all) ');
                     var configs = {};
 
                     for (var i = 0; i < response.data.length; i++) {
@@ -63,7 +56,7 @@ app.service('ConfigService', function ($http, $q){
                         configs[response.data[i].name].profileInfo = buildProfileInfo(response.data[i]);
 
                         if (params.loadConfig == 'soft') {
-                            console.log('> soft loaded config with profileInfo:'+response.data[i].name);
+                            //console.log('> soft loaded config with profileInfo:'+response.data[i].name);
                             if (response.data[i].postConfig !== undefined)  {
                                 configs[response.data[i].name].postConfig = true;
                             }
@@ -73,7 +66,7 @@ app.service('ConfigService', function ($http, $q){
                         } else {
                             // todo: this won't really ever happen... hopefully
                             //configs[response.data[i].name] = buildProfile({profile:response.data[i], loadConfig: params.loadConfig});
-                            console.log('> loaded config with profileInfo:'+response.data[i].name);
+                            //console.log('> loaded config with profileInfo:'+response.data[i].name);
                         }
 
                     };
@@ -82,18 +75,8 @@ app.service('ConfigService', function ($http, $q){
                 }
         });            
     };
+    */
 
-    ConfigService.getProfileConfig = function(namespace){
-
-        var url = '/api/config/profile/'+namespace;
-        return $http.get(url).
-        then(function(response) {
-            // if (params.namespace) {
-            var data = response.data;
-            console.log(':: ProfileService ::  getProfileConfig ('+namespace+')');
-            return data;
-        });
-    };
 
     ConfigService.cleanConfig = function(options){
         var params = {
@@ -103,18 +86,19 @@ app.service('ConfigService', function ($http, $q){
         return $http.get('/api/' + params.namespace + '/fetch/'+params.configType).
         then(function(response) {
             var data = response.data;
-            //console.log(data);
+            ////console.log(data);
             return data;
         });            
     };
 
     ConfigService.update = function(namespace, formData, configType){
+
         return $http.post('/api/config/update/' + namespace+'/'+configType, formData).
         then(function(response) {
             var data = response.data;
             return data;
         });            
-        return formData;
+        //return formData;
 
     };
 
@@ -124,7 +108,7 @@ app.service('ConfigService', function ($http, $q){
     //        namespace: options.namespace,
     //        count: options.count
     //    };
-    //    // console.log(params);
+    //    // //console.log(params);
     //    return $http.post('/api/' + params.namespace + '/posts/'+ params.count, params).
     //    then(function(response) {
     //
@@ -138,9 +122,9 @@ app.service('ConfigService', function ($http, $q){
     ConfigService.delete = function(namespace){            
         return $http.delete('/api/configs/' + namespace).
         then(function(response) {
-            // console.log(response.data); //I get the correct items, all seems ok here
+            // //console.log(response.data); //I get the correct items, all seems ok here
             return (response.data);
-            // console.log(profileService);
+            // //console.log(profileService);
         });            
     };
 

@@ -20,18 +20,19 @@ module.exports = function(app) {
     app.get('/api/configs/network', function(req, res) {
         Config.get({}, function(config){
 
-            //console.log('>> @start Config.get()');
-            //console.log(config);
-            //console.log('>> /@end');
+            ////console.log('>> @start Config.get()');
+            ////console.log(config);
+            ////console.log('>> /@end');
 
             res.json(config);
         });
         
     });
 
+    // todo: deprecate this route
     // retrieve network config -------------------------------------------------------*/
     app.get('/api/config/network/:namespace', function(req, res) {
-        Config.get({namespace: req.params.namespace}, function(config){
+        Config.findByName({namespace: req.params.namespace}, function(config){
 
             //console.log('>> @start Config.get({namespace: '+req.params.namespace+'})');
             //console.log(config);
@@ -46,16 +47,18 @@ module.exports = function(app) {
     // add/update network config -------------------------------------------------------*/
     app.post('/api/config/update/:namespace/:type', function(req, res) {
 
-        //console.log('>> @start Config.update({namespace: '+req.params.namespace+'})');
-        //console.log(config);
-        //console.log('>> /@end');
+        ////console.log('>> @start Config.update({namespace: '+req.params.namespace+'})');
+        ////console.log(config);
+        ////console.log('>> /@end');
 
-        Config.update({
-            namespace: req.params.namespace,
-            data: req.body,
+        var _config = new Config({name: req.params.namespace}); // instantiated Config
+
+        _config.update({
+            data: req.body[req.params.type+'Config'],
             type: req.params.type
         }, function(config) {
-            res.json(config);
+            console.log(config);
+            //res.json(config);
         });
     });
 
@@ -64,22 +67,22 @@ module.exports = function(app) {
     //*****************************************************************/
 
     // retrieve network configs (post & profile) -------------------------*/
-    app.get('/api/config/profile/:namespace', function(req, res) {
+    app.get('/api/profile/config/:namespace', function(req, res) {
 
-        Profile.get({name: req.params.namespace, columns: 'profile'}, function(config){
-
+        Config.findByName(req.params.namespace, function(err, config) {
             //console.log('>> @start Profile.get({namespace: '+req.params.namespace+'})');
-            //console.log(config);
+            //console.log('static: '+config[0]); // ruff
             //console.log('>> /@end /api/config/profile/:'+req.params.namespace);
 
-            res.json(config);
+            res.json(config[0]);
         });
+
 
     });
 
     // wipe config -------------------------------------------------------*/
     //app.delete('/api/configs/:namespace', function(req, res) {
-    //    // console.log('test');
+    //    // //console.log('test');
     //    // get settings with mongoose, return default settings if !settings.saved
     //    Settings.findOne({
     //        name: 'settings'

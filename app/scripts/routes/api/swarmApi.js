@@ -28,9 +28,9 @@ module.exports = function(app) {
           client.Users.getUser('self', process.env.SWARM_ACCESS_TOKEN, 
             function (error, data) {
               if(error) {
-                console.log(error);
+                //console.log(error);
               } else {
-                  console.log(data.user);
+                  //console.log(data.user);
 
                     Profile.updateProfile({
                         namespace: namespace,
@@ -38,7 +38,7 @@ module.exports = function(app) {
                         username: process.env.SWARM_USERNAME,
                         profile: data.user
                     }, function(data) {
-                        // console.log(data);
+                        // //console.log(data);
                         res.json(data);
                     });
 

@@ -20,11 +20,11 @@ app.service('CoreService', function ($http, $q){
             then(function(response) {
                 var data = response.data;
                 if (params.namespace) {
-                    console.log(':: CoreService ::  getNetworks (single) ');
+                    //console.log(':: CoreService ::  getNetworks (single) ');
                 } else {
-                    console.log(':: CoreService ::  getNetworks (all) ');
+                    //console.log(':: CoreService ::  getNetworks (all) ');
                 }
-            //console.log(data);
+            ////console.log(data);
                 return data;
         });            
     };
@@ -36,7 +36,7 @@ app.service('CoreService', function ($http, $q){
     //     then(function(response) {
     //         var data = response.data;
     //         data.formData = formData;
-    //         // console.log(response.data);
+    //         // //console.log(response.data);
     //         return (response.data);
     //     });            
     //     return formData;
@@ -47,9 +47,9 @@ app.service('CoreService', function ($http, $q){
     // CoreService.delete = function(namespace){            
     //     return $http.delete('/api/profiles/' + namespace).
     //     then(function(response) {
-    //         // console.log(response.data); //I get the correct items, all seems ok here
+    //         // //console.log(response.data); //I get the correct items, all seems ok here
     //         return (response.data);
-    //         // console.log(profileService);
+    //         // //console.log(profileService);
     //     });            
     // }
 

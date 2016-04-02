@@ -14,28 +14,34 @@ var app = angular.module('controllers.Config', [
 
 app.controller('networksController', ['$scope', '$http', 'CoreService', 'networks', 'configs',
     function networksController($scope, $http, CoreService, networks, configs) {
-        //console.log($scope);
+        ////console.log($scope);
 
     $scope.networks = networks;
     $scope.configs = configs;
-    console.log($scope);
+    //console.log($scope);
+
     // when submitting the add form, send the text to the node API
     //$scope.cleanProfile = function(namespace) {
     //    ConfigService.cleanProfile({namespace: namespace}).then(function(data){
     //        // $scope.profiles[namespace]
-    //        console.log(data);
+    //        //console.log(data);
     //    });
     //};
 
 }]);
 
 
-app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config', 'sample',
-    function configController($scope, $http, $stateParams, ConfigService, ProfileService,  profile, config, sample) {
-        //console.log(profile);
+app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config',
+    function configController($scope, $http, $stateParams, ConfigService, ProfileService,  profile, config) {
+        //console.log(profile.postProperties);
 
         //$scope.hidden = true;
-        $scope.profileInfo = config.profileInfo;
+        $scope.profileInfo = {
+            avatar: profile.avatar,
+            last_modified: profile.last_modified,
+            name: profile.name,
+            username: profile.username
+        };
 
         $scope.formData = {
             profileConfig : config.profileConfig,
@@ -44,13 +50,19 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
             postProperties : profile.postProperties
         };
 
-        $scope.post = sample;
+        var loadSample = function(){
+            return ProfileService.getPosts( {namespace: $stateParams.namespace, count: 1}, true);
+        };
+
+        loadSample().then(function(response){
+            $scope.post = response;
+        });
 
         console.log($scope);
 
         // when submitting the add form, send the text to the node API
         //$scope.deleteProfile = function(namespace) {
-        //    //console.log(':: deleteProfile');
+        //    ////console.log(':: deleteProfile');
         //    $scope.ConfigService.delete(namespace).then(function(data){
         //        delete $scope.profile;
         //    });
@@ -67,16 +79,17 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
         $scope.updateConfig = function(configType) {
             ConfigService.update($scope.profileInfo.name, $scope.formData, configType).then(function(data){
                 $scope.profileInfo.last_modified = data.last_modified;
-                console.log(data);
+                //console.log(data);
                 updatedConfigs(data);
                 //$scope.formData[configType+'Properties'] = data;
             });
         };
 
         $scope.updateProperties = function(configType) {
-            ProfileService.update($scope.profileInfo.name, $scope.formData[configType+'Properties'], configType).then(function(data){
+            //console.log($scope.formData);
+            ProfileService.update($scope.profileInfo.name, $scope.formData[configType+'Config'], configType).then(function(data){
                 //$scope.profileInfo.last_modified = data.last_modified;
-                $scope.formData[configType+'Properties'] = data;
+                $scope.formData[configType+'Config'] = data;
             });
         };
 
@@ -85,7 +98,7 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
         $scope.cleanConfig = function(configType) {
             //$scope.show_modal = true;
             ConfigService.cleanConfig({namespace: $scope.profileInfo.name, configType: configType}).then(function(data){
-                //console.log('test');
+                ////console.log('test');
                 updatedConfigs(data);
                 $scope.show_modal = false;
             });
@@ -98,8 +111,8 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
         };
         //
         $scope.createEntity = function(label) {
-            console.log('createEntity?');
-            console.log(label);
+            //console.log('createEntity?');
+            //console.log(label);
         };
 
         function updatedConfigs(data) {
@@ -107,7 +120,7 @@ app.controller('configController', ['$scope', '$http',  '$stateParams', 'ConfigS
             $scope.formData.postConfig = data.postConfig;
             $scope.formData.profileProperties = data.profileProperties;
             $scope.formData.postProperties = data.postProperties;
-            //console.log(data.profileProperties);
+            ////console.log(data.profileProperties);
 
         }
 

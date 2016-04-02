@@ -27,7 +27,7 @@ module.exports = function(app) {
 
             client.user('self', function(err, result, remaining, limit) {
                 if (err) {
-                    console.log(err);
+                    //console.log(err);
                 } else {
                     Config.update({
                         namespace: namespace,
@@ -37,7 +37,7 @@ module.exports = function(app) {
                         type: 'profile'
 
                     }, function(config) {
-                        //console.log(config);
+                        ////console.log(config);
                         res.json(config);
 
                     });
@@ -49,8 +49,10 @@ module.exports = function(app) {
 
             client.user_self_media_recent({count: 5}, function(err, medias, pagination, remaining, limit) {
                 if (err) {
-                    console.log(err);
+                    //console.log(err);
                 } else {
+                    //console.log( assignValues(medias[4]) );
+                    //res.json(config);
 
                     Config.update({
                         namespace: namespace,
@@ -75,15 +77,15 @@ module.exports = function(app) {
 
 
     app.post('/api/' + namespace + '/fetch/posts/:count/:sample', function(req, res) {
-        // console.log(req.params);
-        // console.log(req.body);
-        // console.log(req);
+        // //console.log(req.params);
+        // //console.log(req.body);
+        // //console.log(req);
 
         client.user_self_media_recent({count: req.params.count}, function(err, medias, pagination, remaining, limit) {
             if (err) {
-                console.log(err);
+                //console.log(err);
             } else {
-                //console.log('req.body > '+ req.body);
+                ////console.log('req.body > '+ req.body);
                 var posts = _.filter(medias, function(media){
                     return assignValues(media);
                 });
@@ -97,7 +99,7 @@ module.exports = function(app) {
                     res.json(drops);
 
                 });
-                //res.json({posts:medias, flat: flatten(medias, {delimiter: '__'})});
+
             }
         });
 

@@ -90,7 +90,7 @@ gulp.task('e2e', function () {
 
 // we'd need a slight delay to reload browsers
 // connected to browser-sync after restarting nodemon
-var BROWSER_SYNC_RELOAD_DELAY = 3000;
+var BROWSER_SYNC_RELOAD_DELAY = 5000;
 
 gulp.task('nodemon', function (cb) {
   var called = false;

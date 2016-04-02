@@ -26,7 +26,7 @@ var params = {
 // expose the routes to our app with module.exports
 module.exports = function(app) {
     app.get('/api/' + namespace + '/fetch/:configType', function(req, res) {
-        console.log('••• '+ req.params.configType);
+        //console.log('••• '+ req.params.configType);
         // if (err) res.send(err)
         if (req.params.configType == 'profile') {
 
@@ -47,7 +47,7 @@ module.exports = function(app) {
                         res.json(config);
                     });
                 } else {
-                    console.log(error)
+                    //console.log(error)
                 }
             });
         } else {
@@ -56,7 +56,7 @@ module.exports = function(app) {
 
                     delete posts[0].user;
 
-                    //console.log(assignValues(posts[0]));
+                    ////console.log(assignValues(posts[0]));
 
                     Config.update({
                         namespace: namespace,
@@ -70,7 +70,7 @@ module.exports = function(app) {
                         res.json(config);
                     });
                 } else {
-                    console.log(error)
+                    //console.log(error)
                 }
             });
 
@@ -79,15 +79,15 @@ module.exports = function(app) {
     });
 
     app.post('/api/' + namespace + '/fetch/posts/:count/:sample', function(req, res) {
-        // console.log(req.params);
-        // console.log(req.body);
-        // console.log(req);
+        // //console.log(req.params);
+        // //console.log(req.body);
+        // //console.log(req);
 
         client.get('statuses/user_timeline', params, function(error, posts, response) {
             if (error) {
-                console.log(err);
+                //console.log(err);
             } else {
-                //console.log('req.body > '+ req.body);
+                ////console.log('req.body > '+ req.body);
                 var posts = _.filter(posts, function(post){
                     return assignValues(post);
                 });

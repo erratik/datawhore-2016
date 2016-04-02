@@ -30,7 +30,7 @@ app.constant('angularMomentConfig', {
         templateUrl: 'templates/tpl--profiles.html',
         resolve: {
             networks: function(CoreService) {
-                //console.log(CoreService.getNetworkConfigs({namespace: false}));
+                ////console.log(CoreService.getNetworkConfigs({namespace: false}));
                 return CoreService.getNetworks({namespace: false});
                 // return ConfigService.load($stateParams.namespace);
             },
@@ -45,16 +45,12 @@ app.constant('angularMomentConfig', {
         templateUrl: 'templates/tpl--profile.html',
         resolve: {
             config: function(ConfigService, $stateParams) {
-                //console.log(ConfigService.getNetworkConfig({namespace: $stateParams.namespace, loadConfig: true}));
-                return ConfigService.getNetworkConfig({namespace: $stateParams.namespace, loadConfig: true});
+                ////console.log(ConfigService.getNetworkConfig({namespace: $stateParams.namespace, loadConfig: true}));
+                return ConfigService.getConfig($stateParams.namespace);
                 // return ConfigService.load($stateParams.namespace);
             },
-            profile: function(ConfigService, $stateParams) {
-                return ConfigService.getProfileConfig( $stateParams.namespace );
-                // return ConfigService.load($stateParams.namespace);
-            },
-            sample: function(ProfileService, $stateParams) {
-                return ProfileService.getPosts( {namespace: $stateParams.namespace, count: 1}, true);
+            profile: function(ProfileService, $stateParams) {
+                return ProfileService.getProfile( $stateParams.namespace );
                 // return ConfigService.load($stateParams.namespace);
             }
         }
@@ -69,7 +65,7 @@ app.filter('typeof', function(){
 });
 app.filter('length', function(){
     return function(context){
-        // console.log(context.length);
+        // //console.log(context.length);
         return (typeof context == "object") ? Object.keys(context).length : '';
     }
 });
@@ -105,7 +101,7 @@ var makeParent = function(nodeParent, objParent) {
         if (content !== null ) {
             var that = nodeParent[_nodeKeys[i]];
             objParent[_nodeKeys[i]] = makeData(that, _nodeKeys[i]);
-            // console.log(Object.keys(that.content.value));
+            // //console.log(Object.keys(that.content.value));
             var injected = objParent[_nodeKeys[i]];
 
             if (injected.grouped

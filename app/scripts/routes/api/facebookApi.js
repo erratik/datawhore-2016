@@ -16,7 +16,7 @@ module.exports = function(app) {
 
     // UPDATE FACEBOOK PROFILE
     app.get('/api/' + namespace + '/profile', function(req, res) {
-        // console.log('boo');
+        // //console.log('boo');
         var fb = new fbgraph.Facebook(process.env.FACEBOOK_ACCESS_TOKEN, 'v2.4');
         fb.graph('/me?fields=id,name,location,birthday,friends,picture,cover', function(err, me) {
                 if (err) console.log(err);
@@ -27,7 +27,7 @@ module.exports = function(app) {
                     username: process.env.FACEBOOK_USERNAME,
                     profile: me
                 }, function(data) {
-                    // console.log(data);
+                    // //console.log(data);
                     res.json(data);
                 });
         });
@@ -36,12 +36,12 @@ module.exports = function(app) {
 
     //GET POSTS
     app.get('/api/' + namespace + '/posts', function(req, res) {
-        console.log(req.body);
+        //console.log(req.body);
         var fb = new fbgraph.Facebook(process.env.FACEBOOK_ACCESS_TOKEN, 'v2.4');
         fb.graph('/me/feed', function(err, result) {
             if (err) console.log(err);
                 
-            console.log(result);
+            //console.log(result);
                
         });
 

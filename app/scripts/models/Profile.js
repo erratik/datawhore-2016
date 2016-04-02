@@ -1,123 +1,58 @@
 var mongoose = require('mongoose');
+var moment = require('moment');
 var _ = require('lodash');
 
-var writeProperties = require('../custom-packages/prioritize').writeProperties;
-
-var schema = new mongoose.Schema({
-    name: String,
-    last_modified: Number,
-    avatar: String,
-    username: String,
-    postProperties: {},
-    profileProperties: {},
-    post: {
-        type:Object,
-        entities: {}
+// bootstrap mongoose, because syntax.
+mongoose.createModel = function(name, options) {
+    var schema = new mongoose.Schema(options.schema);
+    for (key in options.self) {
+        if (typeof options.self[key] !== 'function') continue;
+        schema.statics[key] = options.self[key];
     }
-}, {strict: false});
-
-
-schema.statics = {
-    get: function(config, callback){
-
-        if (config.name) {
-            // Profile.findOne({name: params.namespace}, function(err, profile) {
-        Profile.findOne({name: config.name}).select().exec(function(err, profile) {
-                if (!profile) {
-                    console.log('no abridged profile found');
-                    Profile.create(config, function(err, profile) {
-                        if (!err) {
-                            console.log('... abridged profile created');
-                            callback(profile);
-                        }
-                    });
-                } else {
-                    console.log('************* profile and post properties gotten');
-                    //console.log(profile);
-                    callback(profile); // return settings in JSON format
-                    
-                }
-            });
-        }
-            
-    },
-    //getAll: function(callback){
-    //
-    //   Profile.find(function(err, profile) {
-    //           if (!profiles.length) {
-    //               console.log('no abridged profiles saved');
-    //           } else {
-    //               console.log(profiles.length+' abridged profiles saved');
-    //               callback(profiles); // return settings in JSON format
-    //           }
-    //   });
-    //
-    //},
-    saveProfile: function(options, callback){
-        var params = {
-            data: options.data,
-            type: options.type,
-            name: options.data.name || options.name, // if not saving all, use the name set in updateConfig(),
-            updating: options.updating
-        };
-
-        console.log('<---------- save '+params.type);
-
-
-            Profile.findOne({name: params.name}).select().exec(function(err, profile) {
-                if (!profile) {
-                    console.log('abridged profile not saved, not found');
-                    
-                } else {
-                    //
-
-                    profile.last_modified = params.data.last_modified;
-
-                    switch(params.type) {
-                        case 'all':
-                            profile.profileProperties = writeProperties(params.data.postConfig, profile.profileProperties);
-                            profile.profileProperties = writeProperties(params.data.profileConfig, profile.postProperties);
-                            profile.avatar = params.data.avatar;
-                            profile.username = params.data.username;
-                            console.log('+++ full profile propeties saving...');
-                            break;
-                        case 'profile':
-                            profile.profileProperties = params.updating ? params.data : writeProperties(params.data.profileConfig, profile.profileProperties);
-                            console.log('+++ profile  properties saved');
-                            break;
-                        case 'post':
-                            console.log(params.updating);
-                            console.log(params.data);
-                            profile.postProperties = params.updating ? params.data : writeProperties(params.data.postConfig, profile.postProperties);
-                            //profile.post = profile.postProperties;
-                            console.log('+++ post  properties saved');
-                            break;
-                        default:
-                            profile.avatar = params.data.avatar;
-                            profile.username = params.data.username;
-                            console.log('+++ avatar and username saved in profile properties for '+params.name);
-
-                    }
-
-
-                    profile.save(function (err) {
-                        if (err) return handleError(err);
-                        console.log('+++ abridged profile saved');
-                        if (params.updating) {
-                            console.log(profile);
-                            console.log('+++ updating: '+params.type);
-
-                            callback(profile[params.type+'Properties']);
-                        } else {
-                            //console.log(profile);
-                            callback(profile); // return settings in JSON format
-                        }
-                    });
-                }
-            });
-            
+    for (key in options) {
+        if (typeof options[key] !== 'function') continue;
+        schema.methods[key] = options[key];
     }
+    return mongoose.model(name, schema);
 };
 
+// Define the model w/ pretty syntax!
+var Profile = mongoose.createModel('Profile', {
+    schema: {
+        name: String,
+        last_modified: Number,
+        avatar: String,
+        username: String,
+        postProperties: {},
+        profileProperties: {},
+        post: {
+            type:Object,
+            entities: {}
+        }
+    },
+    self: {
+        findByName: function(name, cb) {
+            return this.find({ name: name }, cb);
+        }
+    },
+    getProperties: function(type, callback) {
+         return this.model('Profile').find({ name: this.name }, function(err, profile){
+             //console.log(profile);
+             callback(profile[0][type+'Properties']);
+         });
+    },
+    update: function(options, callback){
 
-module.exports = Profile = mongoose.model('Profile', schema);
+        var query = { name: this.name},
+            update = {last_modified : moment().format('X')},
+            opts = {multi:false};
+        update[options.type+'Profile'] = options.data;
+
+        //console.log(update);
+        this.model('Profile').update(query, update, opts, callback);
+
+    }
+
+});
+
+module.exports = Profile;

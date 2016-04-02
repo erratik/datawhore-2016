@@ -16,7 +16,7 @@ schema.statics = {
                 name: 'core'
             }, function(err, core) {
                 if (err) console.log(err)
-                console.log('Core Model > saved profile...');
+                //console.log('Core Model > saved profile...');
                 if (typeof callback == 'function') callback(core);
             });
         });
@@ -42,7 +42,7 @@ schema.statics = {
                     name: 'core'
                 }, function(err, core) {
                     if (err) console.log(err)
-                    console.log('Core Model > updated core...');
+                    //console.log('Core Model > updated core...');
                     if (typeof callback == 'function') callback(core);
                 });
             });
@@ -55,7 +55,7 @@ schema.statics = {
         if (params.namespace) {
             Core.findOne('core', function(err, core) {
                 if (!core) {
-                    console.log('no core found');
+                    //console.log('no core found');
                 } else {
                     callback(core.networks[params.namespace]); // return core in JSON format
                     
@@ -65,9 +65,9 @@ schema.statics = {
 
             Core.find(function(err, core) {
                 if (!core.length) {
-                    console.log('no core saved');
+                    //console.log('no core saved');
                 } else {
-                    // console.log(core[0].networks)
+                    // //console.log(core[0].networks)
 
                     callback(core[0].networks); // return core in JSON format
                 }
