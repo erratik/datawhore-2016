@@ -24,8 +24,11 @@
         console.log(err);
     });
 
-    app.use(express.static(__dirname + '/app'));  // set the static files location /app/img will be /img for users
-    app.use('/bower_components', express.static(__dirname + '/bower_components'));
+    // static content routes
+    app.use('/app',express.static(__dirname + '/../app'));  // set the static files location /app/img will be /img for users
+    //app.use('/core',express.static(__dirname + '/../app/modules/core')); // static path for core scripts
+    app.use('/bower_components', express.static(__dirname + '/../bower_components'));
+
     app.use(morgan('dev'));                                         // log every request to the console
     app.use(bodyParser.urlencoded({'extended':'true'}));            // parse application/x-www-form-urlencoded
     app.use(bodyParser.json());                                     // parse application/json
@@ -34,27 +37,21 @@
 
     app.use(methodOverride());
 
-    ///** Angoose bootstraping */
-    //require("angoose").init(app, {
-    //    'module-dirs':'./app/scripts/models',
-    //    'mongo-opts': 'localhost:27017/data/datawhore'
-    //});
-
 
     // routes ======================================================================
 
 
-    require('./app/scripts/routes/configApi')(app);
-    require('./app/scripts/routes/profileApi')(app);
-    require('./app/scripts/routes/coreApi')(app);
+    require('../app/scripts/routes/configApi')(app);
+    require('../app/scripts/routes/profileApi')(app);
+    require('../app/scripts/routes/coreApi')(app);
     //require('./app/scripts/routes/connectApi')(app);
 
     // TODO: Tay - require-directory?
-    require('./app/scripts/routes/api/facebookApi')(app);
-    require('./app/scripts/routes/api/twitterApi')(app);
-    require('./app/scripts/routes/api/lastfmApi')(app);
-    require('./app/scripts/routes/api/instagramApi')(app);
-    require('./app/scripts/routes/api/swarmApi')(app);
+    require('../app/scripts/routes/api/facebookApi')(app);
+    require('../app/scripts/routes/api/twitterApi')(app);
+    require('../app/scripts/routes/api/lastfmApi')(app);
+    require('../app/scripts/routes/api/instagramApi')(app);
+    require('../app/scripts/routes/api/swarmApi')(app);
 
     // listen (start app with node server.js) ======================================
     app.listen(port);
