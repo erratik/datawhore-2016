@@ -25,7 +25,7 @@
     });
 
     // static content routes
-    app.use('/app',express.static(__dirname + '/../app'));  // set the static files location /app/img will be /img for users
+    app.use(express.static(__dirname + '/../app'));  // set the static files location /app/img will be /img for users
     //app.use('/core',express.static(__dirname + '/../app/modules/core')); // static path for core scripts
     app.use('/bower_components', express.static(__dirname + '/../bower_components'));
 

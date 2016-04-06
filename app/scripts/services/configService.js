@@ -1,9 +1,6 @@
-// public/core.js
-var app = angular.module('services.Config', []);
-
-
-
-app.service('ConfigService', function ($http, $q){
+define(['./module'], function (services) {
+    'use strict';
+    services.service('ConfigService', function ($http, $q){
     var ConfigService = {};
 
     ConfigService.getConfig = function(name) {
@@ -130,4 +127,6 @@ app.service('ConfigService', function ($http, $q){
 
 
     return ConfigService;
+});
+
 });

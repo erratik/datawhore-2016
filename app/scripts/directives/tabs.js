@@ -3,14 +3,12 @@
  * @author: nerv
  * @version: 0.2.5, 2012-08-25
  */
-(function(angular) {
-
+define(['./module'], function (directives) {
     'use strict';
-
-    angular.module('tabs', []);
-
-    angular.module('tabs')
-        .directive('ngTabs', ngTabsDirective);
+    directives
+        .directive('ngTabs', ngTabsDirective)
+        .directive('ngTabHead', ngTabHeadDirective)
+        .directive('ngTabBody', ngTabBodyDirective);
 
     function ngTabsDirective() {
         return {
@@ -41,8 +39,6 @@
     ngTabsController.$inject = ['$scope'];
 
 
-    angular.module('tabs')
-        .directive('ngTabHead', ngTabHeadDirective);
 
     function ngTabHeadDirective() {
         return {
@@ -69,9 +65,6 @@
     }
 
 
-    angular.module('tabs')
-        .directive('ngTabBody', ngTabBodyDirective);
-
     function ngTabBodyDirective() {
         return {
             scope: false,
@@ -87,4 +80,4 @@
         };
     }
 
-})(angular);
+});

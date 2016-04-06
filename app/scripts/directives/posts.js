@@ -1,8 +1,6 @@
-;(function (angular) {
+define(['./module'], function (directives) {
     'use strict';
-
-    angular.module('directives.postConfig', [])
-        .directive('postConfig', function () {
+    directives.directive('postConfig', function () {
         return {
             restrict: 'E',
             scope: true,
@@ -19,4 +17,4 @@
 
 
 
-})(angular);
+});
