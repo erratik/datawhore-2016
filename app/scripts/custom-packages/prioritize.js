@@ -116,7 +116,8 @@ function writeProperties(props, current) {
     var deleting = {};
     var savedProps = {};
     var properties = _.pluck(_.filter(props, {content: { 'enabled':  true }}), 'content');
-
+console.log(props);
+console.log('gghhj');
     var attributeGroup = _.pluck(_.filter(props, 'grouped'), 'content');
     _.forEach(attributeGroup, function(attribute, cle){
         _.forEach(attribute, function(item, key){
@@ -168,6 +169,7 @@ function writeProperties(props, current) {
     });
 
     _.forEach(properties, function(item, key){
+        console.log(properties);
 
         if (item.label !== undefined) {
             //first & second level

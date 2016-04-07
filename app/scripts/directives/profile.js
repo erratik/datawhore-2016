@@ -94,16 +94,26 @@ define(['./module'], function (directives) {
                 }
             };
         })
-        .directive('profileFetch', function () {
+        .directive('configFetch', function () {
             return {
                 restrict: 'E',
+                replace: true,
                 scope: {
-                    done: "&",
+                    fetch: "&",
                     namespace: "@",
                     text: '@'
                 },
-                template: '<div class="right mini ui button trigger" ng-click="done({namespace:namespace})"><img src="/images/settings/{{namespace}}.png" class="micro">{{text}}</div>',
-                link: function () {
+                controller: function ($scope) {
+
+                    $scope.fn = function() {
+                        $scope.fetch({namespace: $scope.namespace});
+                    };
+
+                },
+                template: '<div class="right mini ui button trigger" ng-click="fn()"><img src="/images/settings/{{namespace}}.png" class="micro">{{text}}</div>',
+                link: function (scope, elem, attrs) {
+
+                    //console.info(elem);
                     //$('.ui.basic.modal')
                     ////;
                     //console.log( );

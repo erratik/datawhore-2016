@@ -36,9 +36,9 @@ module.exports = function(app) {
 
         Profile.findByName(req.params.namespace, function(err, profile){
 
-            //console.log('>> @start Profile.get('+req.params.namespace+')');
-            //console.log(profile[0]);
-            //console.log('>> /@end');
+            console.log('>> @start Profile.findByName('+req.params.namespace+')');
+            console.log(profile[0]);
+            console.log('>> /@end');
 
             res.json(profile[0]);
         });

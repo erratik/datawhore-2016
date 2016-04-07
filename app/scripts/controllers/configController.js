@@ -3,13 +3,13 @@ define([
 ], function (controllers) {
     'use strict';
     controllers
-        .controller('networksController', ['$scope', '$http', 'CoreService', 'networks', 'configs',
-            function networksController($scope, $http, CoreService, networks, configs) {
+        .controller('networksController', ['$scope', '$http', '$log', 'CoreService', 'networks', 'configs',
+            function networksController($scope, $http, $log, CoreService, networks, configs) {
                 ////console.log($scope);
 
                 $scope.networks = networks;
                 $scope.configs = configs;
-                console.log($scope);
+                $log.info($scope);
 
                 // when submitting the add form, send the text to the node API
                 //$scope.cleanProfile = function(namespace) {
@@ -49,7 +49,8 @@ define([
                 console.log($scope);
 
                 $scope.updateConfig = function (configType) {
-                    ConfigService.update($scope.profileInfo.name, $scope.formData, configType).then(function (data) {
+                    var config =  $scope.formData[configType+'Config'];
+                    ConfigService.update($scope.profileInfo.name, config, configType).then(function (data) {
                         $scope.profileInfo.last_modified = data.last_modified;
                         //console.log(data);
                         updatedConfigs(data);
@@ -69,13 +70,13 @@ define([
                 // when submitting the add form, send the text to the node API
                 $scope.cleanConfig = function (configType) {
                     //$scope.show_modal = true;
+
                     ConfigService.cleanConfig({
                         namespace: $scope.profileInfo.name,
-                        configType: configType
+                        type: configType
                     }).then(function (data) {
-                        ////console.log('test');
                         updatedConfigs(data);
-                        $scope.show_modal = false;
+                        //$scope.show_modal = false;
                     });
                 };
                 // when submitting the add form, send the text to the node API

@@ -47,19 +47,20 @@ module.exports = function(app) {
     // add/update network config -------------------------------------------------------*/
     app.post('/api/config/update/:namespace/:type', function(req, res) {
 
-        ////console.log('>> @start Config.update({namespace: '+req.params.namespace+'})');
-        ////console.log(config);
-        ////console.log('>> /@end');
-
+        //console.log('>> @start Config.update({namespace: '+req.params.namespace+'})');
         var _config = new Config({name: req.params.namespace}); // instantiated Config
 
         _config.update({
-            data: req.body[req.params.type+'Config'],
-            type: req.params.type
+            data: req.body,
+            type: req.params.type,
+            reset: false
         }, function(config) {
             console.log(config);
             //res.json(config);
         });
+
+        //console.log(req.body);
+        //console.log('>> /@end');
     });
 
     //*****************************************************************/

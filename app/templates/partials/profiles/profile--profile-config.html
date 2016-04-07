@@ -1,7 +1,7 @@
 
 <div class="ui segment">
-    <div class="header ui"><i class="icon settings outline"></i>Post Configuration
-        <profile-fetch namespace="{{profileInfo.name}}" done="open_modal()" style="float: right" text="Clean profile"></profile-fetch>
+    <div class="header ui"><i class="icon settings outline"></i>Profile Configuration
+        <config-fetch namespace="{{profileInfo.name}}" fetch="cleanConfig('profile')" style="float: right" text="Clean profile"></config-fetch>
     </div>
 
     <table class="ui compact celled definition table">
@@ -22,22 +22,22 @@
         </tfoot>
     </table>
 </div>
-<modal ng-model="show_modal" class="basic small">
-    <div class="ui icon header">
-        <i class="archive icon"></i>
-        Reset post configuration
-    </div>
-    <div class="content">
-        <p>You sure you wanna reset the profile config??</p>
-    </div>
-    <div class="actions">
-        <div class="ui red basic cancel inverted button" ng-click="close_modal()">
-            <i class="remove icon"></i>
-            No
-        </div>
-        <div class="ui green ok inverted button" ng-click="cleanConfig('profile')">
-            <i class="checkmark icon"></i>
-            Yes
-        </div>
-    </div>
-</modal>
+<!--<modal ng-model="show_modal" class="basic small">-->
+    <!--<div class="ui icon header">-->
+        <!--<i class="archive icon"></i>-->
+        <!--Reset post configuration-->
+    <!--</div>-->
+    <!--<div class="content">-->
+        <!--<p>You sure you wanna reset the profile config??</p>-->
+    <!--</div>-->
+    <!--<div class="actions">-->
+        <!--<div class="ui red basic cancel inverted button" ng-click="close_modal()">-->
+            <!--<i class="remove icon"></i>-->
+            <!--No-->
+        <!--</div>-->
+        <!--<div class="ui green ok inverted button" ng-click="cleanConfig('profile')">-->
+            <!--<i class="checkmark icon"></i>-->
+            <!--Yes-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</modal>-->

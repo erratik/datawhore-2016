@@ -2,6 +2,9 @@ var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('lodash');
 
+var assignValues = require('../custom-packages/prioritize').assignValues;
+var writeProperties = require('../custom-packages/prioritize').writeProperties;
+
 
 // bootstrap mongoose, because syntax.
 mongoose.createModel = function(name, options) {
@@ -34,15 +37,18 @@ var Config = mongoose.createModel('Config', {
         }
 
     },
-    update: function(options, callback){
+    update: function(options, cb){
 
         var query = { name: this.name},
             update = {last_modified : moment().format('X')},
             opts = {multi:false};
-        update[options.type+'Config'] = options.data;
-
-        //console.log(update);
-        this.model('Config').update(query, update, opts, callback);
+        update[options.type+'Config'] = (options.reset) ? assignValues(options.data) : writeProperties(options.data);
+        var that = this.model('Config');
+        this.model('Config').update(query, update, opts, function(err, numAffected){
+            that.findOne({name:query.name}, function(err, config){
+                cb(config);
+            });
+        });
 
     }
 });

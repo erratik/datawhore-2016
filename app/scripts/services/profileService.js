@@ -1,19 +1,17 @@
 define(['./module'], function (services) {
     'use strict';
-    services.service('ProfileService', function ($http, $q) {
-
+    services.service('ProfileService', ['$http', '$log', function ($http, $log) {
 
         this.getProfile = function (name) {
 
             return $http.get('/api/profile/properties/' + name).
                 then(function (response) {
                     var data = response.data;
-                    console.log(':: ProfileService ::  getProfile (' + name + ') ');
-                    console.log(data);
+                    $log.debug('[ProfileService] getProfile (' + name + ') ');
+                    $log.info(data);
                     return data;
                 });
         };
-
 
         this.getPosts = function (options, sample) {
             sample = (sample !== undefined) ? true : false;
@@ -43,7 +41,6 @@ define(['./module'], function (services) {
 
         };
 
-
         this.delete = function (namespace) {
             return $http.delete('/api/profiles/' + namespace).
                 then(function (response) {
@@ -53,8 +50,7 @@ define(['./module'], function (services) {
                 });
         }
 
-
         return this;
-    });
+    }]);
 
 });

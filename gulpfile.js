@@ -26,7 +26,7 @@ gulp.task('less',function () {
 
 gulp.task('semantic', function () {
   return gulp.src('bower_components/semantic/dist/themes/**/**/**')
-  .pipe(gulp.dest('dist/styles/themes'));
+  .pipe(gulp.dest('app/styles/semantic'));
 });
 
 gulp.task('jshint', function () {

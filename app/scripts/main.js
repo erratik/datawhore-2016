@@ -34,7 +34,10 @@ require.config({
             deps: ['angular']
         },
         'angular-semantic':{
-            deps: ['angular']
+            deps: ['jquery', 'angular']
+        },
+        'semantic':{
+            deps: ['jquery']
         }
     },
     

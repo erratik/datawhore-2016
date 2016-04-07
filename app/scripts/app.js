@@ -4,6 +4,7 @@
  */
 define([
     'angular',
+    'jquery',
     'uiRouter',
     'moment',
     'angular-moment',

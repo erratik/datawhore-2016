@@ -21,27 +21,18 @@ client.use({
 
 module.exports = function(app) {
 
-    app.get('/api/' + namespace + '/fetch/:configType', function(req, res) {
+    app.get('/api/' + namespace + '/fetch/:type', function(req, res) {
 
-        if (req.params.configType == 'profile') {
+        if (req.params.type == 'profile') {
 
             client.user('self', function(err, result, remaining, limit) {
                 if (err) {
-                    //console.log(err);
+                    console.log(err);
                 } else {
-                    Config.update({
-                        namespace: namespace,
-                        data: {
-                            profileConfig: assignValues(result)
-                        },
-                        type: 'profile'
 
-                    }, function(config) {
-                        ////console.log(config);
-                        res.json(config);
-
+                    resetConfig(req.params.type, result, function(boom){
+                        res.json(boom);
                     });
-
 
                 }
             });
@@ -104,6 +95,21 @@ module.exports = function(app) {
         });
 
     });
+
+    var resetConfig = function(type, update, cb) {
+
+        var _config = new Config({name: namespace}); // instantiated Config
+
+        _config.update({
+            data: update,
+            type: type,
+            reset: true
+        }, function(config) {
+                cb(config);
+
+            //});
+        });
+    };
 
 };
 
