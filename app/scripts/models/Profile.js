@@ -46,9 +46,10 @@ var Profile = mongoose.createModel('Profile', {
         var query = { name: this.name},
             update = {last_modified : moment().format('X')},
             opts = {multi:false};
-        update[options.type+'Profile'] = options.data;
+        update[options.type+'Properties'] = options.data;
 
         //console.log(update);
+        //console.log('[model][Profile] update');
         this.model('Profile').update(query, update, opts, callback);
 
     }

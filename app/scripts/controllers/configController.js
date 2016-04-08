@@ -52,7 +52,9 @@ define([
                     var config =  $scope.formData[type+'Config'];
                     ConfigService.update($scope.profileInfo.name, type, config).then(function (data) {
                         //$scope.profileInfo.last_modified = data.last_modified;
-                        console.log(data);
+                        $scope.formData.profileConfig = data.config;
+                        $scope.formData.profileProperties = data.properties;
+                        console.info(data);
                         //updatedConfigs(data);
                         //$scope.formData[configType+'Properties'] = data;
                     });
@@ -76,7 +78,10 @@ define([
                         type: configType
                     }).then(function (data) {
                         //console.info(data);
-                        $scope.formData.profileConfig = data;
+                        $scope.formData.profileConfig = data.config;
+                        $scope.formData.profileProperties = data.properties;
+                        console.info(data);
+
                         //$scope.show_modal = false;
                     });
                 };

@@ -110,7 +110,10 @@ function mapAttributeKeys(item, prefix) {
 }
 
 function writeProperties(props, current) {
-    console.log('..........writeProperties...')
+
+    // this will return mapped properties, ut only the ones enabled
+    console.log('>> @start writeProperties()');
+
 
     if (current === undefined) {current = false;}
     var deleting = {};
@@ -166,6 +169,7 @@ function writeProperties(props, current) {
 
         });
     });
+
     // todo: why is this happening for every property?
     _.forEach(properties, function(item, key){
         //console.log(properties);
@@ -193,8 +197,9 @@ function writeProperties(props, current) {
         }
     });
 
-    //console.log(savedProps);
+    console.log(savedProps);
 
+    console.log('>> /@end writeProperties()');
     return savedProps;
 
 }

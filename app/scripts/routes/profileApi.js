@@ -26,7 +26,8 @@ module.exports = function(app) {
         var _profile = new Profile({name: req.params.namespace}); // instantiated Profile
 
         _profile.update({
-            data: req.body[req.params.configType+'Properties']
+            data: req.body[req.params.configType+'Properties'],
+            type: req.params.configType
         }, function(config) {
             res.json(config);
         });

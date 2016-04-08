@@ -5,6 +5,7 @@ var _ = require('lodash');
 var assignValues = require('../custom-packages/prioritize').assignValues;
 var writeProperties = require('../custom-packages/prioritize').writeProperties;
 
+var Profile = require('./Profile');
 
 // bootstrap mongoose, because syntax.
 mongoose.createModel = function(name, options) {
@@ -45,12 +46,27 @@ var Config = mongoose.createModel('Config', {
         update[options.type+'Config'] = (options.reset) ? assignValues(options.data) : options.data;
         var that = this.model('Config');
 
-        //cb(writeProperties(options.data));
-        //cb(options.data);
         this.model('Config').update(query, update, opts, function(err, numAffected){
             if (numAffected) {
-                    cb(update.profileConfig);
 
+                    // now i want to check if i have saved properties and write them over with writeProperties
+                    that.findOne({name: query.name}, function(err, config){
+
+                        //if (typeof config.virgin == 'undefined') {
+                            var _profile = new Profile({name: query.name}); // instantiated Profile
+                            _profile.update({
+                                data: writeProperties(options.data),
+                                type: options.type
+                            }, function(err, properties) {
+
+                                console.log(properties);
+
+                                cb({config:update.profileConfig, properties:  writeProperties(options.data)});
+                            });
+
+
+                        //}
+                    });
             } else {
                 console.log(err);
             }
@@ -58,5 +74,7 @@ var Config = mongoose.createModel('Config', {
 
     }
 });
+
+Profile = mongoose.model('Profile', Profile);
 
 module.exports = Config;
