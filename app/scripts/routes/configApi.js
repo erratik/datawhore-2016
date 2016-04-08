@@ -55,8 +55,8 @@ module.exports = function(app) {
             type: req.params.type,
             reset: false
         }, function(config) {
-            console.log(config);
-            //res.json(config);
+            //console.log(config);
+            res.json(config);
         });
 
         //console.log(req.body);

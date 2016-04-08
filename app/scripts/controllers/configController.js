@@ -48,12 +48,12 @@ define([
 
                 console.log($scope);
 
-                $scope.updateConfig = function (configType) {
-                    var config =  $scope.formData[configType+'Config'];
-                    ConfigService.update($scope.profileInfo.name, config, configType).then(function (data) {
-                        $scope.profileInfo.last_modified = data.last_modified;
-                        //console.log(data);
-                        updatedConfigs(data);
+                $scope.updateConfig = function (type) {
+                    var config =  $scope.formData[type+'Config'];
+                    ConfigService.update($scope.profileInfo.name, type, config).then(function (data) {
+                        //$scope.profileInfo.last_modified = data.last_modified;
+                        console.log(data);
+                        //updatedConfigs(data);
                         //$scope.formData[configType+'Properties'] = data;
                     });
                 };
@@ -75,7 +75,8 @@ define([
                         namespace: $scope.profileInfo.name,
                         type: configType
                     }).then(function (data) {
-                        updatedConfigs(data);
+                        //console.info(data);
+                        $scope.formData.profileConfig = data;
                         //$scope.show_modal = false;
                     });
                 };

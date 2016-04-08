@@ -85,7 +85,7 @@ define(['./module'], function (services) {
                 });
         };
 
-        ConfigService.update = function (namespace, config, type) {
+        ConfigService.update = function (namespace, type, config) {
 
             return $http.post('/api/config/update/' + namespace + '/' + type, config).
                 then(function (response) {
