@@ -166,9 +166,9 @@ function writeProperties(props, current) {
 
         });
     });
-
+    // todo: why is this happening for every property?
     _.forEach(properties, function(item, key){
-        console.log(properties);
+        //console.log(properties);
 
         if (item.label !== undefined) {
             //first & second level

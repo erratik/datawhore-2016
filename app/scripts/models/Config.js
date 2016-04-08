@@ -42,11 +42,15 @@ var Config = mongoose.createModel('Config', {
         var query = { name: this.name},
             update = {last_modified : moment().format('X')},
             opts = {multi:false};
-        update[options.type+'Config'] = (options.reset) ? assignValues(options.data) : writeProperties(options.data);
-        //var that = this.model('Config');
+        update[options.type+'Config'] = (options.reset) ? assignValues(options.data) : options.data;
+        var that = this.model('Config');
+
+        //cb(writeProperties(options.data));
+        //cb(options.data);
         this.model('Config').update(query, update, opts, function(err, numAffected){
             if (numAffected) {
                     cb(update.profileConfig);
+
             } else {
                 console.log(err);
             }
