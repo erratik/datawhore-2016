@@ -9,7 +9,7 @@ define([
 
                 $scope.networks = networks;
                 $scope.configs = configs;
-                $log.info($scope);
+                console.info($scope);
 
                 // when submitting the add form, send the text to the node API
                 //$scope.cleanProfile = function(namespace) {
@@ -60,11 +60,12 @@ define([
                     });
                 };
 
-                $scope.updateProperties = function (configType) {
+                $scope.updateProperties = function (type) {
                     //console.log($scope.formData);
-                    ProfileService.update($scope.profileInfo.name, $scope.formData[configType + 'Config'], configType).then(function (data) {
+                    ProfileService.update($scope.profileInfo.name, $scope.formData[type + 'Properties'], type).then(function (data) {
                         //$scope.profileInfo.last_modified = data.last_modified;
-                        $scope.formData[configType + 'Config'] = data;
+                        console.info(data);
+                        //$scope.formData[type + 'Properties'] = data;
                     });
                 };
 

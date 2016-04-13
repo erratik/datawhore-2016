@@ -1,35 +1,30 @@
-// load the setting model
-var defaultSettings = require('../../../config');
 var Settings = require('../models/Core');
-
 var Profile = require('../models/Profile');
-var merge = require('merge'),
-    original, cloned;
+
 var mongoose = require('mongoose');
 var moment = require('moment');
-var flatten = require('flat');
-var unflatten = require('flat').unflatten;
+
 // expose the routes to our app with module.exports
 
 module.exports = function(app) {
 
 
     // add specific properties to config -------------------------------------------------------*/
-    app.post('/api/profile/update/:namespace/:configType', function(req, res) {
+    app.post('/api/profile/update/:namespace/:type', function(req, res) {
 
-        //console.log('>> @start profileApi > Config.saveProfile({name: '+req.params.namespace+', type: '+req.params.configType+'}), '+req.params.configType+'Properties update');
-        //console.log(req.body);
-        //console.log('>> /@end');
+        console.log('>> @start profileApi > Profile.update({name: '+req.params.namespace+', type: '+req.params.type+'}), '+req.params.type+'Properties update');
+        console.log(req.body);
+        console.log('>> /@end');
 
         //console.log(req.body[req.params.configType+'Properties']);
 
         var _profile = new Profile({name: req.params.namespace}); // instantiated Profile
 
         _profile.update({
-            data: req.body[req.params.configType+'Properties'],
-            type: req.params.configType
-        }, function(config) {
-            res.json(config);
+            data: req.body,
+            type: req.params.type
+        }, function(err, saved) {
+            if (saved) res.json(req.body);
         });
     });
 
@@ -37,9 +32,9 @@ module.exports = function(app) {
 
         Profile.findByName(req.params.namespace, function(err, profile){
 
-            console.log('>> @start Profile.findByName('+req.params.namespace+')');
-            console.log(profile[0]);
-            console.log('>> /@end');
+            //console.log('>> @start Profile.findByName('+req.params.namespace+')');
+            //console.log(profile[0]);
+            //console.log('>> /@end');
 
             res.json(profile[0]);
         });

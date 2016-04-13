@@ -8,8 +8,8 @@ define(['./module'], function (services) {
             return $http.get('/api/profile/config/' + name).
                 then(function (response) {
                     var data = response.data;
-                    $log.debug('[ConfigService] getConfig (' + name + ') ');
-                    $log.info(data);
+                    //console.debug('[ConfigService] getConfig (' + name + ') ');
+                    //console.info(data);
                     return data;
                 });
         };

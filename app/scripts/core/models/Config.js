@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('lodash');
 
-var assignValues = require('../custom-packages/prioritize').assignValues;
-var writeProperties = require('../custom-packages/prioritize').writeProperties;
+var assignValues = require('../../custom-packages/prioritize').assignValues;
+var writeProperties = require('../../custom-packages/prioritize').writeProperties;
 
 var Profile = require('./Profile');
 
@@ -36,36 +36,32 @@ var Config = mongoose.createModel('Config', {
         findByName: function(name, cb) {
             return this.find({ name: name }, cb);
         }
-
     },
     update: function(options, cb){
 
         var query = { name: this.name},
             update = {last_modified : moment().format('X')},
-            opts = {multi:false};
+            opts = {multi:false, upsert: true};
         update[options.type+'Config'] = (options.reset) ? assignValues(options.data) : options.data;
         var that = this.model('Config');
 
-        this.model('Config').update(query, update, opts, function(err, numAffected){
-            if (numAffected) {
-
+        this.model('Config').update(query, update, opts, function(err, saved){
+            if (saved) {
                     // now i want to check if i have saved properties and write them over with writeProperties
                     that.findOne({name: query.name}, function(err, config){
-
-                        //if (typeof config.virgin == 'undefined') {
+                        var data = writeProperties(options.data);
+                        if (config) {
                             var _profile = new Profile({name: query.name}); // instantiated Profile
                             _profile.update({
-                                data: writeProperties(options.data),
-                                type: options.type
-                            }, function(err, properties) {
-
-                                console.log(properties);
-
-                                cb({config:update.profileConfig, properties:  writeProperties(options.data)});
+                                data: data,
+                                type: options.type,
+                                wipe: true
+                            }, function(err, saved) {
+                                if (saved) cb({config:update.profileConfig, properties: data});
                             });
-
-
-                        //}
+                        } else {
+                           cb(err);
+                        }
                     });
             } else {
                 console.log(err);
@@ -76,5 +72,4 @@ var Config = mongoose.createModel('Config', {
 });
 
 Profile = mongoose.model('Profile', Profile);
-
 module.exports = Config;

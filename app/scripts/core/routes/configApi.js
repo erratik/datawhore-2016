@@ -1,13 +1,10 @@
-// load the setting model
+var mongoose = require('mongoose');
+var moment = require('moment');
+
 var Settings = require('../models/Core');
 var Config = require('../models/Config');
 var Profile = require('../models/Profile');
-var merge = require('merge'),
-    original, cloned;
-var mongoose = require('mongoose');
-var moment = require('moment');
-var flatten = require('flat');
-var unflatten = require('flat').unflatten;
+
 // expose the routes to our app with module.exports
 
 module.exports = function(app) {

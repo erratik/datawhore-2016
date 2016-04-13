@@ -125,7 +125,13 @@ gulp.task('browser-sync', ['nodemon'], function () {
   browserSync.init({
 
     // watch the following files; changes will be injected (css & images) or cause browser to refresh
-    files: ['app/{**/}*.{.js,.html,.css}'],
+    files: [
+        //'app/{**/}*.{.js,.html,.css}',
+        'app/scripts/{**/}*.js',
+        'app/templates/{**/}*.html',
+        'app/styles/css/*.css'
+
+    ],
 
     // informs browser-sync to proxy our expressjs app which would run at the following location
     proxy: 'http://localhost:4000',

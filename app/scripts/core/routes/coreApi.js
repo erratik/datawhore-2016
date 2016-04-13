@@ -1,13 +1,9 @@
-// load the setting model
-var defaultCore = require('../../../config');
-var Core = require('../models/Core');
-//var Profile = require('../models/Profile');
-var obj = require('../../../utils/objTools');
-var str = require('../../../utils/stringTools');
-var merge = require('merge'),original, cloned;
 var mongoose = require('mongoose');
 var moment = require('moment');
-var flatten = require('flat');
+
+var defaultCore = require('../../../../config');
+var Core = require('../models/Core');
+
 // expose the routes to our app with module.exports
 module.exports = function(app) {
     //*****************************************************************/  
@@ -142,6 +138,6 @@ module.exports = function(app) {
 
     // application -------------------------------------------------------------
     app.get('/', function(req, res) {
-        res.sendfile('./app/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+        res.sendfile('../../index.html'); // load the single view file (angular will handle the page changes on the front-end)
     });
 };

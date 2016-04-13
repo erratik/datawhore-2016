@@ -5,7 +5,7 @@ var _ = require('lodash');
 var Profile = require('./Profile');
 
 // custom packages
-var findValues = require('../custom-packages/prioritize').findValues;
+var findValues = require('../../custom-packages/prioritize').findValues;
 
 // bootstrap mongoose, because syntax.
 mongoose.createModel = function(name, options) {

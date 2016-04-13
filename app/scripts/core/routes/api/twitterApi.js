@@ -7,7 +7,7 @@ var Config = require('../../models/Config');
 var Drop = require('../../models/Drop');
 
 // custom packages
-var assignValues = require('../../custom-packages/prioritize').assignValues;
+var assignValues = require('../../../custom-packages/prioritize').assignValues;
 
 // network config
 var namespace = 'twitter';

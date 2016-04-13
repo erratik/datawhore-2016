@@ -7,8 +7,8 @@ define(['./module'], function (services) {
             return $http.get('/api/profile/properties/' + name).
                 then(function (response) {
                     var data = response.data;
-                    $log.debug('[ProfileService] getProfile (' + name + ') ');
-                    $log.info(data);
+                    //console.debug('[ProfileService] getProfile (' + name + ') ');
+                    //console.info(data);
                     return data;
                 });
         };
@@ -27,17 +27,15 @@ define(['./module'], function (services) {
                 });
         };
 
-        this.update = function (namespace, formData, configType) {
+        this.update = function (namespace, formData, type) {
             console.log(formData);
-            return $http.post('/api/profile/update/' + namespace + '/' + configType, formData).
+            return $http.post('/api/profile/update/' + namespace + '/' + type, formData).
                 then(function (response) {
                     var data = response.data;
-                    // data.formData = formData;
-                    //console.log(data);
-
+                    //console.debug('[ProfileService] update (' + namespace + ') ');
+                    //console.info(data);
                     return data;
                 });
-            //return formData;
 
         };
 

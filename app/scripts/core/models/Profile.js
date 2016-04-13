@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('lodash');
 
+var writeProperties = require('../../custom-packages/prioritize').writeProperties;
+
 // bootstrap mongoose, because syntax.
 mongoose.createModel = function(name, options) {
     var schema = new mongoose.Schema(options.schema);
@@ -45,11 +47,29 @@ var Profile = mongoose.createModel('Profile', {
 
         var query = { name: this.name},
             update = {last_modified : moment().format('X')},
-            opts = {multi:false};
+            opts = {multi:false, upsert: true};
+
+        /*
+        var updateFromConfig = typeof options.wipe == 'boolean';
+
+        console.log(updateFromConfig);
+        if (updateFromConfig) {
+            _.forEach(options.data, function (prop, key) {
+                console.log(key.indexOf(prop.friendlyName));
+                console.log(key, prop.friendlyName);
+
+                if (key.indexOf(prop.friendlyName) == -1) {
+                    delete options.data[key];
+                    console.log(key + 'won\'t be saved');
+                }
+            });
+        }
+        */
+
         update[options.type+'Properties'] = options.data;
 
-        //console.log(update);
-        //console.log('[model][Profile] update');
+        console.log(update);
+
         this.model('Profile').update(query, update, opts, callback);
 
     }

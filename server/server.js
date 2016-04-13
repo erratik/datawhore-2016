@@ -42,17 +42,17 @@
     // routes ======================================================================
 
 
-    require('../app/scripts/routes/configApi')(app);
-    require('../app/scripts/routes/profileApi')(app);
-    require('../app/scripts/routes/coreApi')(app);
-    //require('./app/scripts/routes/connectApi')(app);
+    require('../app/scripts/core/routes/configApi')(app);
+    require('../app/scripts/core/routes/profileApi')(app);
+    require('../app/scripts/core/routes/coreApi')(app);
+    //require('../app/scripts/core/routes/app/scripts/routes/connectApi')(app);
 
     // TODO: Tay - require-directory?
-    require('../app/scripts/routes/api/facebookApi')(app);
-    require('../app/scripts/routes/api/twitterApi')(app);
-    require('../app/scripts/routes/api/lastfmApi')(app);
-    require('../app/scripts/routes/api/instagramApi')(app);
-    require('../app/scripts/routes/api/swarmApi')(app);
+    require('../app/scripts/core/routes/api/facebookApi')(app);
+    require('../app/scripts/core/routes/api/twitterApi')(app);
+    require('../app/scripts/core/routes/api/lastfmApi')(app);
+    require('../app/scripts/core/routes/api/instagramApi')(app);
+    require('../app/scripts/core/routes/api/swarmApi')(app);
 
     // listen (start app with node server.js) ======================================
     app.listen(port);

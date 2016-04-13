@@ -110,16 +110,14 @@ function mapAttributeKeys(item, prefix) {
 }
 
 function writeProperties(props, current) {
+    // this will return mapped properties, but only the ones enabled
 
-    // this will return mapped properties, ut only the ones enabled
-    console.log('>> @start writeProperties()');
-
+    //console.log('>> @start writeProperties()');
 
     if (current === undefined) {current = false;}
     var deleting = {};
     var savedProps = {};
     var properties = _.pluck(_.filter(props, {content: { 'enabled':  true }}), 'content');
-
     var attributeGroup = _.pluck(_.filter(props, 'grouped'), 'content');
     _.forEach(attributeGroup, function(attribute, cle){
         _.forEach(attribute, function(item, key){
@@ -169,7 +167,6 @@ function writeProperties(props, current) {
 
         });
     });
-
     // todo: why is this happening for every property?
     _.forEach(properties, function(item, key){
         //console.log(properties);
@@ -197,9 +194,8 @@ function writeProperties(props, current) {
         }
     });
 
-    console.log(savedProps);
-
-    console.log('>> /@end writeProperties()');
+    //console.log(savedProps);
+    //console.log('>> /@end writeProperties()');
     return savedProps;
 
 }
