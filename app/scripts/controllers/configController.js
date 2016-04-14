@@ -38,6 +38,9 @@ define([
                     postProperties: profile.postProperties
                 };
 
+                $scope.sortType = 'data.label';
+                $scope.sortReverse = false;
+
                 var loadSample = function () {
                     return ProfileService.getPosts({namespace: $stateParams.namespace, count: 1}, true);
                 };
@@ -51,39 +54,34 @@ define([
                 $scope.updateConfig = function (type) {
                     var config =  $scope.formData[type+'Config'];
                     ConfigService.update($scope.profileInfo.name, type, config).then(function (data) {
-                        //$scope.profileInfo.last_modified = data.last_modified;
                         $scope.formData.profileConfig = data.config;
                         $scope.formData.profileProperties = data.properties;
-                        console.info(data);
-                        //updatedConfigs(data);
-                        //$scope.formData[configType+'Properties'] = data;
                     });
                 };
 
                 $scope.updateProperties = function (type) {
                     //console.log($scope.formData);
                     ProfileService.update($scope.profileInfo.name, $scope.formData[type + 'Properties'], type).then(function (data) {
-                        //$scope.profileInfo.last_modified = data.last_modified;
-                        console.info(data);
-                        //$scope.formData[type + 'Properties'] = data;
+                        //console.info(data);
+                        $scope.formData[type + 'Properties'] = data;
                     });
                 };
 
 
                 // when submitting the add form, send the text to the node API
-                $scope.cleanConfig = function (configType) {
+                $scope.cleanConfig = function (type) {
                     //$scope.show_modal = true;
 
                     ConfigService.cleanConfig({
                         namespace: $scope.profileInfo.name,
-                        type: configType
+                        type: type
                     }).then(function (data) {
                         //console.info(data);
-                        $scope.formData.profileConfig = data.config;
-                        $scope.formData.profileProperties = data.properties;
-                        console.info(data);
+                        $scope.formData[type+'Config']= data.config;
+                        $scope.formData[type+'Properties'] = data.properties;
+                        console.info($scope.formData);
 
-                        //$scope.show_modal = false;
+                        $scope.show_modal = false;
                     });
                 };
                 // when submitting the add form, send the text to the node API

@@ -47,7 +47,7 @@ var Profile = mongoose.createModel('Profile', {
 
         var query = { name: this.name},
             update = {last_modified : moment().format('X')},
-            opts = {multi:false, upsert: true};
+            opts = {multi:false};
 
         /*
         var updateFromConfig = typeof options.wipe == 'boolean';

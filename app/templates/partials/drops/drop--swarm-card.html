@@ -1,0 +1,18 @@
+<div class="ui card">
+    <div class="content">
+        <div class="right floated meta">{{post.created_time | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}</div>
+        <img class="ui avatar image" src="{{profileInfo.avatar}}"> {{profileInfo.username}}
+    </div>
+    <!--<div class="image">
+        <img src="{{post.url}}">
+    </div>-->
+    <div class="content">
+        <div ng-if="post.location_name"><i class="icon location arrow"></i>{{post.location_name}}</div>
+        {{post.caption}}
+    </div>
+    <div class="content">
+
+        <i class="comment icon"></i>
+        {{post.comments_count}} comments
+    </div>
+</div>

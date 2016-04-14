@@ -41,15 +41,16 @@ var Config = mongoose.createModel('Config', {
 
         var query = { name: this.name},
             update = {last_modified : moment().format('X')},
-            opts = {multi:false, upsert: true};
+            opts = {multi:false};
         update[options.type+'Config'] = (options.reset) ? assignValues(options.data) : options.data;
         var that = this.model('Config');
-
+        console.log(update);
         this.model('Config').update(query, update, opts, function(err, saved){
             if (saved) {
                     // now i want to check if i have saved properties and write them over with writeProperties
                     that.findOne({name: query.name}, function(err, config){
                         var data = writeProperties(options.data);
+                        //console.log(data);
                         if (config) {
                             var _profile = new Profile({name: query.name}); // instantiated Profile
                             _profile.update({
@@ -57,14 +58,14 @@ var Config = mongoose.createModel('Config', {
                                 type: options.type,
                                 wipe: true
                             }, function(err, saved) {
-                                if (saved) cb({config:update.profileConfig, properties: data});
+                                if (saved) cb({config:update[options.type+'Config'], properties: data});
                             });
                         } else {
                            cb(err);
                         }
                     });
             } else {
-                console.log(err);
+                cb(err);
             }
         });
 

@@ -74,7 +74,7 @@ define(['./module'], function (directives) {
                     checkboxes: '@',
                     values: '@',
                     label: '@',
-                    entityName: "=",
+                    entityName: "@",
                     groupedParent: "@",
                     model: '=',
                     isChild: "=",
@@ -85,7 +85,10 @@ define(['./module'], function (directives) {
                 },
                 templateUrl: 'templates/directives/profile--single-row.html',
                 link: function (scope, element, attrs) {
-
+                    if (typeof scope.entityName == 'string') {
+                        //console.log(scope.entityName);
+                        //scope.label = scope.entityName;
+                    }
                     // attrs.$observe('checkboxes', function() {
 
                     //     scope.checkboxes = scope.$eval(attrs.checkboxes);

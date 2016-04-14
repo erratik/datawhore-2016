@@ -38,7 +38,7 @@
                                             <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
                                                 <i class="checkmark icon"></i>
                                             </button>
-                                            <span>({{label}})</span>
+                                            <span ng-click="attribute.friendlyName=label">({{label}})</span>
                                         </div>
 
                                     </div>
@@ -90,7 +90,7 @@
                                                 <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
                                                     <i class="checkmark icon"></i>
                                                 </button>
-                                                <span>({{label}})</span>
+                                                <span ng-click="attribute.friendlyName=label.replace('__', '_')">({{label}})</span>
                                             </div>
 
                                         </div>

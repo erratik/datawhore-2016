@@ -1,48 +1,33 @@
 
-<table width="100%" >
+<accordion>
+	<accordion-group title="{{label}}">
+        <button class="ui basic button mini" create="createEntity(entityName)">
+            <i class="icon external square"></i>
+            Create <strong>{{entityName}}</strong> entity
+        </button>
+		<!--<i class="icon folder"></i>{{label}}-->
+		<div ng-repeat="(lbl, attribute) in data">
+
+            <profile-row
+                    data="attribute"
+                    checkboxes="true"
+                    values="true"
+                    entity-name="{{label}}"
+                    label="{{label}}"
+                    grouped="attribute.grouped"
+                    ng-if="!attribute.grouped"></profile-row>
 
 
-	<tr>
-		<td ng-switch="isChild">
-			<div ng-switch-when="undefined">
+            <profile-row
+                    data="attribute.content"
+                    checkboxes="true"
+                    values="true"
+                    entity-name="{{attribute.label}}"
+                    label="{{attribute.label}}"
+                    grouped="attribute.grouped"
+                    ng-if="attribute.grouped"></profile-row>
 
-				<accordion>
-					<accordion-group title="{{label}}">
-						<!--<i class="icon folder"></i>{{label}}-->
-						<div ng-repeat="(lbl, attribute) in data">
-							<div ng-if="!attribute.grouped">
-								<profile-row data="attribute" checkboxes="true" values="true" entity-name="label" ng-if="!groupedParent"></profile-row>
-							</div>
+		</div>
+	</accordion-group>
+</accordion>
 
-							<accordion ng-if="attribute.grouped">
-								<accordion-group title="{{attribute.label}}">
-									<div ng-repeat="item in attribute.content">
-										<profile-row
-												data="item"
-												values="true"
-												grouped="attribute.grouped"
-												grouped-parent="true"
-												is-child="true"
-												label="{{item.value}}"
-												prefix="{{label}}__{{attribute.label}}__">
-										</profile-row>
-									</div>
-								</accordion-group>
-							</accordion>
-						</div>
-
-					</accordion-group>
-				</accordion>
-			</div>
-			<div ng-switch-when="true">
-
-				<div>
-					<profile-row data="data" checkboxes="true" values="true" is-child="isChild"></profile-row>
-				</div>
-			</div>
-
-		</td>
-
-	</tr>
-
-</table>

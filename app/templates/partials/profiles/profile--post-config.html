@@ -1,13 +1,19 @@
 
 <div class="ui segment">
     <div class="header ui"><i class="icon settings outline"></i>Post Configuration
-        <config-fetch namespace="{{profileInfo.name}}" fetch="cleanConfig(profileInfo.name)" style="float: right" text="Clean Post"></config-fetch></div>
+        <config-fetch namespace="{{profileInfo.name}}" fetch="cleanConfig('post')" style="float: right" text="Clean Post"></config-fetch></div>
 
     <table class="ui compact celled definition table">
         <tbody>
-        <tr ng-repeat="(label, attribute) in formData.postConfig">
+        <tr ng-repeat="(label, attribute) in formData.postConfig | orderBy:sortType:sortReverse">
             <td colspan="3">
-                <profile-row data="formData.postConfig[label].content" grouped="attribute.grouped" checkboxes="true" values="true" label="{{label}}" model="formData.postConfig"></profile-row>
+                <profile-row
+                        data="formData.postConfig[label].content"
+                        grouped="attribute.grouped"
+                        checkboxes="true"
+                        values="true"
+                        label="{{label}}"
+                        model="formData.postConfig"></profile-row>
             </td>
 
         </tr>

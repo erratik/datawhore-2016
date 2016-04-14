@@ -40,22 +40,13 @@ module.exports = function(app) {
 
             client.user_self_media_recent({count: 5}, function(err, medias, pagination, remaining, limit) {
                 if (err) {
-                    //console.log(err);
+                    console.log(err);
                 } else {
                     //console.log( assignValues(medias[4]) );
                     //res.json(config);
 
-                    Config.update({
-                        namespace: namespace,
-                        data: {
-                            postConfig: assignValues(medias[4])
-
-                        },
-                        type: 'post'
-                    }, function(config) {
-
-                        res.json(config);
-
+                    resetConfig(req.params.type, medias[4], function(boom){
+                        res.json(boom);
                     });
                 }
             });
