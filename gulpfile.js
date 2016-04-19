@@ -159,6 +159,7 @@ gulp.task('watch', function () {
 
   gulp.watch('app/styles/**/*.less', ['less']);
   gulp.watch('app/styles/**/*.css', ['styles']);
+  //gulp.watch('app/templates/{**/}*.html', ['styles']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
 

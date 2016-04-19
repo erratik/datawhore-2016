@@ -33,6 +33,12 @@
     <div class="extra content">
     
         <a class="ui button mini" ui-sref="config({namespace: namespace})"><i class="icon edit"></i> Edit</a>
+
         <!-- <a class="ui button mini" ui-sref="configs.namespace({namespace: namespace})"><i class="icon edit"></i> Edit</a> -->
+    </div>
+    <div class="extra content">
+        <disconnect-namespace></disconnect-namespace>
+        <connect-namespace classes="right mini ui button trigger positive" connect="connectNetwork(namespace)"></connect-namespace>
+        <remove-namespace></remove-namespace>
     </div>
 </div>

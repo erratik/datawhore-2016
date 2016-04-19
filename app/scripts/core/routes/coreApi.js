@@ -3,6 +3,7 @@ var moment = require('moment');
 
 var defaultCore = require('../../../../config');
 var Core = require('../models/Core');
+var Config = require('../models/Config');
 
 // expose the routes to our app with module.exports
 module.exports = function(app) {
@@ -11,11 +12,36 @@ module.exports = function(app) {
     //*****************************************************************/
     app.get('/api/core', function(req, res) {
         // get settings with mongoose, return default settings if !settings.saved
-        Core.getNetworkConfigs({}, function(data){
+        Config.getAll(function(err, data){
             //console.log(data);
             //console.log('test2');
 
             res.json(data);
+        });
+    });
+
+    // create network object -------------------------------------------------------*/
+    app.post('/api/core/connect/:namespace', function(req, res) {
+        var _config = new Config({name: req.params.namespace}); // instantiated Config
+
+        _config.update({
+            data: req.body,
+            type: 'core'
+        }, function(config) {
+            //console.log(config);
+            res.json(config);
+        });
+    });
+    // update network settings in a config -------------------------------------------------------*/
+    app.post('/api/core/update/:namespace', function(req, res) {
+        var _config = new Config({name: req.params.namespace}); // instantiated Config
+        //console.log(req.body);
+        _config.update({
+            data: req.body,
+            type: 'core'
+        }, function(config) {
+            //console.log(cssonfig);
+            res.json(config);
         });
     });
 
@@ -61,7 +87,7 @@ module.exports = function(app) {
     //    networks
     //*****************************************************************/
     // create network object -------------------------------------------------------*/
-    app.post('/api/settings/network/', function(req, res) {
+    app.post('/api/core/network/', function(req, res) {
         Core.findOne({
             name: 'settings'
         }, function(err, settings) {

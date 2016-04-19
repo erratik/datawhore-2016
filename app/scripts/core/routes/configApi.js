@@ -13,19 +13,6 @@ module.exports = function(app) {
     //    Configs
     //*****************************************************************/
 
-    // retrieve all network config -------------------------------------------------------*/
-    app.get('/api/configs/network', function(req, res) {
-        Config.get({}, function(config){
-
-            ////console.log('>> @start Config.get()');
-            ////console.log(config);
-            ////console.log('>> /@end');
-
-            res.json(config);
-        });
-        
-    });
-
     // todo: deprecate this route
     // retrieve network config -------------------------------------------------------*/
     app.get('/api/config/network/:namespace', function(req, res) {
@@ -78,24 +65,7 @@ module.exports = function(app) {
 
     });
 
-    // wipe config -------------------------------------------------------*/
-    //app.delete('/api/configs/:namespace', function(req, res) {
-    //    // //console.log('test');
-    //    // get settings with mongoose, return default settings if !settings.saved
-    //    Settings.findOne({
-    //        name: 'settings'
-    //    }, function(err, settings) {
-    //        if (err) console.log(err);
-    //        Config.remove({
-    //            name: req.params.namespace
-    //        }, function(err, config) {
-    //            if (err) res.send(err);
-    //            settings.configs[req.params.namespace]['config'] = false;
-    //            Settings.updateConfig(settings.configs);
-    //            res.json(settings.configs[req.params.namespace]);
-    //        });
-    //    });
-    //});
+
 
 
 };

@@ -9,6 +9,7 @@ define([
     'moment',
     'angular-moment',
     'angular-semantic',
+    //'angular-lodash',
     'angular-filter',
     './controllers/index',
     './directives/index',
@@ -25,6 +26,7 @@ define([
         'angularMoment',
         'angular.filter',
         'angularify.semantic',
+        //'angular-lodash',
         'ui.router'
     ]);
 });

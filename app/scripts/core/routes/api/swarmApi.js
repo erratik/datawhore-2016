@@ -9,7 +9,6 @@ var namespace = 'swarm';
 
 var assignValues = require('../../../custom-packages/prioritize').assignValues;
 
-
 var swarmConfig = {
     'secrets' : {
         'clientId' : process.env.SWARM_API_KEY,
@@ -34,8 +33,6 @@ module.exports = function(app) {
                         //console.log(error);
                     } else {
                         //console.log(data.user);
-
-
                         resetConfig(req.params.type, data.user, function(boom){
                             res.json(boom);
                         });
@@ -46,9 +43,6 @@ module.exports = function(app) {
 
             client.Users.getCheckins('self', {limit: 1}, process.env.SWARM_ACCESS_TOKEN, function (error, data) {
                 //console.log(data.checkins.items[0]);
-                //
-                //console.log(data[0]);
-
                 resetConfig(req.params.type, data.checkins.items[0], function(boom){
                     res.json(boom);
                 });
@@ -60,9 +54,7 @@ module.exports = function(app) {
 
 
     app.post('/api/' + namespace + '/fetch/posts/:count/:sample', function(req, res) {
-        // //console.log(req.params);
-        // //console.log(req.body);
-        // //console.log(req);
+
         client.Users.getCheckins('self', {limit: req.params.count}, process.env.SWARM_ACCESS_TOKEN, function (error, data) {
 
             if (error) {
@@ -96,8 +88,6 @@ module.exports = function(app) {
             reset: true
         }, function(config) {
             cb(config);
-
-            //});
         });
     };
 };

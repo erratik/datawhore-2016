@@ -16,6 +16,8 @@
     "angular-filter": "~0.5.8",
     "angular-semantic-ui": "~0.0.3",
     "requirejs": "^2.2.0",
-    "domReady": "requirejs-domready#^2.0.1"
+    "domReady": "requirejs-domready#^2.0.1",
+    "angular-lodash": "^0.1.2",
+    "lodash": "^4.11.1"
   }
 }

@@ -3,21 +3,23 @@ define([
 ], function (controllers) {
     'use strict';
     controllers
-        .controller('networksController', ['$scope', '$http', '$log', 'CoreService', 'networks', 'configs',
-            function networksController($scope, $http, $log, CoreService, networks, configs) {
+        .controller('networksController', ['$scope', '$http', '$log', 'CoreService', 'networks',
+            function networksController($scope, $http, $log, CoreService, networks) {
                 ////console.log($scope);
 
                 $scope.networks = networks;
-                $scope.configs = configs;
-                console.info($scope);
+                //$scope.configs = configs;
+                console.info($scope.networks);
 
-                // when submitting the add form, send the text to the node API
-                //$scope.cleanProfile = function(namespace) {
-                //    ConfigService.cleanProfile({namespace: namespace}).then(function(data){
-                //        // $scope.profiles[namespace]
-                //        //console.log(data);
-                //    });
-                //};
+
+                $scope.connectNetwork = function (type) {
+                    var config =  $scope.formData[type+'Config'];
+                    CoreService.connectNetwork($scope.profileInfo.name, type, config).then(function (data) {
+                        $scope.formData.profileConfig = data.config;
+                        $scope.formData.profileProperties = data.properties;
+                    });
+                };
+
 
             }
         ])

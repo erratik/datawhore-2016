@@ -25,17 +25,19 @@ define(['./app'], function (app) {
     'use strict';
     return app.constant('angularMomentConfig', {
         preprocess: 'unix' // optional
-    }).config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
+    }).constant('_', window._).config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
         $stateProvider
-            .state('view1', {
-                url: '/view1',
-                templateUrl: 'partials/partial1.html',
-                controller: 'MyCtrl1'
-            })
-            .state('view2', {
-                url: '/view2',
-                templateUrl: 'partials/partial2.html',
-                controller: 'MyCtrl2'
+            .state('core', {
+                url: '/',
+                controller: 'coreController',
+                templateUrl: 'templates/tpl--settings.html',
+                resolve: {
+                    networks: ['CoreService', function (CoreService) {
+                        ////console.log(CoreService.getNetworkConfigs({namespace: false}));
+                        return CoreService.getNetworks({namespace: false});
+                        // return ConfigService.load($stateParams.namespace);
+                    }]
+                }
             }).state('networks', {
                 url: '/',
                 controller: 'networksController',
@@ -45,11 +47,6 @@ define(['./app'], function (app) {
                         ////console.log(CoreService.getNetworkConfigs({namespace: false}));
                         return CoreService.getNetworks({namespace: false});
                         // return ConfigService.load($stateParams.namespace);
-                    }],
-                    configs: ['CoreService', function (CoreService) {
-                        //return CoreService.getNetworkConfig({namespace: false, loadConfig: 'soft'});
-                        // return ConfigService.load($stateParams.namespace);
-                        return true;
                     }]
                 }
             })

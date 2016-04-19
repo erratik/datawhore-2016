@@ -8,7 +8,5 @@ define([
     './configController',
     './profileController',
     './networkController',
-    './settingsController',
-    './my-ctrl-1',
-    './my-ctrl-2'
+    './coreController'
 ], function () {});

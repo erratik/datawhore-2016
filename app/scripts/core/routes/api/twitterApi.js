@@ -1,12 +1,10 @@
 // required packages
-var mongoose = require('mongoose');
-var _ = require('lodash');
-
-// models
 var Config = require('../../models/Config');
 var Drop = require('../../models/Drop');
 
-// custom packages
+var mongoose = require('mongoose');
+var _ = require('lodash');
+
 var assignValues = require('../../../custom-packages/prioritize').assignValues;
 
 // network config
@@ -25,26 +23,14 @@ var params = {
 };
 // expose the routes to our app with module.exports
 module.exports = function(app) {
-    app.get('/api/' + namespace + '/fetch/:configType', function(req, res) {
-        //console.log('••• '+ req.params.configType);
-        // if (err) res.send(err)
-        if (req.params.configType == 'profile') {
+    app.get('/api/' + namespace + '/fetch/:type', function(req, res) {
 
-
+        if (req.params.type == 'profile') {
             client.get('users/show', params, function (error, docs, response) {
                 if (!error) {
 
-
-                    Config.update({
-                        namespace: namespace,
-                        data: {
-                            profileConfig: assignValues(docs)
-                        },
-                        type: 'profile'
-                    },
-                    function (config) {
-
-                        res.json(config);
+                    resetConfig(req.params.type, docs, function(boom){
+                        res.json(boom);
                     });
                 } else {
                     //console.log(error)
@@ -56,18 +42,8 @@ module.exports = function(app) {
 
                     delete posts[0].user;
 
-                    ////console.log(assignValues(posts[0]));
-
-                    Config.update({
-                        namespace: namespace,
-                        data: {
-                            postConfig: assignValues(posts[0])
-                        },
-                        type: 'post'
-                    },
-                    function (config) {
-
-                        res.json(config);
+                    resetConfig(req.params.type, posts[0], function(boom){
+                        res.json(boom);
                     });
                 } else {
                     //console.log(error)
@@ -108,6 +84,19 @@ module.exports = function(app) {
 
     });
 
+    var resetConfig = function(type, update, cb) {
 
+        var _config = new Config({name: namespace}); // instantiated Config
+
+        _config.update({
+            data: update,
+            type: type,
+            reset: true
+        }, function(config) {
+            cb(config);
+
+            //});
+        });
+    };
 
 };
