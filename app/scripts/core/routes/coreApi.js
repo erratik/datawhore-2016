@@ -14,12 +14,27 @@ module.exports = function(app) {
         // get settings with mongoose, return default settings if !settings.saved
         Config.getAll(function(err, data){
             //console.log(data);
-            //console.log('test2');
+            //console.log('test2');config
 
             res.json(data);
         });
     });
 
+    // create network object -------------------------------------------------------*/
+    app.post('/api/core/add/:namespace', function(req, res) {
+        //console.log(req.params.namespace);
+
+        var _config = new Config({name: req.params.namespace}); // instantiated Config
+        //console.log(_config);
+
+        _config.update({
+            type: 'network'
+        }, function(config) {
+            //console.log(config);
+            res.json(config);
+        });
+
+    });
     // create network object -------------------------------------------------------*/
     app.post('/api/core/connect/:namespace', function(req, res) {
         var _config = new Config({name: req.params.namespace}); // instantiated Config

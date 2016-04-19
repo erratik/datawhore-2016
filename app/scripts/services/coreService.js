@@ -26,20 +26,27 @@ define(['./module'], function (services) {
 
 
         CoreService.connectNetwork = function (namespace) {
-            namespace = typeof namespace == 'undefined' ? false : namespace;
-            var url = (namespace) ? '/api/core/' + namespace : '/api/core';
-            return $http.get(url).
+
+            return $http.get('/api/connect/' + namespace ).
                 then(function (response) {
                     var data = response.data;
-                    if (params.namespace) {
-                        //console.log(':: CoreService ::  getNetworks (single) ');
-                    } else {
-                        //console.log(':: CoreService ::  getNetworks (all) ');
-                    }
+
                     ////console.log(data);
                     return data;
                 });
         };
+
+        CoreService.addNetwork = function (namespace, type) {
+    console.log(namespace, type);
+            return $http.post('/api/core/add/' + namespace).
+                then(function (response) {
+                    var data = response.data;
+                    console.debug(':: CoreService ::  addNetwork ('+namespace+') ');
+                    console.info(data);
+                    return data;
+                });
+        };
+
 
         CoreService.updateNetwork = function (namespace, settings) {
 

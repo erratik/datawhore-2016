@@ -12,14 +12,6 @@ define([
                 console.info($scope.networks);
 
 
-                $scope.connectNetwork = function (type) {
-                    var config =  $scope.formData[type+'Config'];
-                    CoreService.connectNetwork($scope.profileInfo.name, type, config).then(function (data) {
-                        $scope.formData.profileConfig = data.config;
-                        $scope.formData.profileProperties = data.properties;
-                    });
-                };
-
 
             }
         ])

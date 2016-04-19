@@ -20,7 +20,7 @@ module.exports = function (app) {
         'twitter'    : 'https://api.twitter.com/oauth/authorize?oauth_token=' + process.env.TWITTER_OAUTH_TOKEN,
         'swarm'      : 'https://foursquare.com/oauth2/authenticate/?client_id=' + process.env.SWARM_API_KEY + '&redirect_uri=' + process.env.BASE_URI + '/api/connect/swarm/callback&response_type=code',
         'instagram'  : 'https://api.instagram.com/oauth/authorize/?client_id=' + process.env.INSTAGRAM_API_KEY + '&redirect_uri=' + process.env.BASE_URI + '/api/connect/instagram/callback&response_type=code',
-        'lastfm'     : 'http://www.last.fm/api/auth/?api_key=' + process.env.LASTFM_API_KEY,
+        'lastfm'     : 'http://www.last.fm/api/auth/?api_key=',
         'tumblr'     : ''
     };
 
@@ -30,15 +30,15 @@ module.exports = function (app) {
         res.send(req);
     });
 
-    app.get('/api/connect/:namespace', function (req, res) {
+    app.get('/api/connect/:namespace/:api_key/:api_secret', function (req, res) {
 
         console.log('[API CONNECT] ' + req.params.namespace);
         console.log(req.body);
 
-
         var _config = new Config({name: req.params.namespace}); // instantiated Config
 
 
+        var connectUrl = connectPaths[req.params.namespace];
 
         switch (req.params.namespace) {
             case 'twitter':
@@ -51,11 +51,10 @@ module.exports = function (app) {
 
                 break;
             case 'facebook':
-                    fbgraph.redirectLoginForm(req, res)
+                    //fbgraph.redirectLoginForm(req, res)
                 break;
             case 'lastfm':
-
-
+                    res.send(connectUrl+req.params.api_key);
                 break;
             case 'tumblr':
 
@@ -77,14 +76,14 @@ module.exports = function (app) {
 
         }
 
-        _config.update({
+        /*_config.update({
             data: req.body,
             type: req.params.type,
             reset: 'connect'
         }, function (config) {
             //console.log(config);
             res.json(config);
-        });
+        });*/
 
         //console.log(req.body);
         //console.log('>> /@end');

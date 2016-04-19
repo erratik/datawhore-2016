@@ -1,6 +1,9 @@
 <!-- partial: settings-networkconfig -->
 
+
 <h3 class="ui header dividing">Social Network Configurations ({{networkCount}})</h3>
+<add-namespace></add-namespace>
+
 <div class="sixteen wide column"  ng-if="!networkCount">
     <p>No networks added yet.</p>
 </div>
@@ -8,14 +11,7 @@
     <div class="item" ng-repeat="network in networks">
         <img class="ui avatar image" ng-src="/images/settings/{{network.name}}.png">
         <div class="content">
-            <!--{{namespace}}-->
-            <!--{{network}}-->
-
              <div class="header">{{network.name}}</div>
-            <div class="right mini ui button trigger" ng-click="details=!details">Details</div>
-            <div class="right mini ui button trigger" ng-click="edit=true">Configure</div>
-            <!--<disconnect-namespace></disconnect-namespace>-->
-            <!--<remove-namespace></remove-namespace>-->
         </div>
         <div class="">
             <div class="eight column wide">
@@ -28,22 +24,10 @@
                         <div class="header">{{key}}</div>
                         {{value}}
                     </div>
-                    <div class="right mini ui button trigger" ng-click="edit=!edit">Edit</div>
                 </div>
             </div>
             <div class="eight column wide">
                 <form class="ui form">
-                    <!-- <namespace-toggle></namespace-toggle> -->
-                    <div class=" fields">
-                        <!--<div class="field four wide ">
-                            <label>Username</label>
-                            <input type="text" value="settings.configs[network.namespace].username" ng-model="formData.username">
-                        </div>-->
-                        <!--<div class="field twelve wide ">
-                            <label>Redirect URL</label>
-                            <input type="text" value="settings.configs[network.namespace].redirect_url" ng-model="formData.redirect_url">
-                        </div>-->
-                    </div>
                     <div class="field">
                         <oauth-parameters network="network.name" current-settings="network.settings.oauth"></oauth-parameters>
                     </div>

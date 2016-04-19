@@ -63,17 +63,32 @@ define(['./module'], function (directives) {
                 }
             };
         })
-        .directive('configureNamespace', function () {
+        .directive('addNamespace', ['CoreService', function (CoreService) {
             return {
                 restrict: 'E',
-                template: '<div class="ui positive button">Configure</div>',
+                templateUrl: tpl_folder + 'network--add.html',
+                controller: function($scope) {
+                    $scope.namespace = '';
+                    $scope.type = '';
+                    $scope.addNetwork = function() {
+
+                        CoreService.addNetwork($scope.namespace, $scope.type).then(function (data) {
+                            CoreService.getNetworks({namespace: false}).then(function(networks){
+                                //console.log($scope.$parent);
+                                $scope.$parent.networks = networks;
+                            });
+                        });
+                    };
+
+
+                },
                 link: function (scope, element, attrs) {
-                    element.on('click', function () {
-                        scope.configureNetwork(scope.network.name);
-                    });
+                    //element.on('click', function () {
+                    //    scope.configureNetwork(scope.network.name);
+                    //});
                 }
             };
-        })
+        }])
         .directive('detailsNamespace', function () {
             return {
                 restrict: 'E',
@@ -94,13 +109,18 @@ define(['./module'], function (directives) {
                 transclude: true,
                 scope: {
                     network: '=',
-                    currentSettings: '='
+                    currentSettings: '=',
+                    connect: "&"
                 },
                 controller: function ($scope) {
 
                     $scope.preset = true;
                     $scope.data = {};
                     $scope.data[$scope.network] = [];
+                    $scope.showOauthParams = _.size($scope.currentSettings) >= 2 ? _.size($scope.currentSettings) : false;
+                    //$scope.proposeConnect = _.size($scope.currentSettings) >= 2 ? true : true;
+                    $scope.addSettings = false;
+
                     $scope.params = [
                         {
                             key: 'api_key',
@@ -123,41 +143,47 @@ define(['./module'], function (directives) {
                         } else {
                             $scope.data[$scope.network].push(_.first(_.filter($scope.params, {key: key})));
                         }
-
                         $scope.params = _.reject($scope.params, {key: key});
 
                     });
-                    //console.log($scope.currentSettings);
-                    console.log($scope.params);
 
-                    $scope.addSettings = $scope.params.length ? true : false;
-                    $scope.proposeConnect = !$scope.params.length ? true : false;
 
+                    //console.info($scope);
 
                     $scope.addNewChoice = function () {
                         $scope.data[$scope.network].push({});
                     };
 
                     $scope.removeChoice = function (key) {
-
                         $scope.data[$scope.network] = _.reject($scope.data[$scope.network], {key: key});
-
                     };
 
-                    console.info($scope);
 
                     // Add/update or a network ----------------------------------*/
                     $scope.updateNetwork = function () {
-                        //var settings = _.merge( $scope.data[$scope.network], $scope.currentSettings);
-                        console.info($scope.currentSettings);
-                        console.info($scope.data[$scope.network]);
-                        //console.info(settings);
                         CoreService.updateNetwork($scope.network, {oauth: $scope.data[$scope.network]}).then(function (data) {
                             console.info(data);
-                            //$scope.formData.profileConfig = data.config;
-                            //$scope.formData.profileProperties = data.properties;
+                            $scope.currentSettings = data.settings.oauth;
+                            $scope.addSettings = false;
                         });
                     };
+
+                    // Add/update or a network ----------------------------------*/
+                    $scope.addNetwork = function () {
+
+                        //CoreService.updateNetwork($scope.network, {oauth: $scope.data[$scope.network]}).then(function (data) {
+                        //    //console.info(data);
+                        //    $scope.currentSettings = data.settings.oauth;
+                        //    $scope.addSettings = false;
+                        //});
+                    };
+
+                    $scope.fn = function() {
+                        $scope.connect($scope.currentSettings);
+                    };
+
+
+                    //console.log($scope.$parent)
 
                 },
                 templateUrl: tpl_folder + 'network--settings.html',//

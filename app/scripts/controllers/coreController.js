@@ -9,66 +9,9 @@ define([
 
                 $scope.networks = networks;
                 $scope.networkCount = _.size(networks);
-                //console.info($scope);
-
-                //
-                //$scope.SettingsService = angular.copy(SettingsService);
-                //
-                //// $scope.profiles.load();
-                //$scope.SettingsService.load().then(function (items) {
-                //    // console.log(items);
-                //    $scope.settings = items;
-                //    $scope.formData = items.formData;
-                //    console.log($scope);
-                //    init();
-                //});
-
-                // $scope.updateProfileProps = function(namespace) {
-                //     $scope.ProfileService.updateProps(namespace, false, $scope.formData[namespace]).then(function(profile){
-                //         // console.log(profile);
-                //         $scope.model.profiles[namespace] = profile;
-                //         // $scope.edit[namespace]=!$scope.edit[namespace];
-                //     });
-                // };
-
-                // when submitting the add form, send the text to the node API
-                $scope.createSettings = function () {
-                    $scope.settings.last_modified = Date.now() / 1000 | 0;
-
-                    $http.post('/api/settings', $scope.settings)
-                        .success(function (data) {
-                            $scope.settings = data;
-                            console.log(data);
-                        })
-                        .error(function (data) {
-                            console.log('Error: ' + data);
-                        });
-                };
-
-                // delete a setting after checking it
-                $scope.deleteSettings = function () {
-                    $http.delete('/api/settings/', $scope.settings)
-                        .success(function (data) {
-                            $scope.settings = data;
-                        })
-                        .error(function (data) {
-                            console.log('Error: ' + data);
-                        });
-                };
+                console.info($scope);
 
 
-                // Add networks that can be configured ----------------------------------*/
-                $scope.addNetworkNamespace = function () {
-                    $http.post('/api/settings/network/', $scope.formData)
-                        .success(function (data) {
-                            $scope.formData = {}; // clear the form so our user is ready to enter another
-                            $scope.settings = data;
-                            console.log(data);
-                        })
-                        .error(function (data) {
-                            console.log('Error: ' + data);
-                        });
-                };
                 $scope.deleteNetworkNamespace = function (namespace) {
                     console.log(namespace);
                     $http.delete('/api/settings/network/' + namespace)

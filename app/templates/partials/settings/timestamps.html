@@ -24,33 +24,3 @@
       </div>
   </form>
 </div>
-
-<div class="eight wide column" ng-show="settings.saved">
-  <h4 class="ui header dividing">Add a network namespace</h4>
-  <div class="compact ui button" ng-show="!namespace" ng-click="namespace=!namespace">Add</div>
-  <form class="ui form" ng-show="namespace">
-    <div class="two fields">
-      
-      <div class="field">
-        <label>Namespace</label>
-        <input type="text" placeholder="Add network namepsace" ng-model="formData.namespace">
-      </div>
-      <div class="field">
-        <label>Drop Type</label>
-        <input type="text" placeholder="Add drop type" ng-model="formData.type">
-      </div>
-    </div>
-    <!-- <div class="field"> -->
-      <div class="field">
-        <label>Filename</label>
-        <input type="text" placeholder="/images/[filename.*]" ng-model="formData.filename">
-      </div>
-    <!-- </div> -->
-
-      <div class="ui buttons small">
-          <button type="submit" class="ui button positive" ng-click="addNetworkNamespace()">Add</button>
-        <div class="or"></div>
-          <button type="submit" class="ui button" ng-click="namespace=!namespace">Cancel</button>
-      </div>
-  </form>
-</div>

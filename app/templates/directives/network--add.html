@@ -1,0 +1,23 @@
+<div class="eight wide column">
+    <h4 class="ui header dividing">Add a network namespace</h4>
+    <div class="compact ui button" ng-show="!adding" ng-click="adding=!adding">Add</div>
+    <form class="ui form" ng-show="adding">
+        <div class="two fields">
+
+            <div class="field">
+                <label>Namespace</label>
+                <input type="text" placeholder="Add network namespace" ng-model="namespace">
+            </div>
+            <div class="field">
+                <label>Drop Type</label>
+                <input type="text" placeholder="Add drop type" ng-model="type">
+            </div>
+        </div>
+
+        <div class="ui buttons small">
+            <button type="submit" class="ui button positive" ng-click="addNetwork()">Add</button>
+            <div class="or"></div>
+            <button type="submit" class="ui button" ng-click="adding=!adding">Cancel</button>
+        </div>
+    </form>
+</div>

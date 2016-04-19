@@ -51,7 +51,7 @@ var Config = mongoose.createModel('Config', {
         if (isConfig) {
             update[options.type + 'Config'] = (options.reset) ? assignValues(options.data) : options.data;
             var that = this.model('Config');
-        } else {
+        } else if (options.type == 'core') {
             update.settings = {};
             _.each(options.data, function(obj, key){
 
@@ -67,6 +67,8 @@ var Config = mongoose.createModel('Config', {
                 });
 
             });
+        } else if (options.type == 'network') {
+
         }
         //console.log(update);
         //cb(update);

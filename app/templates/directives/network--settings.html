@@ -1,23 +1,17 @@
-<!--<div ng-switch="preset">-->
-<!--<div ng-switch-when="false">-->
-<!--</div>-->
-<!--<div ng-switch-when="true">-->
-<!--</div>-->
-<!--</div>-->
 
-<h4>Network OAuth Parameters</h4>
-<div ng-hide="addSettings">
-    <ul>
-        <li ng-repeat="(key,setting) in currentSettings">
-            {{setting.label}} - {{setting.value}} - {{key}}
-            <!--<input ng-model="currentSettings[key].value">-->
-        </li>
-    </ul>
-    <div class="ui mini button" ng-show="proposeConnect" ng-click="addSettings=!addSettings">Edit fields</div>
+<div ng-if="showOauthParams">
+
+    <h4>Network OAuth Parameters</h4>
+    <div ng-hide="addSettings">
+        <ul>
+            <li ng-repeat="(key,setting) in currentSettings">
+                {{setting.label}} - {{setting.value}}
+            </li>
+        </ul>
+    </div>
+    <button class="ui button green" add="connectNetwork()"><i class="exchange icon"></i>Connect</button>
 </div>
-
-
-<div ng-show="!proposeConnect||addSettings">
+<div ng-show="addSettings||!showOauthParams">
 
     <fieldset data-ng-repeat="choice in data[network]">
 
@@ -28,9 +22,8 @@
                 <input type="text" ng-model="choice.key" key="" placeholder="key name">
             </div>
             <div ng-switch-when="true">
-                {{params.length}} - {{choice}}
+
                 <select ng-model="data[network][$index]" ng-options="item.key for item in params" ng-if="params.length"></select>
-                <!--<select ng-model="toAddChart" ng-options="chart.id as chart.name for chart in chartList | filter:chart.active=='false'">-->
                 <input type="text" ng-model="choice.key" key="" placeholder="key name" ng-if="!params.length">
 
             </div>
@@ -42,16 +35,16 @@
         <button class="remove"  ng-click="removeChoice(choice.key)">-</button>
 
     </fieldset>
-    <button class="addfields" ng-click="addNewChoice()">Add fields</button>
-
-    <div>
-        {{ data[network] }}
-    </div>
 
     <div class="ui buttons">
-        <div class="ui mini button" ng-click="addSettings=!addSettings">Cancel</div>
-        <div class="or"></div>
-        <div class="ui positive button" ng-click="updateNetwork(network.name)">Update fields</div>
+        <button class="ui button blue" ng-click="addNewChoice()">Add Oauth Params</button>
+        <div class="or" ng-show="showOauthParams||addSettings"></div>
+        <div class="ui positive button" ng-show="showOauthParams||addSettings" ng-click="updateNetwork(network.name)">Update fields</div>
+        <div class="or" ng-if="showOauthParams"></div>
+        <div class="ui button negative" ng-if="showOauthParams" ng-click="addSettings=!addSettings">Cancel</div>
     </div>
+</div>
+<div ng-show="showOauthParams">
+
 
 </div>
