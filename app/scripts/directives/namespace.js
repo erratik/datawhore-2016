@@ -109,8 +109,7 @@ define(['./module'], function (directives) {
                 transclude: true,
                 scope: {
                     network: '=',
-                    currentSettings: '=',
-                    connect: "&"
+                    currentSettings: '='
                 },
                 controller: function ($scope) {
 
@@ -169,17 +168,12 @@ define(['./module'], function (directives) {
                     };
 
                     // Add/update or a network ----------------------------------*/
-                    $scope.addNetwork = function () {
+                    $scope.connectNetwork = function () {
+                        console.debug($scope.currentSettings);
+                        CoreService.connectNetwork($scope.network, $scope.currentSettings).then(function (data) {
+                            console.info(data);
 
-                        //CoreService.updateNetwork($scope.network, {oauth: $scope.data[$scope.network]}).then(function (data) {
-                        //    //console.info(data);
-                        //    $scope.currentSettings = data.settings.oauth;
-                        //    $scope.addSettings = false;
-                        //});
-                    };
-
-                    $scope.fn = function() {
-                        $scope.connect($scope.currentSettings);
+                        });
                     };
 
 

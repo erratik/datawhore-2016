@@ -25,19 +25,20 @@ define(['./module'], function (services) {
         };
 
 
-        CoreService.connectNetwork = function (namespace) {
-
-            return $http.get('/api/connect/' + namespace ).
+        CoreService.connectNetwork = function (namespace, oauthParams) {
+            var url = '/api/connect/' + namespace+'/'+oauthParams.api_key.value+'/'+oauthParams.api_secret.value;
+            //console.debug(url);
+            return $http.get(url, oauthParams ).
                 then(function (response) {
-                    var data = response.data;
-
-                    ////console.log(data);
-                    return data;
+                    var url = response.data;
+                    console.debug(url);
+                    document.location.href = url;
+                    //return data;
                 });
         };
 
         CoreService.addNetwork = function (namespace, type) {
-    console.log(namespace, type);
+
             return $http.post('/api/core/add/' + namespace).
                 then(function (response) {
                     var data = response.data;

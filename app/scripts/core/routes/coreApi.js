@@ -35,18 +35,7 @@ module.exports = function(app) {
         });
 
     });
-    // create network object -------------------------------------------------------*/
-    app.post('/api/core/connect/:namespace', function(req, res) {
-        var _config = new Config({name: req.params.namespace}); // instantiated Config
 
-        _config.update({
-            data: req.body,
-            type: 'core'
-        }, function(config) {
-            //console.log(config);
-            res.json(config);
-        });
-    });
     // update network settings in a config -------------------------------------------------------*/
     app.post('/api/core/update/:namespace', function(req, res) {
         var _config = new Config({name: req.params.namespace}); // instantiated Config
