@@ -1,6 +1,7 @@
-
+sh_*
 *.log
 
+backups
 bower_components
 node_modules
 .idea/.name
