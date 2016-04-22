@@ -15,7 +15,7 @@ schema.statics = {
             Core.findOne({
                 name: 'core'
             }, function(err, core) {
-                if (err) console.log(err)
+                if (err) console.log(err);
                 //console.log('Core Model > saved profile...');
                 if (typeof callback == 'function') callback(core);
             });
@@ -27,7 +27,7 @@ schema.statics = {
         Core.findOne({
             name: 'core'
         }, function(err, core) {
-            if (err) console.log(err)
+            if (err) console.log(err);
 
             var updatedCore = {
               configs: params.configs || core.configs,
@@ -41,7 +41,7 @@ schema.statics = {
                 Core.findOne({
                     name: 'core'
                 }, function(err, core) {
-                    if (err) console.log(err)
+                    if (err) console.log(err);
                     //console.log('Core Model > updated core...');
                     if (typeof callback == 'function') callback(core);
                 });
@@ -75,5 +75,5 @@ schema.statics = {
         }
             
     }
-}
+};
 module.exports = Core = mongoose.model('Core', schema);

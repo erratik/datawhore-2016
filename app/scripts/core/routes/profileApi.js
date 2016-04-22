@@ -53,7 +53,7 @@ module.exports = function(app) {
                 name: req.params.namespace
             }, function(err, profile) {
                 if (err) res.send(err);
-                settings.configs[req.params.namespace]['profile'] = false;
+                settings.configs[req.params.namespace].profile = false;
                 Settings.updateConfig(settings.configs);
                 res.json(settings.configs[req.params.namespace]);
             });

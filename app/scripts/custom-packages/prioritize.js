@@ -19,7 +19,7 @@ function isSimpleProperty(value) {
         return false;
     }
 
-};
+}
 
 function assignValues(node) {
 
@@ -75,7 +75,7 @@ function assignValues(node) {
     //obj.grouped = false;
     //console.log('------------ @end assignValues');
     return obj;
-};
+}
 
 function makeData(val, label) {
     //console.log('make data running');
@@ -97,7 +97,7 @@ function makeData(val, label) {
         obj.grouped = false;
     }
     return obj;
-};
+}
 
 function mapAttributeKeys(item, prefix) {
     var keys = {};
@@ -229,4 +229,4 @@ function findValues(post, split, prop, obj){
         }
     });
 
-};
+}

@@ -64,7 +64,7 @@ module.exports = function(app) {
                 //console.log(err);
             } else {
                 ////console.log('req.body > '+ req.body);
-                var posts = _.filter(posts, function(post){
+                posts = _.filter(posts, function(post){
                     return assignValues(post);
                 });
 

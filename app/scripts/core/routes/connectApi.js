@@ -137,7 +137,7 @@ module.exports = function (app) {
                 Settings.findOne({
                     name: 'settings'
                 }, function (err, settings) {
-                    if (err) res.send(err)
+                    if (err) res.send(err);
                     var request = require('request');
                     request({
                         url: 'https://foursquare.com/oauth2/access_token',
@@ -166,7 +166,7 @@ module.exports = function (app) {
                                 Settings.findOne({
                                     name: 'settings'
                                 }, function (err, settings) {
-                                    if (err) console.log(err)
+                                    if (err) console.log(err);
                                     console.log(settings);
                                 });
                             });
@@ -185,7 +185,7 @@ module.exports = function (app) {
                         name: 'settings'
                     },
                     function (err, settings) {
-                        if (err) res.send(err)
+                        if (err) res.send(err);
                         var request = require('request');
                         request({
                             url: 'https://api.instagram.com/oauth/access_token',
@@ -215,7 +215,7 @@ module.exports = function (app) {
                                     Settings.findOne({
                                         name: 'settings'
                                     }, function (err, settings) {
-                                        if (err) console.log(err)
+                                        if (err) console.log(err);
                                         console.log(settings);
                                     });
                                 });
@@ -298,10 +298,10 @@ module.exports = function (app) {
                 Settings.findOne({
                     name: 'settings'
                 }, function (err, settings) {
-                    if (err) res.send(err)
+                    if (err) res.send(err);
                     moves.token(req.query.code, function (error, response, body) {
-                        var body = JSON.parse(body),
-                            access_token = body.access_token,
+                             body = JSON.parse(body);
+                            var access_token = body.access_token,
                             refresh_token = body.refresh_token,
                             user_id = body.user_id,
                             expires_in = body.expires_in;
@@ -322,7 +322,7 @@ module.exports = function (app) {
                             Settings.findOne({
                                 name: 'settings'
                             }, function (err, settings) {
-                                if (err) console.log(err)
+                                if (err) console.log(err);
                                 console.log(settings);
                             });
                         });
@@ -375,7 +375,7 @@ module.exports = function (app) {
         Settings.findOne({
             name: 'settings'
         }, function (err, settings) {
-            if (err) res.send(err)
+            if (err) res.send(err);
 
             settings.networks.facebook.connected = true;
             Settings.update({
@@ -385,7 +385,7 @@ module.exports = function (app) {
                 Settings.findOne({
                     name: 'settings'
                 }, function (err, settings) {
-                    if (err) console.log(err)
+                    if (err) console.log(err);
                     console.log(settings.networks.facebook);
                 });
             });

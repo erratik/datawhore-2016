@@ -5,18 +5,18 @@ define(['./module'], function (filters) {
         .filter('interpolate', ['version', function (version) {
             return function (text) {
                 return String(text).replace(/\%VERSION\%/mg, version);
-            }
+            };
         }])
         .filter('typeof', function () {
             return function (context) {
                 return typeof context;
-            }
+            };
         })
         .filter('length', function () {
             return function (context) {
                 // //console.log(context.length);
                 return (typeof context == "object") ? Object.keys(context).length : '';
-            }
+            };
         })
         .filter('fromNow', function () {
             return function (date) {
@@ -38,7 +38,7 @@ define(['./module'], function (filters) {
                     return a - b;
                 });
                 return array;
-            }
+            };
         });
 
 });

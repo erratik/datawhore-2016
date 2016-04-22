@@ -1,5 +1,5 @@
 define(function(){
     return ['$log', function($log){
-        $log.info('Core module started...')
+        $log.info('Core module started...');
     }];
 });

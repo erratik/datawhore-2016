@@ -16,7 +16,7 @@ var swarmConfig = {
         'redirectUrl' : 'http://datawhore.erratik.ca:3000/connect/swarm/callback',
         'accessToken' : process.env.SWARM_ACCESS_TOKEN
     }
-}
+};
 
 var client = require('node-foursquare')(swarmConfig);
 

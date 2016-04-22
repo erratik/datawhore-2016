@@ -124,19 +124,19 @@ define(['./module'], function (directives) {
                         {
                             key: 'api_key',
                             label: 'API Key',
-                            value: (typeof $scope.currentSettings != 'undefined' && typeof $scope.currentSettings['api_key'] != 'undefined') ? $scope.currentSettings['api_key'].value : ''
+                            value: (typeof $scope.currentSettings != 'undefined' && typeof $scope.currentSettings.api_key != 'undefined') ? $scope.currentSettings.api_key.value : ''
                         },
                         {
                             key: 'api_secret',
                             label: 'API Secret',
-                            value: (typeof $scope.currentSettings != 'undefined' && typeof $scope.currentSettings['api_secret'] != 'undefined') ? $scope.currentSettings['api_secret'].value : ''
+                            value: (typeof $scope.currentSettings != 'undefined' && typeof $scope.currentSettings.api_secret != 'undefined') ? $scope.currentSettings.api_secret.value : ''
 
                         }
                     ];
 
                     _.each($scope.currentSettings, function (obj, key) {
 
-                        if (_.first(_.filter($scope.params, {key: key})) == undefined) {
+                        if (_.first(_.filter($scope.params, {key: key})) === undefined) {
                             obj.key = key;
                             $scope.data[$scope.network].push(obj);
                         } else {
@@ -186,6 +186,6 @@ define(['./module'], function (directives) {
 
                 }
             };
-        }])
+        }]);
 
 });

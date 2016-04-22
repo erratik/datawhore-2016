@@ -46,7 +46,7 @@ define(['./module'], function (services) {
                     return (response.data);
                     // //console.log(profileService);
                 });
-        }
+        };
 
         return this;
     }]);

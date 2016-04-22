@@ -149,7 +149,7 @@ module.exports = function(app) {
                     res.json(settings);
                 });
             });
-        })
+        });
         // remove network config -------------------------------------------------------*/
     app.delete('/disconnect/network/:namespace', function(req, res) {
         Core.findOne({
