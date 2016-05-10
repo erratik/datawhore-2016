@@ -32,7 +32,7 @@ define(['./module'], function (services) {
                 then(function (response) {
                     var url = response.data;
                     console.debug(url);
-                    document.location.href = url;
+                    window.location = url;
                     //return data;
                 });
         };
@@ -60,15 +60,16 @@ define(['./module'], function (services) {
                 });
         };
 
-        // CoreService.delete = function(namespace){
-        //     return $http.delete('/api/profiles/' + namespace).
-        //     then(function(response) {
-        //         // //console.log(response.data); //I get the correct items, all seems ok here
-        //         return (response.data);
-        //         // //console.log(profileService);
-        //     });
-        // }
+        CoreService.removeNetwork = function (namespace, type) {
 
+            return $http.post('/api/core/remove/' + namespace).
+                then(function (response) {
+                    var data = response.data;
+                    console.debug(':: CoreService ::  removeNetwork ('+namespace+') ');
+                    console.info(data);
+                    return data;
+                });
+        };
 
         return CoreService;
     });

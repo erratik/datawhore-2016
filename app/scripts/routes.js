@@ -26,6 +26,10 @@ define(['./app'], function (app) {
     return app.constant('angularMomentConfig', {
         preprocess: 'unix' // optional
     }).constant('_', window._).config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
+
+
+        $urlRouterProvider.when('', '/');
+
         $stateProvider
             .state('core', {
                 url: '/',
@@ -38,8 +42,8 @@ define(['./app'], function (app) {
                         // return ConfigService.load($stateParams.namespace);
                     }]
                 }
-            }).state('networks', {
-                url: '/',
+            }).state('profiles', {
+                url: '/profiles',
                 controller: 'networksController',
                 templateUrl: 'templates/tpl--profiles.html',
                 resolve: {

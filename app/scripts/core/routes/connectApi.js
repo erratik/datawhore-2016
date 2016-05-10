@@ -2,20 +2,10 @@ var Settings = require('../models/Core');
 var Config = require('../models/Config');
 
 var mongoose = require('mongoose');
+var oauthSignature = require('oauth-signature');
 var fs = require('fs');
-var md5 = require('md5');
-var Twitter = require('twitter');
-var client = new Twitter({
-    consumer_key: process.env.TWITTER_API_KEY,
-    consumer_secret: process.env.TWITTER_API_SECRET,
-    access_token_key: process.env.TWITTER_ACCESS_TOKEN,
-    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-});
-var LastfmAPI = require('lastfmapi');
-var lfm_credentials = {
-    'api_key': '',
-    'secret': ''
-};
+
+
 // Create a new instance
 
 // expose the routes to our app with module.exports
@@ -23,85 +13,115 @@ module.exports = function (app) {
 
     var fbgraph = require('fbgraphapi');
 
-    var connectPaths = {
-        'twitter': 'https://api.twitter.com/oauth/authorize?oauth_token=' + process.env.TWITTER_OAUTH_TOKEN,
-        'swarm': 'https://foursquare.com/oauth2/authenticate/?client_id=' + process.env.SWARM_API_KEY + '&redirect_uri=' + process.env.BASE_URI + '/api/connect/swarm/callback&response_type=code',
-        'instagram': 'https://api.instagram.com/oauth/authorize/?client_id=' + process.env.INSTAGRAM_API_KEY + '&redirect_uri=' + process.env.BASE_URI + '/api/connect/instagram/callback&response_type=code',
-        'lastfm': 'http://www.last.fm/api/auth/?api_key=',
-        'tumblr': ''
-    };
-    app.use(function (req, res, next) {
-        res.header("Access-Control-Allow-Origin", "http://datawhore.erratik.ca:3000/");
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-        next();
-    });
-
     app.get('/api/connect/twitter/middle', function (req, res) {
         res.send(req);
     });
 
     app.get('/api/connect/:namespace/:key/:secret', function (req, res) {
 
-
+        //if (req.params.namespace == 'callback') res.send();
         console.log('[API CONNECT] ' + req.params.namespace);
 
-        lfm_credentials.api_key = req.params.key;
-        lfm_credentials.api_secret = req.params.secret;
+        Config.findByName(req.params.namespace, function (err, config) {
 
-        var _config = new Config({name: req.params.namespace}); // instantiated Config
+            var oauth = config[0].settings.oauth;
 
+            switch (req.params.namespace) {
+                case 'twitter':
 
-        var connectUrl = connectPaths[req.params.namespace];
+                    res.redirect('/api/callback/'+req.params.namespace);
 
-        switch (req.params.namespace) {
-            case 'twitter':
+                    break;
+                case 'swarm':
 
-                break;
-            case 'swarm':
+                    var credentials = {
+                        secrets : {
+                            redirectUrl: oauth.redirect_uri.value,
+                            clientId: oauth.api_key.value,
+                            clientSecret: oauth.api_secret.value
+                        }
+                    };
+                    var foursquare = require('node-foursquare')(credentials);
+                    res.redirect( foursquare.getAuthClientRedirectUrl() );
 
-                break;
-            case 'instagram':
+                    break;
+                case 'instagram':
 
-                break;
-            case 'facebook':
-                //fbgraph.redirectLoginForm(req, res)
-                break;
-            case 'lastfm':
+                    var api = require('instagram-node').instagram();
 
-
-                var lfm = new LastfmAPI(lfm_credentials);
-                lfm.auth.getToken(function(err, token){
-                    var sig = md5("api_key"+req.params.key+"methodauth.getSession"+"token"+token+req.params.secret);
-                    console.log(err, token, sig);
-
-
-                    lfm.auth.getSession({token:token, sig:sig} , function (err, session) {
-                        console.log(err, session);
+                    api.use({
+                        client_id: oauth.api_key.value,
+                        client_secret: oauth.api_secret.value
                     });
-                });
-                //res.send(connectUrl + req.params.key + '&cb=http://datawhore.erratik.ca:3000/api/connect/' + req.params.namespace + '/callback');
 
-                break;
-            case 'tumblr':
 
-                break;
-            case 'moves':
+                    var redirect_uri = oauth.redirect_uri.value;
 
-                var Moves = require('moves');
-                var moves = new Moves({
-                    client_id: process.env.MOVES_API_KEY,
-                    client_secret: process.env.MOVES_API_SECRET,
-                    redirect_uri: process.env.BASE_URI + '/api/connect/moves/callback'
-                });
-                moves.authorize({
-                    scope: ['activity', 'location'], //can contain either activity, location or both
-                    state: 'moves_state' //optional state as per oauth
-                }, res);
-                break;
-            default:
+                    //exports.authorize_user = function(req, res) {
+                    res.send(api.get_authorization_url(redirect_uri, { scope: ['basic'], state: 'authed-basic' }));
+                    //};
+                    break;
+                case 'facebook':
+                    //fbgraph.redirectLoginForm(req, res)
+                    break;
+                case 'spotify':
+                    var SpotifyWebApi = require('spotify-web-api-node');
 
-        }
+                    var scopes = ['user-read-private', 'user-read-email'],
+                        redirectUri = config[0].settings.oauth.redirect_uri.value + '/middle',
+                        clientId = config[0].settings.oauth.api_key.value,
+                        state = 'authed';
+
+                    // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+                    var spotifyApi = new SpotifyWebApi({
+                        redirectUri: redirectUri,
+                        clientId: clientId
+                    });
+
+                    // Create the authorization URL
+                    var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
+
+                    res.send(authorizeURL);
+
+                    break;
+                case 'tumblr':
+                    /*
+                    var passport = require('passport-tumblr');
+                    passport.use(new TumblrStrategy({
+                            consumerKey: oauth.api_key.value,
+                            consumerSecret: oauth.api_secret.value,
+                            callbackURL: oauth.redirect_uri.value
+                        },
+                        function(token, tokenSecret, profile, done) {
+                            User.findOrCreate({ tumblrId: profile.id }, function (err, user) {
+                                return done(err, user);
+                            });
+                        }
+                    ));*/
+                    //passport.authenticate('tumblr');
+                    res.redirect('/api/callback/'+req.params.namespace);
+                    break;
+                case 'moves':
+
+                    var Moves = require('moves');
+                    var moves = new Moves({
+                        client_id: oauth.api_key.value,
+                        client_secret: oauth.api_secret.value,
+                        redirect_uri: oauth.redirect_uri.value
+                    });
+
+                    var authorizeURL = moves.authorize({
+                        scope: ['activity', 'location'] //can contain either activity, location or both
+                        , state: 'authed' //optional state as per oauth
+                    });
+
+                    res.send(authorizeURL);
+                    break;
+                default:
+
+            }
+        });
+
 
         /*_config.update({
          data: req.body,
@@ -115,234 +135,238 @@ module.exports = function (app) {
         //console.log(req.body);
         //console.log('>> /@end');
     });
-    app.get('/api/connect/:namespace/callback/:bounce?', function (req, res) {
+    app.get('/api/callback/:namespace/:bounce?', function (req, res) {
 
-        /*Settings.findOne({
-         name: 'settings'
-         }, function (err, settings) {
-         if (err) res.send(err)
-         var params = {
-         screen_name: settings.configs.twitter.username
-         };
-         });
-         */
         console.log('[API CONNECT CALLBACK] ' + req.params.namespace);
 
-        switch (req.params.namespace) {
-            case 'twitter':
 
-                break;
-            case 'swarm':
+        Config.findByName(req.params.namespace, function (err, config) {
 
-                Settings.findOne({
-                    name: 'settings'
-                }, function (err, settings) {
-                    if (err) res.send(err);
-                    var request = require('request');
-                    request({
-                        url: 'https://foursquare.com/oauth2/access_token',
-                        method: 'POST',
-                        formData: {
-                            client_id: process.env.SWARM_API_KEY,
-                            client_secret: process.env.SWARM_API_SECRET,
-                            grant_type: 'authorization_code',
-                            redirect_uri: process.env.BASE_URI + '/api/connect/swarm/callback',
+            //console.log(config);
+            var oauth = config[0].settings.oauth;
+            var _config = new Config({name: req.params.namespace}); // instantiated Config
+
+            _config.connect(function () {
+
+                switch (req.params.namespace) {
+                    case 'twitter':
+                        res.redirect('/#/');
+                        break;
+                    case 'tumblr':
+
+                        var passport = require('passport-tumblr');
+                        passport.use(new TumblrStrategy({
+                                consumerKey: oauth.api_key.value,
+                                consumerSecret: oauth.api_secret.value,
+                                callbackURL: oauth.redirect_uri.value
+                            },
+                            function(token, tokenSecret, profile, done) {
+                                User.findOrCreate({ tumblrId: profile.id }, function (err, user) {
+                                    return done(err, user);
+                                });
+                            }
+                        ));
+
+                        passport.authenticate('tumblr', { failureRedirect: '/login' },
+                            function(req, res) {
+                                // Successful authentication, redirect home.
+                                res.redirect('/');
+                            });
+                        //res.redirect('/#/');
+                        break;
+                    case 'swarm':
+
+                        var credentials = {
+                            secrets : {
+                                redirectUrl: oauth.redirect_uri.value,
+                                clientId: oauth.api_key.value,
+                                clientSecret: oauth.api_secret.value
+                            }
+                        };
+
+                        var foursquare = require('node-foursquare')(credentials);
+
+                        foursquare.getAccessToken({
                             code: req.query.code
-                        }
-                    }, function (error, response, body) {
-                        if (!error && response.statusCode == 200) {
-                            var result = JSON.parse(body);
-                            settings.configs.swarm.access_token = result.access_token;
-                            for (var i = 0; i < settings.networks.length; i++) {
-                                // console.log(req.params.namespace);
-                                if (settings.networks[i].namespace == 'swarm') {
-                                    settings.networks[i].connected = true;
-                                }
+                        }, function (error, access_token) {
+                            if(error) {
+                                res.send('An error was thrown: ' + error.message);
                             }
-                            Settings.update({
-                                networks: settings.networks,
-                                configs: settings.configs
-                            }, function (err, settings) {
-                                Settings.findOne({
-                                    name: 'settings'
-                                }, function (err, settings) {
-                                    if (err) console.log(err);
-                                    console.log(settings);
+                            else {
+                                // Save the accessToken and redirect.
+                                console.log('Yay! Access token is ' + access_token);
+                                oauth.access_token = {
+                                    value: access_token,
+                                    label: 'Access Token'
+                                };
+
+                                _config.update({
+                                    data: oauth,
+                                    type: 'settings.oauth'
+                                }, function() {
+                                    res.redirect('/#/');
                                 });
-                            });
-                        } else {
-                            console.log(body);
-                            console.log(response);
-                        }
-                        //res.redirect('/');
-                    });
-                });
-
-                break;
-            case 'instagram':
-
-                Settings.findOne({
-                        name: 'settings'
-                    },
-                    function (err, settings) {
-                        if (err) res.send(err);
-                        var request = require('request');
-                        request({
-                            url: 'https://api.instagram.com/oauth/access_token',
-                            method: "POST",
-                            formData: {
-                                client_id: process.env.INSTAGRAM_API_KEY,
-                                client_secret: process.env.INSTAGRAM_API_SECRET,
-                                grant_type: 'authorization_code',
-                                redirect_uri: process.env.BASE_URI + '/api/connect/instagram/callback',
-                                code: req.query.code
                             }
-                        }, function (error, response, body) {
-                            if (!error && response.statusCode == 200) {
-                                var result = JSON.parse(body);
-                                settings.configs.instagram.access_token = result.access_token;
-                                // settings.configs.instagram.profile = result.user;
-                                for (var i = 0; i < settings.networks.length; i++) {
-                                    // console.log(req.params.namespace);
-                                    if (settings.networks[i].namespace == 'instagram') {
-                                        settings.networks[i].connected = true;
-                                    }
-                                }
-                                Settings.update({
-                                    networks: settings.networks,
-                                    configs: settings.configs
-                                }, function (err, settings) {
-                                    Settings.findOne({
-                                        name: 'settings'
-                                    }, function (err, settings) {
-                                        if (err) console.log(err);
-                                        console.log(settings);
-                                    });
-                                });
+                        });
+
+                        break;
+
+                    case 'instagram':
+
+                        var api = require('instagram-node').instagram();
+                        api.use({
+                            client_id: oauth.api_key.value,
+                            client_secret: oauth.api_secret.value
+                        });
+
+                        //api.handleauth = function(req, res) {
+                        api.authorize_user(req.query.code, oauth.redirect_uri.value, function(err, result) {
+                            if (err) {
+                                console.log(err.body);
+                                res.send("Didn't work");
                             } else {
-                                // console.log(error);
-                                // console.log(response.statusCode );
+                                console.log('Yay! Access token is ' + result.access_token);
+                                oauth.access_token = {
+                                    value: result.access_token,
+                                    label: 'Access Token'
+                                };
+
+                                _config.update({
+                                    data: oauth,
+                                    type: 'settings.oauth'
+                                }, function() {
+                                    res.redirect('/#/');
+                                });
                             }
-                            res.redirect('/');
                         });
-                    });
-                break;
-            case 'facebook':
+                    break;
+                    case 'facebook':
 
-                break;
-            case 'lastfm':
-                var lfm = new LastfmAPI(lfm_credentials);
+                    break;
+                    case 'spotify':
+                        if (req.params.bounce == 'middle') {
 
-                if (req.params.bounce) {
-                    console.log(req.params.bounce);
-                } else {
-                    var params = {
-                        cb: 'http://datawhore.erratik.ca:3000/api/connect/' + req.params.namespace + '/callback/true',
-                        token: req.query.token
-                    };
-                    //console.log(lfm.getAuthenticationUrl(params));
-                    //var authenticateUrl = lfm.getAuthenticationUrl(params);
-                    lfm.auth.getToken(function(err, token){
-                        console.log(err, token);
+                            //console.log(config);
+                            //res.json(config);
+                            res.redirect('/#/');
+                            /*
+                             //var SpotifyWebApi = require('spotify-web-api-node');
+                             //// Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+                             //var spotifyApi = new SpotifyWebApi({
+                             //    redirectUri: oauth.redirect_uri.value,
+                             //    clientId: oauth.api_key.value,
+                             //    clientSecret: oauth.api_secret.value
+                             //});
+                             //// Get Elvis' albums
+                             //spotifyApi.getMe()
+                             //    .then(function(data) {
+                             //        console.log('Some information about the authenticated user', data.body);
+                             //    }, function(err) {
+                             //        console.log('Something went wrong!', err);
+                             //    });
 
-                    });
-                    //
+                             // The code that's returned as a query parameter to the redirect URI
+                             var code = req.query.code;
+                             //console.log(oauth.redirect_uri);
+                             spotifyApi.authorizationCodeGrant(code)
+                             .then(function(data) {
+                             console.log('The token expires in ' + data['expires_in']);
+                             console.log('The access token is ' + data['access_token']);
+                             console.log('The refresh token is ' + data['refresh_token']);
 
+                             /!* Ok. We've got the access token!
+                             Save the access token for this user somewhere so that you can use it again.
+                             Cookie? Local storage?
+                             *!/
 
+                             console.log(data);
+                             /!* Redirecting back to the main page! :-) *!/
+                             res.redirect('/#');
 
-                    res.send(params);
-                    // Create a new instance
-                    //lfm.getAuthenticationUrl(params);
-                }
-                /*
-                 var session = lastfm.session({
-                 token: req.query.token,
-                 handlers: {
-                 success: function (session) {
-                 // lastfm.update('nowplaying', session, { track: track } );
-                 // lastfm.update('scrobble', session, { track: track, timestamp: 12345678 });
-                 Settings.findOne({
-                 name: 'settings'
-                 }, function (err, settings) {
-                 if (err) res.send(err)
-                 settings.configs.lastfm.session_key = session.key;
-                 for (var i = 0; i < settings.networks.length; i++) {
-                 // console.log(req.params.namespace);
-                 if (settings.networks[i].namespace == 'lastfm') {
-                 settings.networks[i].connected = true;
-                 }
-                 }
-                 Settings.update({
-                 networks: settings.networks,
-                 configs: settings.configs
-                 }, function (err, settings) {
-                 Settings.findOne({
-                 name: 'settings'
-                 }, function (err, settings) {
-                 if (err) console.log(err)
-                 console.log(settings);
-                 // res.redirect('/');
-                 });
-                 });
-                 });
-                 }
-                 }
-                 });
-                 */
-                break;
-            case 'tumblr':
-
-                break;
-            case 'moves':
-
-                Settings.findOne({
-                    name: 'settings'
-                }, function (err, settings) {
-                    if (err) res.send(err);
-                    moves.token(req.query.code, function (error, response, body) {
-                             body = JSON.parse(body);
-                            var access_token = body.access_token,
-                            refresh_token = body.refresh_token,
-                            user_id = body.user_id,
-                            expires_in = body.expires_in;
-                        settings.configs.moves.access_token = access_token;
-                        settings.configs.moves.refresh_token = refresh_token;
-                        settings.configs.moves.user_id = user_id;
-                        settings.configs.moves.expires_in = expires_in;
-                        for (var i = 0; i < settings.networks.length; i++) {
-                            // console.log(req.params.namespace);
-                            if (settings.networks[i].namespace == 'moves') {
-                                settings.networks[i].connected = true;
-                            }
+                             }, function(err) {
+                             //res.status(err.code);
+                             res.send(err);
+                             });*/
                         }
-                        Settings.update({
-                            networks: settings.networks,
-                            configs: settings.configs
-                        }, function (err, settings) {
-                            Settings.findOne({
-                                name: 'settings'
-                            }, function (err, settings) {
-                                if (err) console.log(err);
-                                console.log(settings);
+                        /*
+                         var session = spotify.session({
+                         token: req.query.token,
+                         handlers: {
+                         success: function (session) {
+                         // spotify.update('nowplaying', session, { track: track } );
+                         // spotify.update('scrobble', session, { track: track, timestamp: 12345678 });
+                         Settings.findOne({
+                         name: 'settings'
+                         }, function (err, settings) {
+                         if (err) res.send(err)
+                         settings.configs.spotify.session_key = session.key;
+                         for (var i = 0; i < settings.networks.length; i++) {
+                         // console.log(req.params.namespace);
+                         if (settings.networks[i].namespace == 'spotify') {
+                         settings.networks[i].connected = true;
+                         }
+                         }
+                         Settings.update({
+                         networks: settings.networks,
+                         configs: settings.configs
+                         }, function (err, settings) {
+                         Settings.findOne({
+                         name: 'settings'
+                         }, function (err, settings) {
+                         if (err) console.log(err)
+                         console.log(settings);
+                         // res.redirect('/');
+                         });
+                         });
+                         });
+                         }
+                         }
+                         });
+                         */
+                        break;
+                    case 'moves':
+
+                        var Moves = require('moves');
+                        var moves = new Moves({
+                            client_id: oauth.api_key.value,
+                            client_secret: oauth.api_secret.value,
+                            redirect_uri: oauth.redirect_uri.value
+                        });
+
+                        moves.token(req.query.code, function(error, response, body) {
+                            //console.log(response);
+                            console.log(JSON.parse(body));
+                            var data = JSON.parse(body);
+
+                            oauth.access_token = {
+                                value: data.access_token,
+                                label: 'Access Token'
+                            };
+                            oauth.expires_in = {
+                                value: data.expires_in,
+                                label: 'Expires in'
+                            };
+                            oauth.refresh_token = {
+                                value: data.refresh_token,
+                                label: 'Refresh Token'
+                            };
+
+                            _config.update({
+                                data: oauth,
+                                type: 'settings.oauth'
+                            }, function() {
+                                res.redirect('/#/');
                             });
                         });
-                        res.redirect('/');
-                    });
-                });
-                break;
-            default:
 
-        }
 
-        var _config = new Config({name: req.params.namespace}); // instantiated Config
-        //_config.update({
-        //    data: req.body,
-        //    type: req.params.type,
-        //    reset: false
-        //}, function (config) {
-        //    //console.log(config);
-        //    res.json(config);
-        //});
+                    break;
+
+                    default:
+
+                }
+            });
+        });
 
         //console.log(req.body);
         //console.log('>> /@end');

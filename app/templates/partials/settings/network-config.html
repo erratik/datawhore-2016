@@ -4,35 +4,22 @@
 <h3 class="ui header dividing">Social Network Configurations ({{networkCount}})</h3>
 <add-namespace></add-namespace>
 
-<div class="sixteen wide column"  ng-if="!networkCount">
-    <p>No networks added yet.</p>
-</div>
+
 <div class="ui divided list" ng-if="networkCount">
     <div class="item" ng-repeat="network in networks">
         <img class="ui avatar image" ng-src="/images/settings/{{network.name}}.png">
         <div class="content">
              <div class="header">{{network.name}}</div>
         </div>
-        <div class="">
-            <div class="eight column wide">
-                <div class="list">
-                    <div class="item" ng-if="value&&settings.configs[network.namespace]" ng-repeat="(key, value) in settings.configs[network.namespace]">
-                        <div class="header">{{key}}</div>
-                        {{value}}
-                    </div>
-                    <div class="item" ng-show="!settings.configs[network.namespace]">
-                        <div class="header">{{key}}</div>
-                        {{value}}
-                    </div>
+        <div class="eight column wide">
+            <form class="ui form">
+                <div class="field">
+                    <oauth-parameters network="network" namespace="network.name" current-settings="network.settings.oauth"></oauth-parameters>
                 </div>
-            </div>
-            <div class="eight column wide">
-                <form class="ui form">
-                    <div class="field">
-                        <oauth-parameters network="network.name" current-settings="network.settings.oauth"></oauth-parameters>
-                    </div>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
+</div>
+<div class="sixteen wide column"  ng-if="!networkCount">
+    <p>No networks added yet.</p>
 </div>

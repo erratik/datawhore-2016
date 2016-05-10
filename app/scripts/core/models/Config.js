@@ -7,6 +7,8 @@ var writeProperties = require('../../custom-packages/prioritize').writePropertie
 
 var Profile = require('./Profile');
 
+
+
 // bootstrap mongoose, because syntax.
 mongoose.createModel = function(name, options) {
     var schema = new mongoose.Schema(options.schema);
@@ -38,6 +40,7 @@ var Config = mongoose.createModel('Config', {
             return this.find({ name: name }, cb);
         },
         getAll: function(cb) {
+
             return this.find({}, cb);
         }
     },
@@ -54,9 +57,7 @@ var Config = mongoose.createModel('Config', {
         } else if (options.type == 'core') {
             update.settings = {};
             _.each(options.data, function(obj, key){
-
                 update.settings[key] = {};
-
                 _.each(obj, function(settings, k){
                     //return settings;
                     update.settings[key][settings.key] = {
@@ -65,16 +66,23 @@ var Config = mongoose.createModel('Config', {
                     };
 
                 });
-
             });
-        } else if (options.type == 'network') {
-
+        } else {
+            update.connected = true;
+            // create the settings object by map the "type",
+            // which is actually a mapped object to create ('settings.oauth')
+            // with the data the keys with values and labels
+            console.log(options.data);
+            var data = [];
+            data.push(options.data);
+            var updatedObj = _.zipObjectDeep([options.type], data);
+            _.merge(update, updatedObj);
         }
-        //console.log(update);
+        console.log('-> going to update config entry with:');
+        console.log(update);
         //cb(update);
-
         this.model('Config').update(query, update, opts, function (err, saved) {
-            console.log(update);
+            //console.log(update);
 
             if (isConfig) {
                 that.findOne({name: query.name}, function (err, config) {
@@ -98,6 +106,26 @@ var Config = mongoose.createModel('Config', {
             } else if (err || saved) {
                 var msg = err ? err : saved;
                 cb(msg);
+            }
+        });
+
+    },
+    connect: function(cb) {
+
+        var query = {name: this.name},
+            update = {
+                last_modified: moment().format('X'),
+                connected: true
+            },
+            opts = {multi: false, upsert: true};
+
+        this.model('Config').update(query, update, opts, function (err, saved) {
+            console.log(update);
+
+            if (saved) {
+                cb(update);
+            } else if (err) {
+                cb(err);
             }
         });
 

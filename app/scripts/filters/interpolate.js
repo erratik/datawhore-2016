@@ -21,7 +21,7 @@ define(['./module'], function (filters) {
         .filter('fromNow', function () {
             return function (date) {
                 return moment.unix(date).fromNow();
-            }
+            };
         })
         .filter('orderObjectBy', function () {
             return function (input, attribute) {

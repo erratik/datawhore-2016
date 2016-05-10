@@ -108,6 +108,7 @@ define(['./module'], function (directives) {
                 restrict: 'E',
                 transclude: true,
                 scope: {
+                    namespace: '=',
                     network: '=',
                     currentSettings: '='
                 },
@@ -115,7 +116,7 @@ define(['./module'], function (directives) {
 
                     $scope.preset = true;
                     $scope.data = {};
-                    $scope.data[$scope.network] = [];
+                    $scope.data[$scope.namespace] = [];
                     $scope.showOauthParams = _.size($scope.currentSettings) >= 2 ? _.size($scope.currentSettings) : false;
                     //$scope.proposeConnect = _.size($scope.currentSettings) >= 2 ? true : true;
                     $scope.addSettings = false;
@@ -138,9 +139,9 @@ define(['./module'], function (directives) {
 
                         if (_.first(_.filter($scope.params, {key: key})) === undefined) {
                             obj.key = key;
-                            $scope.data[$scope.network].push(obj);
+                            $scope.data[$scope.namespace].push(obj);
                         } else {
-                            $scope.data[$scope.network].push(_.first(_.filter($scope.params, {key: key})));
+                            $scope.data[$scope.namespace].push(_.first(_.filter($scope.params, {key: key})));
                         }
                         $scope.params = _.reject($scope.params, {key: key});
 
@@ -150,17 +151,17 @@ define(['./module'], function (directives) {
                     //console.info($scope);
 
                     $scope.addNewChoice = function () {
-                        $scope.data[$scope.network].push({});
+                        $scope.data[$scope.namespace].push({});
                     };
 
                     $scope.removeChoice = function (key) {
-                        $scope.data[$scope.network] = _.reject($scope.data[$scope.network], {key: key});
+                        $scope.data[$scope.namespace] = _.reject($scope.data[$scope.network], {key: key});
                     };
 
 
                     // Add/update or a network ----------------------------------*/
                     $scope.updateNetwork = function () {
-                        CoreService.updateNetwork($scope.network, {oauth: $scope.data[$scope.network]}).then(function (data) {
+                        CoreService.updateNetwork($scope.namespace, {oauth: $scope.data[$scope.namespace]}).then(function (data) {
                             console.info(data);
                             $scope.currentSettings = data.settings.oauth;
                             $scope.addSettings = false;
@@ -170,17 +171,25 @@ define(['./module'], function (directives) {
                     // Add/update or a network ----------------------------------*/
                     $scope.connectNetwork = function () {
                         console.debug($scope.currentSettings);
-                        CoreService.connectNetwork($scope.network, $scope.currentSettings).then(function (data) {
+                        CoreService.connectNetwork($scope.namespace, $scope.currentSettings);
+                    };
+
+                    $scope.removeNetwork = function () {
+                        CoreService.removeNetwork($scope.namespace, $scope.currentSettings).then(function (data) {
                             console.info(data);
 
                         });
+                    };
+
+                    $scope.edit = function () {
+                        $scope.addSettings = true;
                     };
 
 
                     //console.log($scope.$parent)
 
                 },
-                templateUrl: tpl_folder + 'network--settings.html',//
+                templateUrl: 'templates/directives/network--settings.html',//
                 link: function (scope, el, attrs) {
                     var network = _.filter(scope.$parent.networks, {name: scope.network});
 

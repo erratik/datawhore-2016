@@ -1,7 +1,6 @@
 
 <div ng-if="showOauthParams">
-
-    <h4>Network OAuth Parameters</h4>
+    <h4>Network OAuth Parameters <i class="ui green" ng-click="edit()"><i class="edit icon"></i></i></h4>
     <div ng-hide="addSettings">
         <ul>
             <li ng-repeat="(key,setting) in currentSettings">
@@ -9,12 +8,17 @@
             </li>
         </ul>
     </div>
-    <button class="ui button green" ng-click="connectNetwork()"><i class="exchange icon"></i>Connect</button>
+
+
+    <button class="ui button green" ng-click="connectNetwork()"><i class="exchange icon"></i>
+        <var ng-if="!network.connected">Connect</var>
+        <var ng-if="network.connected">Reconnect</var>
+    </button>
 </div>
-<div ng-show="addSettings||!showOauthParams">
+<div ng-show="!showOauthParams||addSettings">
 
-    <fieldset data-ng-repeat="choice in data[network]">
-
+    <!--<input type="text" ng-model="namespace" />-->
+    <fieldset data-ng-repeat="choice in data[namespace]">
         <div ng-switch="preset">
             <div ng-switch-when="false">
 
@@ -38,13 +42,9 @@
 
     <div class="ui buttons">
         <button class="ui button blue" ng-click="addNewChoice()">Add Oauth Params</button>
-        <div class="or" ng-show="showOauthParams||addSettings"></div>
-        <div class="ui positive button" ng-show="showOauthParams||addSettings" ng-click="updateNetwork(network.name)">Update fields</div>
+        <div class="or" ></div>
+        <div class="ui positive button"  ng-click="updateNetwork(network.name)">Update fields</div>
         <div class="or" ng-if="showOauthParams"></div>
-        <div class="ui button negative" ng-if="showOauthParams" ng-click="addSettings=!addSettings">Cancel</div>
+        <div class="ui button negative" ng-if="showOauthParams" ng-click="addSettings=false">Cancel</div>
     </div>
-</div>
-<div ng-show="showOauthParams">
-
-
 </div>

@@ -78,6 +78,7 @@ define([
                         $scope.show_modal = false;
                     });
                 };
+
                 // when submitting the add form, send the text to the node API
                 $scope.cleanPost = function (namespace) {
                     ConfigService.cleanPost({namespace: namespace}).then(function (data) {
