@@ -1,9 +1,10 @@
 sh_*
 *.log
 
-backups
 bower_components
 node_modules
+
+backups
 .idea/.name
 .idea/datawhore.iml
 .idea/encodings.xml
@@ -13,3 +14,7 @@ node_modules
 .idea/vcs.xml
 .idea/workspace.xml
 .idea/libraries/datawhore_node_modules.xml
+
+data/
+dist/
+.env

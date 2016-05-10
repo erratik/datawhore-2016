@@ -12,12 +12,14 @@
     // var serveStatic = require('serve-static');
     // var serveIndex = require('serve-index');
     var moment = require('moment');
-    //*****************************************************************/  
+
+    //*****************************************************************/
     //    Configuration
     //*****************************************************************/
 
-    // Connect to our mongo database
-    mongoose.connect(process.env.MONGO_DB);  
+    //**!// Connect to our mongo database
+    //mongoose.connect(process.env.MONGO_DB+'?authMechanism=SCRAM-SHA-1');
+    mongoose.connect('mongodb://localhost/datawhore');
 
     mongoose.connection.on('error', function(err){
         console.log(process.env.MONGO_DB);
@@ -40,7 +42,6 @@
 
 
     // routes ======================================================================
-
 
     require('../app/scripts/core/routes/configApi')(app);
     require('../app/scripts/core/routes/profileApi')(app);
