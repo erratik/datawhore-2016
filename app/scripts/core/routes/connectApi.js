@@ -2,7 +2,7 @@ var Settings = require('../models/Core');
 var Config = require('../models/Config');
 
 var mongoose = require('mongoose');
-var oauthSignature = require('oauth-signature');
+// var oauthSignature = require('oauth-signature');
 var fs = require('fs');
 
 
@@ -29,20 +29,20 @@ module.exports = function (app) {
             switch (req.params.namespace) {
                 case 'twitter':
 
-                    res.redirect('/api/callback/'+req.params.namespace);
+                    res.redirect('/api/callback/' + req.params.namespace);
 
                     break;
                 case 'swarm':
 
                     var credentials = {
-                        secrets : {
+                        secrets: {
                             redirectUrl: oauth.redirect_uri.value,
                             clientId: oauth.api_key.value,
                             clientSecret: oauth.api_secret.value
                         }
                     };
                     var foursquare = require('node-foursquare')(credentials);
-                    res.redirect( foursquare.getAuthClientRedirectUrl() );
+                    res.redirect(foursquare.getAuthClientRedirectUrl());
 
                     break;
                 case 'instagram':
@@ -54,12 +54,10 @@ module.exports = function (app) {
                         client_secret: oauth.api_secret.value
                     });
 
-
                     var redirect_uri = oauth.redirect_uri.value;
 
-                    //exports.authorize_user = function(req, res) {
-                    res.send(api.get_authorization_url(redirect_uri, { scope: ['basic'], state: 'authed-basic' }));
-                    //};
+                    res.send(api.get_authorization_url(redirect_uri, {scope: ['basic'], state: 'authed-basic'}));
+
                     break;
                 case 'facebook':
                     //fbgraph.redirectLoginForm(req, res)
@@ -80,26 +78,25 @@ module.exports = function (app) {
 
                     // Create the authorization URL
                     var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
-
                     res.send(authorizeURL);
 
                     break;
                 case 'tumblr':
                     /*
-                    var passport = require('passport-tumblr');
-                    passport.use(new TumblrStrategy({
-                            consumerKey: oauth.api_key.value,
-                            consumerSecret: oauth.api_secret.value,
-                            callbackURL: oauth.redirect_uri.value
-                        },
-                        function(token, tokenSecret, profile, done) {
-                            User.findOrCreate({ tumblrId: profile.id }, function (err, user) {
-                                return done(err, user);
-                            });
-                        }
-                    ));*/
+                     var passport = require('passport-tumblr');
+                     passport.use(new TumblrStrategy({
+                     consumerKey: oauth.api_key.value,
+                     consumerSecret: oauth.api_secret.value,
+                     callbackURL: oauth.redirect_uri.value
+                     },
+                     function(token, tokenSecret, profile, done) {
+                     User.findOrCreate({ tumblrId: profile.id }, function (err, user) {
+                     return done(err, user);
+                     });
+                     }
+                     ));*/
                     //passport.authenticate('tumblr');
-                    res.redirect('/api/callback/'+req.params.namespace);
+                    res.redirect('/api/callback/' + req.params.namespace);
                     break;
                 case 'moves':
 
@@ -113,6 +110,26 @@ module.exports = function (app) {
                     var authorizeURL = moves.authorize({
                         scope: ['activity', 'location'] //can contain either activity, location or both
                         , state: 'authed' //optional state as per oauth
+                    });
+
+                    res.send(authorizeURL);
+                    break;
+                case 'fitbit':
+
+                    var FitbitApiClient = require("fitbit-node");
+                    var fitbitApi = new FitbitApiClient({
+                        clientID: oauth.api_key.value,
+                        clientSecret: oauth.api_secret.value,
+                        scope: ['activity', 'heartrate', 'location', 'nutrition', 'profile', 'settings', 'sleep', 'social', 'weight']
+                        , redirect_url: oauth.api_secret.value //optional state as per oauth
+                    });
+
+                    console.log(oauth);
+
+
+                    var authorizeURL = fitbitApi.getAuthorizeUrl({
+                        scope: ['activity', 'heartrate', 'location', 'nutrition', 'profile', 'settings', 'sleep', 'social', 'weight']
+                        , redirect_uri: oauth.redirect_uri.value //optional state as per oauth
                     });
 
                     res.send(authorizeURL);
@@ -160,15 +177,15 @@ module.exports = function (app) {
                                 consumerSecret: oauth.api_secret.value,
                                 callbackURL: oauth.redirect_uri.value
                             },
-                            function(token, tokenSecret, profile, done) {
-                                User.findOrCreate({ tumblrId: profile.id }, function (err, user) {
+                            function (token, tokenSecret, profile, done) {
+                                User.findOrCreate({tumblrId: profile.id}, function (err, user) {
                                     return done(err, user);
                                 });
                             }
                         ));
 
-                        passport.authenticate('tumblr', { failureRedirect: '/login' },
-                            function(req, res) {
+                        passport.authenticate('tumblr', {failureRedirect: '/login'},
+                            function (req, res) {
                                 // Successful authentication, redirect home.
                                 res.redirect('/');
                             });
@@ -177,7 +194,7 @@ module.exports = function (app) {
                     case 'swarm':
 
                         var credentials = {
-                            secrets : {
+                            secrets: {
                                 redirectUrl: oauth.redirect_uri.value,
                                 clientId: oauth.api_key.value,
                                 clientSecret: oauth.api_secret.value
@@ -187,27 +204,28 @@ module.exports = function (app) {
                         var foursquare = require('node-foursquare')(credentials);
 
                         foursquare.getAccessToken({
-                            code: req.query.code
-                        }, function (error, access_token) {
-                            if(error) {
-                                res.send('An error was thrown: ' + error.message);
-                            }
-                            else {
-                                // Save the accessToken and redirect.
-                                console.log('Yay! Access token is ' + access_token);
-                                oauth.access_token = {
-                                    value: access_token,
-                                    label: 'Access Token'
-                                };
+                                code: req.query.code
+                            },
+                            function (error, access_token) {
+                                if (error) {
+                                    res.send('An error was thrown: ' + error.message);
+                                }
+                                else {
+                                    // Save the accessToken and redirect.
+                                    console.log('Yay! Access token is ' + access_token);
+                                    oauth.access_token = {
+                                        value: access_token,
+                                        label: 'Access Token'
+                                    };
 
-                                _config.update({
-                                    data: oauth,
-                                    type: 'settings.oauth'
-                                }, function() {
-                                    res.redirect('/#/');
-                                });
-                            }
-                        });
+                                    _config.update({
+                                        data: oauth,
+                                        type: 'settings.oauth'
+                                    }, function () {
+                                        res.redirect('/#/');
+                                    });
+                                }
+                            });
 
                         break;
 
@@ -220,29 +238,30 @@ module.exports = function (app) {
                         });
 
                         //api.handleauth = function(req, res) {
-                        api.authorize_user(req.query.code, oauth.redirect_uri.value, function(err, result) {
-                            if (err) {
-                                console.log(err.body);
-                                res.send("Didn't work");
-                            } else {
-                                console.log('Yay! Access token is ' + result.access_token);
-                                oauth.access_token = {
-                                    value: result.access_token,
-                                    label: 'Access Token'
-                                };
+                        api.authorize_user(req.query.code, oauth.redirect_uri.value,
+                            function (err, result) {
+                                if (err) {
+                                    console.log(err.body);
+                                    res.send("Didn't work");
+                                } else {
+                                    console.log('Yay! Access token is ' + result.access_token);
+                                    oauth.access_token = {
+                                        value: result.access_token,
+                                        label: 'Access Token'
+                                    };
 
-                                _config.update({
-                                    data: oauth,
-                                    type: 'settings.oauth'
-                                }, function() {
-                                    res.redirect('/#/');
-                                });
-                            }
-                        });
-                    break;
+                                    _config.update({
+                                        data: oauth,
+                                        type: 'settings.oauth'
+                                    }, function () {
+                                        res.redirect('/#/');
+                                    });
+                                }
+                            });
+                        break;
                     case 'facebook':
 
-                    break;
+                        break;
                     case 'spotify':
                         if (req.params.bounce == 'middle') {
 
@@ -333,7 +352,7 @@ module.exports = function (app) {
                             redirect_uri: oauth.redirect_uri.value
                         });
 
-                        moves.token(req.query.code, function(error, response, body) {
+                        moves.token(req.query.code, function (error, response, body) {
                             //console.log(response);
                             console.log(JSON.parse(body));
                             var data = JSON.parse(body);
@@ -354,13 +373,50 @@ module.exports = function (app) {
                             _config.update({
                                 data: oauth,
                                 type: 'settings.oauth'
-                            }, function() {
+                            }, function () {
                                 res.redirect('/#/');
                             });
                         });
 
 
-                    break;
+                        break;
+                    case 'fitbit':
+
+                        var FitbitApiClient = require("fitbit-node");
+                        var fitbitApi = new FitbitApiClient({
+                            clientID: oauth.api_key.value,
+                            clientSecret: oauth.api_secret.value
+                        });
+
+                        /*
+                        fitbitApi.getAccessToken(req.query.code, function (error, response, body) {
+                            //console.log(response);
+                            console.log(JSON.parse(body));
+                            var data = JSON.parse(body);
+
+                            oauth.access_token = {
+                                value: data.access_token,
+                                label: 'Access Token'
+                            };
+                            oauth.expires_in = {
+                                value: data.expires_in,
+                                label: 'Expires in'
+                            };
+                            oauth.refresh_token = {
+                                value: data.refresh_token,
+                                label: 'Refresh Token'
+                            };
+
+                            _config.update({
+                                data: oauth,
+                                type: 'settings.oauth'
+                            }, function () {
+                                res.redirect('/#/');
+                            });
+                        });*/
+                        res.send(req.query);
+
+                        break;
 
                     default:
 

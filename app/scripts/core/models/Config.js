@@ -23,6 +23,7 @@ mongoose.createModel = function(name, options) {
     return mongoose.model(name, schema);
 };
 
+
 // Define the model w/ pretty syntax!
 var Config = mongoose.createModel('Config', {
     schema: {
