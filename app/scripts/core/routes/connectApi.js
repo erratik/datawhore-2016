@@ -1,17 +1,12 @@
-var Settings = require('../models/Core');
 var Config = require('../models/Config');
 
 var mongoose = require('mongoose');
 // var oauthSignature = require('oauth-signature');
-var fs = require('fs');
 
-
-// Create a new instance
 
 // expose the routes to our app with module.exports
 module.exports = function (app) {
 
-    var fbgraph = require('fbgraphapi');
 
     app.get('/api/connect/twitter/middle', function (req, res) {
         res.send(req);
@@ -19,6 +14,7 @@ module.exports = function (app) {
 
     app.get('/api/connect/:namespace/:key/:secret', function (req, res) {
 
+        var that = this;
         //if (req.params.namespace == 'callback') res.send();
         console.log('[API CONNECT] ' + req.params.namespace);
 
@@ -48,19 +44,26 @@ module.exports = function (app) {
                 case 'instagram':
 
                     var api = require('instagram-node').instagram();
-
                     api.use({
                         client_id: oauth.api_key.value,
                         client_secret: oauth.api_secret.value
                     });
-
                     var redirect_uri = oauth.redirect_uri.value;
-
                     res.send(api.get_authorization_url(redirect_uri, {scope: ['basic'], state: 'authed-basic'}));
 
                     break;
                 case 'facebook':
-                    //fbgraph.redirectLoginForm(req, res)
+
+                    var graph = require('fbgraph');
+                    var authUrl = graph.getOauthUrl({
+                        "client_id":     oauth.api_key.value
+                        , "redirect_uri":  oauth.redirect_uri.value
+                    });
+
+                    // shows dialog
+                    res.send(authUrl);
+
+
                     break;
                 case 'spotify':
                     var SpotifyWebApi = require('spotify-web-api-node');
@@ -106,7 +109,6 @@ module.exports = function (app) {
                         client_secret: oauth.api_secret.value,
                         redirect_uri: oauth.redirect_uri.value
                     });
-
                     var authorizeURL = moves.authorize({
                         scope: ['activity', 'location'] //can contain either activity, location or both
                         , state: 'authed' //optional state as per oauth
@@ -119,14 +121,8 @@ module.exports = function (app) {
                     var FitbitApiClient = require("fitbit-node");
                     var fitbitApi = new FitbitApiClient({
                         clientID: oauth.api_key.value,
-                        clientSecret: oauth.api_secret.value,
-                        scope: ['activity', 'heartrate', 'location', 'nutrition', 'profile', 'settings', 'sleep', 'social', 'weight']
-                        , redirect_url: oauth.api_secret.value //optional state as per oauth
+                        clientSecret: oauth.api_secret.value
                     });
-
-                    console.log(oauth);
-
-
                     var authorizeURL = fitbitApi.getAuthorizeUrl({
                         scope: ['activity', 'heartrate', 'location', 'nutrition', 'profile', 'settings', 'sleep', 'social', 'weight']
                         , redirect_uri: oauth.redirect_uri.value //optional state as per oauth
@@ -139,15 +135,6 @@ module.exports = function (app) {
             }
         });
 
-
-        /*_config.update({
-         data: req.body,
-         type: req.params.type,
-         reset: 'connect'
-         }, function (config) {
-         //console.log(config);
-         res.json(config);
-         });*/
 
         //console.log(req.body);
         //console.log('>> /@end');
@@ -189,7 +176,6 @@ module.exports = function (app) {
                                 // Successful authentication, redirect home.
                                 res.redirect('/');
                             });
-                        //res.redirect('/#/');
                         break;
                     case 'swarm':
 
@@ -200,9 +186,7 @@ module.exports = function (app) {
                                 clientSecret: oauth.api_secret.value
                             }
                         };
-
                         var foursquare = require('node-foursquare')(credentials);
-
                         foursquare.getAccessToken({
                                 code: req.query.code
                             },
@@ -236,8 +220,6 @@ module.exports = function (app) {
                             client_id: oauth.api_key.value,
                             client_secret: oauth.api_secret.value
                         });
-
-                        //api.handleauth = function(req, res) {
                         api.authorize_user(req.query.code, oauth.redirect_uri.value,
                             function (err, result) {
                                 if (err) {
@@ -258,9 +240,40 @@ module.exports = function (app) {
                                     });
                                 }
                             });
+
                         break;
                     case 'facebook':
 
+                        var graph = require('fbgraph');
+                        // after user click, auth `code` will be set
+                        // we'll send that and get the access token
+                        graph.authorize({
+                            "client_id":      oauth.api_key.value
+                            , "redirect_uri":   oauth.redirect_uri.value + '/bounce'
+                            , "client_secret":  oauth.api_secret.value
+                            , "code":           req.query.code
+                        }, function (err, facebookRes) {
+                            console.log(facebookRes);
+                            // res.redirect('/loggedIn');
+                        });
+
+                        if (req.params.bounce == "bounce") {
+
+                            // Save the accessToken and redirect.
+                            console.log('Yay! Access token is ' + access_token);
+                            oauth.access_token = {
+                                value: req.facebook._accessToken,
+                                label: 'Access Token'
+                            };
+
+                            _config.update({
+                                data: oauth,
+                                type: 'settings.oauth'
+                            }, function () {
+                                res.redirect('/#/');
+                            });
+
+                        }
                         break;
                     case 'spotify':
                         if (req.params.bounce == 'middle') {
@@ -342,6 +355,7 @@ module.exports = function (app) {
                          }
                          });
                          */
+
                         break;
                     case 'moves':
 
@@ -351,10 +365,8 @@ module.exports = function (app) {
                             client_secret: oauth.api_secret.value,
                             redirect_uri: oauth.redirect_uri.value
                         });
-
                         moves.token(req.query.code, function (error, response, body) {
-                            //console.log(response);
-                            console.log(JSON.parse(body));
+
                             var data = JSON.parse(body);
 
                             oauth.access_token = {
@@ -377,7 +389,6 @@ module.exports = function (app) {
                                 res.redirect('/#/');
                             });
                         });
-
 
                         break;
                     case 'fitbit':
@@ -387,11 +398,8 @@ module.exports = function (app) {
                             clientID: oauth.api_key.value,
                             clientSecret: oauth.api_secret.value
                         });
+                        fitbitApi.getAccessToken({code: req.query.code, redirectUrl: oauth.redirect_uri.value}, function (error, response, body) {
 
-                        /*
-                        fitbitApi.getAccessToken(req.query.code, function (error, response, body) {
-                            //console.log(response);
-                            console.log(JSON.parse(body));
                             var data = JSON.parse(body);
 
                             oauth.access_token = {
@@ -413,8 +421,7 @@ module.exports = function (app) {
                             }, function () {
                                 res.redirect('/#/');
                             });
-                        });*/
-                        res.send(req.query);
+                        });
 
                         break;
 
@@ -429,51 +436,17 @@ module.exports = function (app) {
     });
 
 
-    // var cookieParser = require('cookie-parser');    //
-    // var session = require('express-session'); //
-    // app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }))
-    // app.use(fbgraph.auth( {
-    //         appId : process.env.FACEBOOK_API_KEY,
-    //         appSecret : process.env.FACEBOOK_API_SECRET,
-    //         redirectUri : "http://datawhore.erratik.ca:3000/facebook",
-    //         scope: 'public_profile, email, user_about_me, user_actions.news, user_photos, user_posts, user_status, user_tagged_places, user_likes, user_location, user_hometown, user_events, user_birthday, user_friends',
-    //         apiVersion: "v2.2"
-    //     }));
+    /*var cookieParser = require('cookie-parser');
+    var session = require('express-session');
+    var fbgraph = require('fbgraphapi');
 
-    app.get('/api/facebook', function (req, res) {
-        if (!req.hasOwnProperty('facebook')) {
-            console.log('You are not logged in');
-            return res.redirect('/');
-        }
-
-
-        fs.appendFile('.env', 'FACEBOOK_ACCESS_TOKEN=' + req.facebook._accessToken + ' \n', encoding = 'utf8', function (err) {
-            if (err) throw err;
-        });
-
-
-        Settings.findOne({
-            name: 'settings'
-        }, function (err, settings) {
-            if (err) res.send(err);
-
-            settings.networks.facebook.connected = true;
-            Settings.update({
-                networks: settings.networks,
-                last_modified: Date.now() / 1000 | 0
-            }, function (err, settings) {
-                Settings.findOne({
-                    name: 'settings'
-                }, function (err, settings) {
-                    if (err) console.log(err);
-                    console.log(settings.networks.facebook);
-                });
-            });
-            res.redirect('/#/settings');
-
-        });
-
-    });
-
+    app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }))
+    app.use(fbgraph.auth( {
+        appId : '1428921280772005',
+        appSecret : '16eee0db280c4d2bbc44e7748fad80ac',
+        redirectUri : 'http://localhost:3000/api/connect/facebook',
+        scope: 'public_profile, email, user_about_me, user_actions.news, user_photos, user_posts, user_status, user_tagged_places, user_likes, user_location, user_hometown, user_events, user_birthday, user_friends',
+        apiVersion: "v2.2"
+    }));*/
 
 };

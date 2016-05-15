@@ -18,3 +18,4 @@ backups
 data/
 dist/
 .env
+env.txt
