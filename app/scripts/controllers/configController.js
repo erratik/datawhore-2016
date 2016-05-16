@@ -9,20 +9,17 @@ define([
 
                 $scope.networks = networks;
                 //$scope.configs = configs;
-                console.info($scope.networks);
-
-
+                console.info($scope);
 
             }
         ])
 
         .controller('configController', ['$scope', '$http', '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config',
             function configController($scope, $http, $stateParams, ConfigService, ProfileService, profile, config) {
+                console.debug(config)
                 $scope.profileInfo = {
-                    avatar: profile.avatar,
-                    last_modified: profile.last_modified,
-                    name: profile.name,
-                    username: profile.username
+                    last_modified: config.last_modified,
+                    name: $stateParams.namespace
                 };
 
                 $scope.formData = {

@@ -122,10 +122,11 @@ module.exports = function (app) {
                     var fitbitApi = new FitbitApiClient({
                         clientID: oauth.api_key.value,
                         clientSecret: oauth.api_secret.value
-                    });
+
+            });
                     var authorizeURL = fitbitApi.getAuthorizeUrl({
                         scope: ['activity', 'heartrate', 'location', 'nutrition', 'profile', 'settings', 'sleep', 'social', 'weight']
-                        , redirect_uri: oauth.redirect_uri.value //optional state as per oauth
+                        , redirectUri: oauth.redirect_uri.value //optional state as per oauth
                     });
 
                     res.send(authorizeURL);
@@ -249,21 +250,21 @@ module.exports = function (app) {
                         // we'll send that and get the access token
                         graph.authorize({
                             "client_id":      oauth.api_key.value
-                            , "redirect_uri":   oauth.redirect_uri.value + '/bounce'
+                            , "redirect_uri":   oauth.redirect_uri.value
                             , "client_secret":  oauth.api_secret.value
                             , "code":           req.query.code
                         }, function (err, facebookRes) {
                             console.log(facebookRes);
                             // res.redirect('/loggedIn');
-                        });
-
-                        if (req.params.bounce == "bounce") {
-
                             // Save the accessToken and redirect.
-                            console.log('Yay! Access token is ' + access_token);
+                            console.log('Yay! Access token is ' + facebookRes.access_token);
                             oauth.access_token = {
-                                value: req.facebook._accessToken,
+                                value: facebookRes.access_token,
                                 label: 'Access Token'
+                            };
+                            oauth.expires_in = {
+                                value: facebookRes.expires,
+                                label: 'Expires in'
                             };
 
                             _config.update({
@@ -272,8 +273,8 @@ module.exports = function (app) {
                             }, function () {
                                 res.redirect('/#/');
                             });
+                        });
 
-                        }
                         break;
                     case 'spotify':
                         if (req.params.bounce == 'middle') {
@@ -398,6 +399,7 @@ module.exports = function (app) {
                             clientID: oauth.api_key.value,
                             clientSecret: oauth.api_secret.value
                         });
+
                         fitbitApi.getAccessToken({code: req.query.code, redirectUrl: oauth.redirect_uri.value}, function (error, response, body) {
 
                             var data = JSON.parse(body);

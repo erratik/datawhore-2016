@@ -7,7 +7,7 @@ define(['./module'], function (directives) {
                 scope: {
                     namespace: "=",
                     profile: "=",
-                    styles: "@"
+                    classes: "@"
                 },
                 templateUrl: 'templates/directives/profile--avatar.html'
             };
@@ -44,7 +44,7 @@ define(['./module'], function (directives) {
                 }
             };
         })
-        .directive('profileUpdated', function () {
+        .directive('profileUpdated', ['moment', function (moment) {
             return {
                 restrict: 'E',
                 scope: {
@@ -63,7 +63,7 @@ define(['./module'], function (directives) {
                     // }, true);
                 }
             };
-        })
+        }])
         .directive('profileRow', function () {
             return {
                 replace: true,

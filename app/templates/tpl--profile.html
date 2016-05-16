@@ -2,7 +2,7 @@
 <div class="ui container">
     <div class="ui header dividing">
         <profile-avatar namespace="profileInfo.name" profile="profileInfo"
-                        styles="ui left avatar floated left image"></profile-avatar>
+                        classes="ui left floated mini avatar"></profile-avatar>
         <div class="content">
             {{profileInfo.name}} Profile
             <div class="sub header">
@@ -10,101 +10,101 @@
             </div>
         </div>
     </div>
-        <div class="ui header">
-            <div class="content"><i class="icon file"></i>Profile Setup</div>
+    <div class="ui header">
+        <div class="content"><i class="icon file"></i>Profile Setup</div>
+    </div>
+
+        <div ng-tabs class="tabbable">
+            <ul class="ui top attached tabular menu">
+                <li ng-tab-head="active" class="item">
+                    <a href="#" ng-click="$event.preventDefault()">Properties</a>
+                </li>
+                <li ng-tab-head class="item">
+                    <a href="#" ng-click="$event.preventDefault()">Configuration</a>
+                </li>
+            </ul>
+            <div class="tab-content" style="overflow: hidden">
+                <div ng-tab-body="animated bounceInLeft active ui bottom attached tab segment" class="tab-pane">
+                    <div class="column wide six">
+                        <div class="ui segment">
+
+                            <div class="header ui"><i class="icon file outline"></i>Profile Properties</div>
+                            <div class="ui list">
+
+                                <div class="item" ng-repeat="(label, attribute) in formData.profileProperties">
+                                    <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span> {{attribute.friendlyName}}</span></div>
+                                    <div class="ui action input small" ng-hide="!show">
+                                        <input type="text" ng-model="attribute.friendlyName">
+                                        <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
+                                            <i class="checkmark icon"></i>
+                                        </button>
+                                        <span ng-click="attribute.friendlyName=label">({{label}})</span>
+                                    </div>
+
+                                </div>
+                                <div class="ui small  button" ng-click="updateProperties('profile')">
+                                    Approve
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-tab-body="animated fadeInUpBig active ui bottom attached tab segment" class="tab-pane">
+                    <div class="column wide sixteen" ng-include="'templates/partials/profiles/profile--profile-config.html'"></div>
+                </div>
+            </div>
         </div>
 
-            <div ng-tabs class="tabbable">
-                <ul class="ui top attached tabular menu">
-                    <li ng-tab-head="active" class="item">
-                        <a href="#" ng-click="$event.preventDefault()">Properties</a>
-                    </li>
-                    <li ng-tab-head class="item">
-                        <a href="#" ng-click="$event.preventDefault()">Configuration</a>
-                    </li>
-                </ul>
-                <div class="tab-content" style="overflow: hidden">
-                    <div ng-tab-body="animated bounceInLeft active ui bottom attached tab segment" class="tab-pane">
-                        <div class="column wide six">
-                            <div class="ui segment">
 
-                                <div class="header ui"><i class="icon file outline"></i>Profile Properties</div>
+        <div class="ui header">
+            <div class="content"><i class="icon file"></i>Post Design</div>
+        </div>
+        <div ng-tabs class="tabbable">
+            <ul class="ui top attached tabular menu">
+                <li ng-tab-head="active" class="item">
+                    <a href="#" ng-click="$event.preventDefault()">Properties</a>
+                </li>
+                <li ng-tab-head class="item">
+                    <a href="#" ng-click="$event.preventDefault()">Configuration</a>
+                </li>
+            </ul>
+            <div class="tab-content" style="overflow: hidden">
+                <div ng-tab-body="animated bounceInLeft active ui bottom attached tab segment" class="tab-pane">
+                    <div class="ui equal width grid">
+                        <div class="column">
+                            <div class="ui segment">
+                                <!--<div ng-switch-when="instagram">-->
+                                    <div ng-include="'templates/partials/drops/drop--'+profileInfo.name+'-card.html'"></div>
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <div class="seven wide column">
+                            <div class="ui segment">
+                                <div class="header ui"><i class="icon file outline"></i>Post Properties</div>
                                 <div class="ui list">
 
-                                    <div class="item" ng-repeat="(label, attribute) in formData.profileProperties">
+                                    <div class="item" ng-repeat="(label, attribute) in formData.postProperties">
                                         <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span> {{attribute.friendlyName}}</span></div>
                                         <div class="ui action input small" ng-hide="!show">
                                             <input type="text" ng-model="attribute.friendlyName">
                                             <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
                                                 <i class="checkmark icon"></i>
                                             </button>
-                                            <span ng-click="attribute.friendlyName=label">({{label}})</span>
+                                            <span ng-click="attribute.friendlyName=label.replace('__', '_')">({{label}})</span>
                                         </div>
 
                                     </div>
-                                    <div class="ui small  button" ng-click="updateProperties('profile')">
+                                    <div class="ui small  button" ng-click="updateProperties('post')">
                                         Approve
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div ng-tab-body="animated fadeInUpBig active ui bottom attached tab segment" class="tab-pane">
-                        <div class="column wide sixteen" ng-include="'templates/partials/profiles/profile--profile-config.html'"></div>
-                    </div>
+                </div>
+                <div ng-tab-body="animated fadeInUpBig active ui bottom attached tab segment" class="tab-pane">
+                    <div class="column wide sixteen" ng-include="'templates/partials/profiles/profile--post-config.html'"></div>
                 </div>
             </div>
-
-
-            <div class="ui header">
-                <div class="content"><i class="icon file"></i>Post Design</div>
-            </div>
-            <div ng-tabs class="tabbable">
-                <ul class="ui top attached tabular menu">
-                    <li ng-tab-head="active" class="item">
-                        <a href="#" ng-click="$event.preventDefault()">Properties</a>
-                    </li>
-                    <li ng-tab-head class="item">
-                        <a href="#" ng-click="$event.preventDefault()">Configuration</a>
-                    </li>
-                </ul>
-                <div class="tab-content" style="overflow: hidden">
-                    <div ng-tab-body="animated bounceInLeft active ui bottom attached tab segment" class="tab-pane">
-                        <div class="ui equal width grid">
-                            <div class="column">
-                                <div class="ui segment">
-                                    <!--<div ng-switch-when="instagram">-->
-                                        <div ng-include="'templates/partials/drops/drop--'+profileInfo.name+'-card.html'"></div>
-                                    <!--</div>-->
-                                </div>
-                            </div>
-                            <div class="seven wide column">
-                                <div class="ui segment">
-                                    <div class="header ui"><i class="icon file outline"></i>Post Properties</div>
-                                    <div class="ui list">
-
-                                        <div class="item" ng-repeat="(label, attribute) in formData.postProperties">
-                                            <div ng-hide="show"><button class="ui icon button blue mini inverted" ng-click="show=!show"><i class="write icon"></i></button><span> {{attribute.friendlyName}}</span></div>
-                                            <div class="ui action input small" ng-hide="!show">
-                                                <input type="text" ng-model="attribute.friendlyName">
-                                                <button class="ui icon button green" ng-hide="!show" ng-click="show=!show">
-                                                    <i class="checkmark icon"></i>
-                                                </button>
-                                                <span ng-click="attribute.friendlyName=label.replace('__', '_')">({{label}})</span>
-                                            </div>
-
-                                        </div>
-                                        <div class="ui small  button" ng-click="updateProperties('post')">
-                                            Approve
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div ng-tab-body="animated fadeInUpBig active ui bottom attached tab segment" class="tab-pane">
-                        <div class="column wide sixteen" ng-include="'templates/partials/profiles/profile--post-config.html'"></div>
-                    </div>
-                </div>
-
-
+        </div>
+</div>
