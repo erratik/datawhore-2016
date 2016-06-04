@@ -9,28 +9,40 @@ var namespace = 'swarm';
 
 var assignValues = require('../../../custom-packages/prioritize').assignValues;
 
-var swarmConfig = {
-    'secrets' : {
-        'clientId' : process.env.SWARM_API_KEY,
-        'clientSecret' : process.env.SWARM_API_SECRET,
-        'redirectUrl' : 'http://datawhore.erratik.ca:3000/connect/swarm/callback',
-        'accessToken' : process.env.SWARM_ACCESS_TOKEN
-    }
-};
-
-var client = require('node-foursquare')(swarmConfig);
+var SpotifyWebApi = require('spotify-web-api-node');
 
 // expose the routes to our app with module.exports
 module.exports = function(app) {
 
-    app.get('/api/' + namespace + '/fetch/:type', function(req, res) {
+    var oauth, spotifyApi;
+    Config.getOauthSettings('spotify', function(err, data){
+        // console.log(data[0]);
+        oauth = data[0].settings.oauth;
+        // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+        spotifyApi =  new SpotifyWebApi({
+            redirectUri: oauth.redirect_uri.value,
+            clientId: oauth.api_key.value,
+            clientSecret: oauth.api_secret.value
+        });
+        spotifyApi.setAccessToken(oauth.access_token.value);
+    });
 
-        Config.findByName(req.params.namespace, function (err, config) {
+    app.get('/api/:namespace/fetch/:type', function(req, res) {
 
-            //console.log(config);
-            var oauth = config[0].settings.oauth;
+            // Get Elvis' albums
+            spotifyApi.getMe()
+               .then(function(data) {
+                   console.log('Some information about the authenticated user', data.body);
 
-            if (req.params.type == 'profile') {
+                   resetConfig(req.params.type, data.body, function(boom){
+                       res.json(boom);
+                   });
+               }, function(err) {
+                   console.log('Something went wrong!', err);
+               });
+
+
+            /*if (req.params.type == 'profile') {
 
                 client.Users.getUser('self', process.env.SWARM_ACCESS_TOKEN,
                     function (error, data) {
@@ -38,9 +50,9 @@ module.exports = function(app) {
                             //console.log(error);
                         } else {
                             //console.log(data.user);
-                            resetConfig(req.params.type, data.user, function(boom){
-                                res.json(boom);
-                            });
+                            // resetConfig(req.params.type, data.user, function(boom){
+                            //     res.json(boom);
+                            // });
 
                         }
                     });
@@ -54,8 +66,8 @@ module.exports = function(app) {
 
                 });
 
-            }
-        });
+            }*/
+
     });
 
 

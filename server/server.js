@@ -55,6 +55,7 @@
     require('../app/scripts/core/routes/api/lastfmApi')(app);
     require('../app/scripts/core/routes/api/instagramApi')(app);
     require('../app/scripts/core/routes/api/swarmApi')(app);
+    require('../app/scripts/core/routes/api/spotifyApi')(app);
 
     // listen (start app with node server.js) ======================================
     app.listen(port);

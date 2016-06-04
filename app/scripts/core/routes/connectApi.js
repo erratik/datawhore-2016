@@ -56,8 +56,8 @@ module.exports = function (app) {
 
                     var graph = require('fbgraph');
                     var authUrl = graph.getOauthUrl({
-                        "client_id":     oauth.api_key.value
-                        , "redirect_uri":  oauth.redirect_uri.value
+                        "client_id": oauth.api_key.value
+                        , "redirect_uri": oauth.redirect_uri.value
                     });
 
                     // shows dialog
@@ -82,6 +82,85 @@ module.exports = function (app) {
                     // Create the authorization URL
                     var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
                     res.send(authorizeURL);
+
+                    break;
+
+                case 'lastfm':
+                   /* var LastFmNode = require('lastfm').LastFmNode;
+                    var LastFmSession = require('../../../../node_modules/lastfm/lib/lastfm/lastfm-session');
+
+                    var lastfm = new LastFmNode({
+                        api_key:  oauth.api_key.value,    // sign-up for a key at http://www.last.fm/api
+                        secret:  oauth.api_secret.value
+                    });
+
+                    lastfm.request("auth.getToken", {
+                        handlers: {
+                            success: function(data) {
+                                // console.log("Success: " + data);
+                                // console.log(data);
+                                res.send('http://www.last.fm/api/auth?api_key='+oauth.api_key.value+'&'+data.token);
+
+                                // var session = lastfm.session({
+                                //     token: data.token,
+                                //     user: 'djladylux',
+                                //         handlers: {
+                                //             success: function(data){
+                                //                 console.log(data)
+                                //             },
+                                //             error: function(error) {
+                                //                 console.log("Error: " + error.message);
+                                //             }
+                                //         }
+                                //
+                                // });
+
+                                // session.on('success', function (someting) {
+                                //     console.log(someting);
+                                // });
+                                // session.on('error', function (someting) {
+                                //     console.log(someting);
+                                // });
+
+                                console.log(session);
+                                // lastfm.request("auth.getSession", {
+                                //     signed: true,
+                                //     handlers: {
+                                //         success: function(data){
+                                //             console.log(data)
+                                //         },
+                                //         error: function(error) {
+                                //             console.log("Error: " + error.message);
+                                //         }
+                                //     }
+                                // });
+
+                            },
+                            error: function(error) {
+                                console.log("Error: " + error.message);
+                            }
+                        },
+                        signed: true
+                    });
+
+                    // console.log(request());
+
+*/
+                    var LastfmAPI = require('lastfmapi');
+
+                    // Create a new instance
+                    var lfm = new LastfmAPI({
+                        api_key:  oauth.api_key.value,    // sign-up for a key at http://www.last.fm/api
+                        secret:  oauth.api_secret.value
+                    });
+
+                    lfm.auth.getToken(function(err, token){
+                        console.log(err, token);
+                        res.send(lfm.getAuthenticationUrl(oauth.redirect_uri.value, token));
+
+                    });
+
+                    // lfm.getAuthenticationUrl(params)
 
                     break;
                 case 'tumblr':
@@ -123,7 +202,7 @@ module.exports = function (app) {
                         clientID: oauth.api_key.value,
                         clientSecret: oauth.api_secret.value
 
-            });
+                    });
                     var authorizeURL = fitbitApi.getAuthorizeUrl({
                         scope: ['activity', 'heartrate', 'location', 'nutrition', 'profile', 'settings', 'sleep', 'social', 'weight']
                         , redirectUri: oauth.redirect_uri.value //optional state as per oauth
@@ -249,12 +328,12 @@ module.exports = function (app) {
                         // after user click, auth `code` will be set
                         // we'll send that and get the access token
                         graph.authorize({
-                            "client_id":      oauth.api_key.value
-                            , "redirect_uri":   oauth.redirect_uri.value
-                            , "client_secret":  oauth.api_secret.value
-                            , "code":           req.query.code
+                            "client_id": oauth.api_key.value
+                            , "redirect_uri": oauth.redirect_uri.value
+                            , "client_secret": oauth.api_secret.value
+                            , "code": req.query.code
                         }, function (err, facebookRes) {
-                            console.log(facebookRes);
+                            // console.log(facebookRes);
                             // res.redirect('/loggedIn');
                             // Save the accessToken and redirect.
                             console.log('Yay! Access token is ' + facebookRes.access_token);
@@ -262,7 +341,7 @@ module.exports = function (app) {
                                 value: facebookRes.access_token,
                                 label: 'Access Token'
                             };
-                            oauth.expires_in = {
+                            oauth.access_token = {
                                 value: facebookRes.expires,
                                 label: 'Expires in'
                             };
@@ -279,83 +358,87 @@ module.exports = function (app) {
                     case 'spotify':
                         if (req.params.bounce == 'middle') {
 
-                            //console.log(config);
-                            //res.json(config);
-                            res.redirect('/#/');
-                            /*
-                             //var SpotifyWebApi = require('spotify-web-api-node');
-                             //// Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
-                             //var spotifyApi = new SpotifyWebApi({
-                             //    redirectUri: oauth.redirect_uri.value,
-                             //    clientId: oauth.api_key.value,
-                             //    clientSecret: oauth.api_secret.value
-                             //});
-                             //// Get Elvis' albums
-                             //spotifyApi.getMe()
-                             //    .then(function(data) {
-                             //        console.log('Some information about the authenticated user', data.body);
-                             //    }, function(err) {
-                             //        console.log('Something went wrong!', err);
-                             //    });
+                            var SpotifyWebApi = require('spotify-web-api-node');
+                            // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+                            var spotifyApi = new SpotifyWebApi({
+                               redirectUri: oauth.redirect_uri.value+'/middle',
+                               clientId: oauth.api_key.value,
+                               clientSecret: oauth.api_secret.value
+                            });
 
-                             // The code that's returned as a query parameter to the redirect URI
-                             var code = req.query.code;
-                             //console.log(oauth.redirect_uri);
-                             spotifyApi.authorizationCodeGrant(code)
-                             .then(function(data) {
-                             console.log('The token expires in ' + data['expires_in']);
-                             console.log('The access token is ' + data['access_token']);
-                             console.log('The refresh token is ' + data['refresh_token']);
 
-                             /!* Ok. We've got the access token!
-                             Save the access token for this user somewhere so that you can use it again.
-                             Cookie? Local storage?
-                             *!/
+                            // The code that's returned as a query parameter to the redirect URI
+                            var code = req.query.code;
+                            spotifyApi.authorizationCodeGrant(code)
+                                .then(function (data) {
+                                    console.log('The token expires in ' + data.body['expires_in']);
+                                    console.log('The access token is ' + data.body['access_token']);
+                                    console.log('The refresh token is ' + data.body['refresh_token']);
 
-                             console.log(data);
-                             /!* Redirecting back to the main page! :-) *!/
-                             res.redirect('/#');
+                                    /* Ok. We've got the access token!
+                                     Save the access token for this user somewhere so that you can use it again.
+                                     Cookie? Local storage?
+                                     */
 
-                             }, function(err) {
-                             //res.status(err.code);
-                             res.send(err);
-                             });*/
+                                    // console.log(data);
+                                    /* Redirecting back to the main page! :-) */
+                                    // res.redirect('/#');
+
+                                    oauth.access_token = {
+                                        value: data.body['access_token'],
+                                        label: 'Access Token'
+                                    };
+                                    oauth.expires_in = {
+                                        value: data.body['expires_in'],
+                                        label: 'Expires in'
+                                    };
+                                    oauth.refresh_token = {
+                                        value: data.body['refresh_token'],
+                                        label: 'Refresh Token'
+                                    };
+
+                                    _config.update({
+                                        data: oauth,
+                                        type: 'settings.oauth'
+                                    }, function () {
+                                        res.redirect('/#/');
+                                    });
+
+                                }, function (err) {
+                                    res.send(err);
+                                });
                         }
-                        /*
-                         var session = spotify.session({
-                         token: req.query.token,
-                         handlers: {
-                         success: function (session) {
-                         // spotify.update('nowplaying', session, { track: track } );
-                         // spotify.update('scrobble', session, { track: track, timestamp: 12345678 });
-                         Settings.findOne({
-                         name: 'settings'
-                         }, function (err, settings) {
-                         if (err) res.send(err)
-                         settings.configs.spotify.session_key = session.key;
-                         for (var i = 0; i < settings.networks.length; i++) {
-                         // console.log(req.params.namespace);
-                         if (settings.networks[i].namespace == 'spotify') {
-                         settings.networks[i].connected = true;
-                         }
-                         }
-                         Settings.update({
-                         networks: settings.networks,
-                         configs: settings.configs
-                         }, function (err, settings) {
-                         Settings.findOne({
-                         name: 'settings'
-                         }, function (err, settings) {
-                         if (err) console.log(err)
-                         console.log(settings);
-                         // res.redirect('/');
-                         });
-                         });
-                         });
-                         }
-                         }
-                         });
-                         */
+
+                        break;
+                    case 'lastfm':
+
+                        var LastfmAPI = require('lastfmapi');
+
+                        // Create a new instance
+                        var lfm = new LastfmAPI({
+                            api_key:  oauth.api_key.value,    // sign-up for a key at http://www.last.fm/api
+                            secret:  oauth.api_secret.value
+                        });
+
+                        lfm.authenticate(req.query.token, function(err, sessionData){
+                            console.log(err, sessionData);
+
+                            oauth.key = {
+                                value: sessionData.key,
+                                label: 'Key'
+                            };
+                            oauth.username = {
+                                value: sessionData.username,
+                                label: 'Username'
+                            };
+
+                            _config.update({
+                                data: oauth,
+                                type: 'settings.oauth'
+                            }, function () {
+                                res.redirect('/#/');
+                            });
+                        });
 
                         break;
                     case 'moves':
@@ -400,7 +483,10 @@ module.exports = function (app) {
                             clientSecret: oauth.api_secret.value
                         });
 
-                        fitbitApi.getAccessToken({code: req.query.code, redirectUrl: oauth.redirect_uri.value}, function (error, response, body) {
+                        fitbitApi.getAccessToken({
+                            code: req.query.code,
+                            redirectUrl: oauth.redirect_uri.value
+                        }, function (error, response, body) {
 
                             var data = JSON.parse(body);
 
@@ -438,17 +524,5 @@ module.exports = function (app) {
     });
 
 
-    /*var cookieParser = require('cookie-parser');
-    var session = require('express-session');
-    var fbgraph = require('fbgraphapi');
-
-    app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }))
-    app.use(fbgraph.auth( {
-        appId : '1428921280772005',
-        appSecret : '16eee0db280c4d2bbc44e7748fad80ac',
-        redirectUri : 'http://localhost:3000/api/connect/facebook',
-        scope: 'public_profile, email, user_about_me, user_actions.news, user_photos, user_posts, user_status, user_tagged_places, user_likes, user_location, user_hometown, user_events, user_birthday, user_friends',
-        apiVersion: "v2.2"
-    }));*/
 
 };

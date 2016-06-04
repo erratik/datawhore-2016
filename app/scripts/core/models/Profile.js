@@ -47,7 +47,7 @@ var Profile = mongoose.createModel('Profile', {
 
         var query = { name: this.name},
             update = {last_modified : moment().format('X')},
-            opts = {multi:false};
+            opts = {multi: false, upsert: true};
 
         /*
         var updateFromConfig = typeof options.wipe == 'boolean';
@@ -67,8 +67,11 @@ var Profile = mongoose.createModel('Profile', {
         */
 
         update[options.type+'Properties'] = options.data;
-
-        console.log(update);
+        // console.log('updating properties');
+        // console.log(update);
+        
+        
+        
 
         this.model('Profile').update(query, update, opts, callback);
 

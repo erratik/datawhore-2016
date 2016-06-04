@@ -23,9 +23,11 @@
  });*/
 define(['./app'], function (app) {
     'use strict';
-    return app.constant('angularMomentConfig', {
-        preprocess: 'unix' // optional
-    }).constant('_', window._).config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
+    return app
+    //     .constant('angularMomentConfig', {
+    //     preprocess: 'unix' // optional
+    // })
+        .constant('_', window._).config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
 
 
         $urlRouterProvider.when('', '/');

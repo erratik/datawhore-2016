@@ -8,56 +8,116 @@ var _ = require('lodash');
 var assignValues = require('../../../custom-packages/prioritize').assignValues;
 
 var namespace = 'facebook';
-    
-var fbgraph = require('fbgraphapi');
+
+var graph = require('fbgraph');
+
+var oauth;
+Config.getOauthSettings('facebook', function (err, data) {
+    // console.log(data[0]);
+    oauth = data[0].settings.oauth;
+    //Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+    // graph.({
+    //     "client_id": oauth.api_key.value
+    //     , "redirect_uri": oauth.redirect_uri.value
+    //     , "client_secret": oauth.api_secret.value
+    //     , "code": req.query.code
+    // }, function (err, facebookRes) {
+    //     // console.log(facebookRes);
+    //     // res.redirect('/loggedIn');
+    //     // Save the accessToken and redirect.
+    //     console.log('Yay! Access token is ' + facebookRes.access_token);
+    //     oauth.access_token = {
+    //         value: facebookRes.access_token,
+    //         label: 'Access Token'
+    //     };
+    //     oauth.access_token = {
+    //         value: facebookRes.expires,
+    //         label: 'Expires in'
+    //     };
+    //
+    //     console.log(oauth);
+    //
+    //     // _config.update({
+    //     //     data: oauth,
+    //     //     type: 'settings.oauth'
+    //     // }, function () {
+    //     //     res.redirect('/#/');
+    //     // });
+    // });
+    var options = {
+        timeout: 3000
+        , pool: {maxSockets: Infinity}
+        , headers: {connection: "keep-alive"}
+    };
+
+    // graph.get("me", {access_token: oauth.access_token.value, fields: 'id,name,location'}, function (err, res) {
+    //     console.log(res); // { id: '4', name: 'Mark Zuckerberg'... }
+    // });
+});
+
 
 // expose the routes to our app with module.exports
-module.exports = function(app) {
-    app.get('/api/' + namespace + '/fetch/:type', function(req, res) {
+module.exports = function (app) {
+    app.get('/api/' + namespace + '/fetch/:type', function (req, res) {
 
+
+        var _config = new Config({name: namespace}); // instantiated Config
         if (req.params.type == 'profile') {
             // //console.log('boo');
-            var fb = new fbgraph.Facebook(process.env.FACEBOOK_ACCESS_TOKEN, 'v2.4');
-            fb.graph('/me?fields=id,name,location,birthday,friends,picture,cover', function (err, me) {
-                if (err) console.log(err);
 
-                resetConfig(req.params.type, docs, function(boom){
+            graph.get("me", {
+                access_token: oauth.access_token.value,
+                fields: 'id,name,location,birthday,friends,picture,cover'
+            }, function (err, response) {
+
+
+                _config.resetConfig({
+                    type: req.params.type,
+                    data: response
+                }, function (boom) {
                     res.json(boom);
                 });
-
             });
+
         } else {
 
+            graph.get("me/feed", {
+                access_token: oauth.access_token.value
+            }, function (err, response) {
+                console.log(response);
+
+                _config.resetConfig({
+                    type: req.params.type,
+                    data: response.data[0]
+                }, function (boom) {
+                    res.json(boom);
+                });
+            });
         }
 
     });
 
     //GET POSTS
-    app.get('/api/' + namespace + '/posts', function(req, res) {
-        //console.log(req.body);
-        var fb = new fbgraph.Facebook(process.env.FACEBOOK_ACCESS_TOKEN, 'v2.4');
-        fb.graph('/me/feed', function(err, result) {
-            if (err) console.log(err);
-                
-            //console.log(result);
-               
-        });
+    app.post('/api/' + namespace + '/fetch/posts/:count/:sample', function (req, res) {
 
+        graph.get("me/feed", {
+            access_token: oauth.access_token.value
+        }, function (err, response) {
+            // console.log(response.data);
+            // console.log(_.slice(response.data, 0, 1));
+            // console.log(_.chunk(1, response.data));
+
+            Drop.storeRain({
+                namespace: namespace,
+                posts: _.slice(response.data, 0, req.params.count),
+                sample: req.params.sample
+            }, function(drops) {
+
+                res.json(drops);
+
+            });
+        });
     });
 
-    var resetConfig = function(type, update, cb) {
-
-        var _config = new Config({name: namespace}); // instantiated Config
-
-        _config.update({
-            data: update,
-            type: type,
-            reset: true
-        }, function(config) {
-            cb(config);
-
-            //});
-        });
-    };
 
 };

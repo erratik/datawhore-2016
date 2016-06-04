@@ -16,10 +16,10 @@
 
         <div ng-tabs class="tabbable">
             <ul class="ui top attached tabular menu">
-                <li ng-tab-head="active" class="item">
+                <li  ng-attr-ng-tab-head="{{formData.profileProperties && 'active' || '' }}" class="item">
                     <a href="#" ng-click="$event.preventDefault()">Properties</a>
                 </li>
-                <li ng-tab-head class="item">
+                <li  ng-attr-ng-tab-head="{{!formData.profileProperties && 'active' || '' }}" class="item">
                     <a href="#" ng-click="$event.preventDefault()">Configuration</a>
                 </li>
             </ul>
@@ -61,10 +61,10 @@
         </div>
         <div ng-tabs class="tabbable">
             <ul class="ui top attached tabular menu">
-                <li ng-tab-head="active" class="item">
+                <li  ng-attr-ng-tab-head="{{formData.postProperties && 'active' || '' }}" class="item">
                     <a href="#" ng-click="$event.preventDefault()">Properties</a>
                 </li>
-                <li ng-tab-head class="item">
+                <li ng-attr-ng-tab-head="{{!formData.postProperties && 'active' || '' }}"  class="item">
                     <a href="#" ng-click="$event.preventDefault()">Configuration</a>
                 </li>
             </ul>

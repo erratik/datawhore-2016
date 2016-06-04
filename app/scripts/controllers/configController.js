@@ -54,7 +54,8 @@ define([
                     //console.log($scope.formData);
                     ProfileService.update($scope.profileInfo.name, $scope.formData[type + 'Properties'], type).then(function (data) {
                         //console.info(data);
-                        $scope.formData[type + 'Properties'] = data;
+                        // $scope.formData[type + 'Properties'] = data;
+                        config[type + 'Properties'] = data;
                     });
                 };
 

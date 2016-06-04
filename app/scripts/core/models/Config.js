@@ -40,10 +40,27 @@ var Config = mongoose.createModel('Config', {
         findByName: function(name, cb) {
             return this.find({ name: name }, cb);
         },
+        getOauthSettings: function(name, cb) {
+            // console.log(this.find({ name: name }));
+            return this.find({ name: name }, 'settings', cb);
+        },
         getAll: function(cb) {
 
             return this.find({}, cb);
         }
+    },
+    resetConfig: function(options, cb) {
+        console.log('resetting '+options.type+' config');
+        console.log(options);
+
+        this.update({
+            data: options.data,
+            type: options.type,
+            reset: true
+        }, function(config) {
+            cb(config);
+        });
+
     },
     update: function(options, cb) {
 
@@ -68,12 +85,13 @@ var Config = mongoose.createModel('Config', {
 
                 });
             });
-        } else {
+
             update.connected = true;
+        } else {
             // create the settings object by map the "type",
             // which is actually a mapped object to create ('settings.oauth')
             // with the data the keys with values and labels
-            console.log(options.data);
+            // console.log(options.data);
             var data = [];
             data.push(options.data);
             var updatedObj = _.zipObjectDeep([options.type], data);
@@ -115,8 +133,7 @@ var Config = mongoose.createModel('Config', {
 
         var query = {name: this.name},
             update = {
-                last_modified: moment().format('X'),
-                connected: true
+                last_modified: moment().format('X')
             },
             opts = {multi: false, upsert: true};
 
@@ -132,6 +149,19 @@ var Config = mongoose.createModel('Config', {
 
     }
 });
+
+Config.prototype.foo = function(bar) {
+    console.log(bar);
+    // var _config = new Config({name: namespace}); // instantiated Config
+    //
+    // _config.update({
+    //     data: update,
+    //     type: type,
+    //     reset: true
+    // }, function(config) {
+    //     cb(config);
+    // });
+};
 
 Profile = mongoose.model('Profile', Profile);
 module.exports = Config;
