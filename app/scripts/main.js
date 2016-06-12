@@ -12,7 +12,7 @@ require.config({
         'angular': '/bower_components/angularjs/angular',
         'uiRouter': '/bower_components/angular-ui-router/release/angular-ui-router',
         'moment': '/bower_components/moment/moment',
-        'angular-moment': '/bower_components/angular-moment/angular-moment',
+        'angular-moment': '../../bower_components/angular-moment/angular-moment',
         'angular-filter': '/bower_components/angular-filter/dist/angular-filter',
         'lodash': '/bower_components/lodash/lodash',
         'angular-lodash': '/bower_components/angular-lodash/angular-lodash',
