@@ -39,7 +39,7 @@ module.exports = function(app) {
             type: req.params.type,
             reset: false
         }, function(config) {
-            //console.log(config);
+            console.log('hkhkjk',config);
             res.json(config);
         });
 

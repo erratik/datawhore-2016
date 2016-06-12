@@ -1,17 +1,12 @@
-var Settings = require('../models/Core');
 var Config = require('../models/Config');
 
 var mongoose = require('mongoose');
-var oauthSignature = require('oauth-signature');
-var fs = require('fs');
+// var oauthSignature = require('oauth-signature');
 
-
-// Create a new instance
 
 // expose the routes to our app with module.exports
 module.exports = function (app) {
 
-    var fbgraph = require('fbgraphapi');
 
     app.get('/api/connect/twitter/middle', function (req, res) {
         res.send(req);
@@ -19,6 +14,7 @@ module.exports = function (app) {
 
     app.get('/api/connect/:namespace/:key/:secret', function (req, res) {
 
+        var that = this;
         //if (req.params.namespace == 'callback') res.send();
         console.log('[API CONNECT] ' + req.params.namespace);
 
@@ -29,40 +25,45 @@ module.exports = function (app) {
             switch (req.params.namespace) {
                 case 'twitter':
 
-                    res.redirect('/api/callback/'+req.params.namespace);
+                    res.redirect('/api/callback/' + req.params.namespace);
 
                     break;
                 case 'swarm':
 
                     var credentials = {
-                        secrets : {
+                        secrets: {
                             redirectUrl: oauth.redirect_uri.value,
                             clientId: oauth.api_key.value,
                             clientSecret: oauth.api_secret.value
                         }
                     };
                     var foursquare = require('node-foursquare')(credentials);
-                    res.redirect( foursquare.getAuthClientRedirectUrl() );
+                    res.redirect(foursquare.getAuthClientRedirectUrl());
 
                     break;
                 case 'instagram':
 
                     var api = require('instagram-node').instagram();
-
                     api.use({
                         client_id: oauth.api_key.value,
                         client_secret: oauth.api_secret.value
                     });
-
-
                     var redirect_uri = oauth.redirect_uri.value;
+                    res.send(api.get_authorization_url(redirect_uri, {scope: ['basic'], state: 'authed-basic'}));
 
-                    //exports.authorize_user = function(req, res) {
-                    res.send(api.get_authorization_url(redirect_uri, { scope: ['basic'], state: 'authed-basic' }));
-                    //};
                     break;
                 case 'facebook':
-                    //fbgraph.redirectLoginForm(req, res)
+
+                    var graph = require('fbgraph');
+                    var authUrl = graph.getOauthUrl({
+                        "client_id": oauth.api_key.value
+                        , "redirect_uri": oauth.redirect_uri.value
+                    });
+
+                    // shows dialog
+                    res.send(authUrl);
+
+
                     break;
                 case 'spotify':
                     var SpotifyWebApi = require('spotify-web-api-node');
@@ -80,26 +81,104 @@ module.exports = function (app) {
 
                     // Create the authorization URL
                     var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
-
                     res.send(authorizeURL);
+
+                    break;
+
+                case 'lastfm':
+                   /* var LastFmNode = require('lastfm').LastFmNode;
+                    var LastFmSession = require('../../../../node_modules/lastfm/lib/lastfm/lastfm-session');
+
+                    var lastfm = new LastFmNode({
+                        api_key:  oauth.api_key.value,    // sign-up for a key at http://www.last.fm/api
+                        secret:  oauth.api_secret.value
+                    });
+
+                    lastfm.request("auth.getToken", {
+                        handlers: {
+                            success: function(data) {
+                                // console.log("Success: " + data);
+                                // console.log(data);
+                                res.send('http://www.last.fm/api/auth?api_key='+oauth.api_key.value+'&'+data.token);
+
+                                // var session = lastfm.session({
+                                //     token: data.token,
+                                //     user: 'djladylux',
+                                //         handlers: {
+                                //             success: function(data){
+                                //                 console.log(data)
+                                //             },
+                                //             error: function(error) {
+                                //                 console.log("Error: " + error.message);
+                                //             }
+                                //         }
+                                //
+                                // });
+
+                                // session.on('success', function (someting) {
+                                //     console.log(someting);
+                                // });
+                                // session.on('error', function (someting) {
+                                //     console.log(someting);
+                                // });
+
+                                console.log(session);
+                                // lastfm.request("auth.getSession", {
+                                //     signed: true,
+                                //     handlers: {
+                                //         success: function(data){
+                                //             console.log(data)
+                                //         },
+                                //         error: function(error) {
+                                //             console.log("Error: " + error.message);
+                                //         }
+                                //     }
+                                // });
+
+                            },
+                            error: function(error) {
+                                console.log("Error: " + error.message);
+                            }
+                        },
+                        signed: true
+                    });
+
+                    // console.log(request());
+
+*/
+                    var LastfmAPI = require('lastfmapi');
+
+                    // Create a new instance
+                    var lfm = new LastfmAPI({
+                        api_key:  oauth.api_key.value,    // sign-up for a key at http://www.last.fm/api
+                        secret:  oauth.api_secret.value
+                    });
+
+                    lfm.auth.getToken(function(err, token){
+                        console.log(err, token);
+                        res.send(lfm.getAuthenticationUrl(oauth.redirect_uri.value, token));
+
+                    });
+
+                    // lfm.getAuthenticationUrl(params)
 
                     break;
                 case 'tumblr':
                     /*
-                    var passport = require('passport-tumblr');
-                    passport.use(new TumblrStrategy({
-                            consumerKey: oauth.api_key.value,
-                            consumerSecret: oauth.api_secret.value,
-                            callbackURL: oauth.redirect_uri.value
-                        },
-                        function(token, tokenSecret, profile, done) {
-                            User.findOrCreate({ tumblrId: profile.id }, function (err, user) {
-                                return done(err, user);
-                            });
-                        }
-                    ));*/
+                     var passport = require('passport-tumblr');
+                     passport.use(new TumblrStrategy({
+                     consumerKey: oauth.api_key.value,
+                     consumerSecret: oauth.api_secret.value,
+                     callbackURL: oauth.redirect_uri.value
+                     },
+                     function(token, tokenSecret, profile, done) {
+                     User.findOrCreate({ tumblrId: profile.id }, function (err, user) {
+                     return done(err, user);
+                     });
+                     }
+                     ));*/
                     //passport.authenticate('tumblr');
-                    res.redirect('/api/callback/'+req.params.namespace);
+                    res.redirect('/api/callback/' + req.params.namespace);
                     break;
                 case 'moves':
 
@@ -109,10 +188,24 @@ module.exports = function (app) {
                         client_secret: oauth.api_secret.value,
                         redirect_uri: oauth.redirect_uri.value
                     });
-
                     var authorizeURL = moves.authorize({
                         scope: ['activity', 'location'] //can contain either activity, location or both
                         , state: 'authed' //optional state as per oauth
+                    });
+
+                    res.send(authorizeURL);
+                    break;
+                case 'fitbit':
+
+                    var FitbitApiClient = require("fitbit-node");
+                    var fitbitApi = new FitbitApiClient({
+                        clientID: oauth.api_key.value,
+                        clientSecret: oauth.api_secret.value
+
+                    });
+                    var authorizeURL = fitbitApi.getAuthorizeUrl({
+                        scope: ['activity', 'heartrate', 'location', 'nutrition', 'profile', 'settings', 'sleep', 'social', 'weight']
+                        , redirectUri: oauth.redirect_uri.value //optional state as per oauth
                     });
 
                     res.send(authorizeURL);
@@ -122,15 +215,6 @@ module.exports = function (app) {
             }
         });
 
-
-        /*_config.update({
-         data: req.body,
-         type: req.params.type,
-         reset: 'connect'
-         }, function (config) {
-         //console.log(config);
-         res.json(config);
-         });*/
 
         //console.log(req.body);
         //console.log('>> /@end');
@@ -160,54 +244,52 @@ module.exports = function (app) {
                                 consumerSecret: oauth.api_secret.value,
                                 callbackURL: oauth.redirect_uri.value
                             },
-                            function(token, tokenSecret, profile, done) {
-                                User.findOrCreate({ tumblrId: profile.id }, function (err, user) {
+                            function (token, tokenSecret, profile, done) {
+                                User.findOrCreate({tumblrId: profile.id}, function (err, user) {
                                     return done(err, user);
                                 });
                             }
                         ));
 
-                        passport.authenticate('tumblr', { failureRedirect: '/login' },
-                            function(req, res) {
+                        passport.authenticate('tumblr', {failureRedirect: '/login'},
+                            function (req, res) {
                                 // Successful authentication, redirect home.
                                 res.redirect('/');
                             });
-                        //res.redirect('/#/');
                         break;
                     case 'swarm':
 
                         var credentials = {
-                            secrets : {
+                            secrets: {
                                 redirectUrl: oauth.redirect_uri.value,
                                 clientId: oauth.api_key.value,
                                 clientSecret: oauth.api_secret.value
                             }
                         };
-
                         var foursquare = require('node-foursquare')(credentials);
-
                         foursquare.getAccessToken({
-                            code: req.query.code
-                        }, function (error, access_token) {
-                            if(error) {
-                                res.send('An error was thrown: ' + error.message);
-                            }
-                            else {
-                                // Save the accessToken and redirect.
-                                console.log('Yay! Access token is ' + access_token);
-                                oauth.access_token = {
-                                    value: access_token,
-                                    label: 'Access Token'
-                                };
+                                code: req.query.code
+                            },
+                            function (error, access_token) {
+                                if (error) {
+                                    res.send('An error was thrown: ' + error.message);
+                                }
+                                else {
+                                    // Save the accessToken and redirect.
+                                    console.log('Yay! Access token is ' + access_token);
+                                    oauth.access_token = {
+                                        value: access_token,
+                                        label: 'Access Token'
+                                    };
 
-                                _config.update({
-                                    data: oauth,
-                                    type: 'settings.oauth'
-                                }, function() {
-                                    res.redirect('/#/');
-                                });
-                            }
-                        });
+                                    _config.update({
+                                        data: oauth,
+                                        type: 'settings.oauth'
+                                    }, function () {
+                                        res.redirect('/#/');
+                                    });
+                                }
+                            });
 
                         break;
 
@@ -218,111 +300,146 @@ module.exports = function (app) {
                             client_id: oauth.api_key.value,
                             client_secret: oauth.api_secret.value
                         });
+                        api.authorize_user(req.query.code, oauth.redirect_uri.value,
+                            function (err, result) {
+                                if (err) {
+                                    console.log(err.body);
+                                    res.send("Didn't work");
+                                } else {
+                                    console.log('Yay! Access token is ' + result.access_token);
+                                    oauth.access_token = {
+                                        value: result.access_token,
+                                        label: 'Access Token'
+                                    };
 
-                        //api.handleauth = function(req, res) {
-                        api.authorize_user(req.query.code, oauth.redirect_uri.value, function(err, result) {
-                            if (err) {
-                                console.log(err.body);
-                                res.send("Didn't work");
-                            } else {
-                                console.log('Yay! Access token is ' + result.access_token);
-                                oauth.access_token = {
-                                    value: result.access_token,
-                                    label: 'Access Token'
-                                };
+                                    _config.update({
+                                        data: oauth,
+                                        type: 'settings.oauth'
+                                    }, function () {
+                                        res.redirect('/#/');
+                                    });
+                                }
+                            });
 
-                                _config.update({
-                                    data: oauth,
-                                    type: 'settings.oauth'
-                                }, function() {
-                                    res.redirect('/#/');
-                                });
-                            }
-                        });
-                    break;
+                        break;
                     case 'facebook':
 
-                    break;
+                        var graph = require('fbgraph');
+                        // after user click, auth `code` will be set
+                        // we'll send that and get the access token
+                        graph.authorize({
+                            "client_id": oauth.api_key.value
+                            , "redirect_uri": oauth.redirect_uri.value
+                            , "client_secret": oauth.api_secret.value
+                            , "code": req.query.code
+                        }, function (err, facebookRes) {
+                            // console.log(facebookRes);
+                            // res.redirect('/loggedIn');
+                            // Save the accessToken and redirect.
+                            console.log('Yay! Access token is ' + facebookRes.access_token);
+                            oauth.access_token = {
+                                value: facebookRes.access_token,
+                                label: 'Access Token'
+                            };
+                            oauth.access_token = {
+                                value: facebookRes.expires,
+                                label: 'Expires in'
+                            };
+
+                            _config.update({
+                                data: oauth,
+                                type: 'settings.oauth'
+                            }, function () {
+                                res.redirect('/#/');
+                            });
+                        });
+
+                        break;
                     case 'spotify':
                         if (req.params.bounce == 'middle') {
 
-                            //console.log(config);
-                            //res.json(config);
-                            res.redirect('/#/');
-                            /*
-                             //var SpotifyWebApi = require('spotify-web-api-node');
-                             //// Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
-                             //var spotifyApi = new SpotifyWebApi({
-                             //    redirectUri: oauth.redirect_uri.value,
-                             //    clientId: oauth.api_key.value,
-                             //    clientSecret: oauth.api_secret.value
-                             //});
-                             //// Get Elvis' albums
-                             //spotifyApi.getMe()
-                             //    .then(function(data) {
-                             //        console.log('Some information about the authenticated user', data.body);
-                             //    }, function(err) {
-                             //        console.log('Something went wrong!', err);
-                             //    });
+                            var SpotifyWebApi = require('spotify-web-api-node');
+                            // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+                            var spotifyApi = new SpotifyWebApi({
+                               redirectUri: oauth.redirect_uri.value+'/middle',
+                               clientId: oauth.api_key.value,
+                               clientSecret: oauth.api_secret.value
+                            });
 
-                             // The code that's returned as a query parameter to the redirect URI
-                             var code = req.query.code;
-                             //console.log(oauth.redirect_uri);
-                             spotifyApi.authorizationCodeGrant(code)
-                             .then(function(data) {
-                             console.log('The token expires in ' + data['expires_in']);
-                             console.log('The access token is ' + data['access_token']);
-                             console.log('The refresh token is ' + data['refresh_token']);
 
-                             /!* Ok. We've got the access token!
-                             Save the access token for this user somewhere so that you can use it again.
-                             Cookie? Local storage?
-                             *!/
+                            // The code that's returned as a query parameter to the redirect URI
+                            var code = req.query.code;
+                            spotifyApi.authorizationCodeGrant(code)
+                                .then(function (data) {
+                                    console.log('The token expires in ' + data.body['expires_in']);
+                                    console.log('The access token is ' + data.body['access_token']);
+                                    console.log('The refresh token is ' + data.body['refresh_token']);
 
-                             console.log(data);
-                             /!* Redirecting back to the main page! :-) *!/
-                             res.redirect('/#');
+                                    /* Ok. We've got the access token!
+                                     Save the access token for this user somewhere so that you can use it again.
+                                     Cookie? Local storage?
+                                     */
 
-                             }, function(err) {
-                             //res.status(err.code);
-                             res.send(err);
-                             });*/
+                                    // console.log(data);
+                                    /* Redirecting back to the main page! :-) */
+                                    // res.redirect('/#');
+
+                                    oauth.access_token = {
+                                        value: data.body['access_token'],
+                                        label: 'Access Token'
+                                    };
+                                    oauth.expires_in = {
+                                        value: data.body['expires_in'],
+                                        label: 'Expires in'
+                                    };
+                                    oauth.refresh_token = {
+                                        value: data.body['refresh_token'],
+                                        label: 'Refresh Token'
+                                    };
+
+                                    _config.update({
+                                        data: oauth,
+                                        type: 'settings.oauth'
+                                    }, function () {
+                                        res.redirect('/#/');
+                                    });
+
+                                }, function (err) {
+                                    res.send(err);
+                                });
                         }
-                        /*
-                         var session = spotify.session({
-                         token: req.query.token,
-                         handlers: {
-                         success: function (session) {
-                         // spotify.update('nowplaying', session, { track: track } );
-                         // spotify.update('scrobble', session, { track: track, timestamp: 12345678 });
-                         Settings.findOne({
-                         name: 'settings'
-                         }, function (err, settings) {
-                         if (err) res.send(err)
-                         settings.configs.spotify.session_key = session.key;
-                         for (var i = 0; i < settings.networks.length; i++) {
-                         // console.log(req.params.namespace);
-                         if (settings.networks[i].namespace == 'spotify') {
-                         settings.networks[i].connected = true;
-                         }
-                         }
-                         Settings.update({
-                         networks: settings.networks,
-                         configs: settings.configs
-                         }, function (err, settings) {
-                         Settings.findOne({
-                         name: 'settings'
-                         }, function (err, settings) {
-                         if (err) console.log(err)
-                         console.log(settings);
-                         // res.redirect('/');
-                         });
-                         });
-                         });
-                         }
-                         }
-                         });
-                         */
+
+                        break;
+                    case 'lastfm':
+
+                        var LastfmAPI = require('lastfmapi');
+
+                        // Create a new instance
+                        var lfm = new LastfmAPI({
+                            api_key:  oauth.api_key.value,    // sign-up for a key at http://www.last.fm/api
+                            secret:  oauth.api_secret.value
+                        });
+
+                        lfm.authenticate(req.query.token, function(err, sessionData){
+                            console.log(err, sessionData);
+
+                            oauth.key = {
+                                value: sessionData.key,
+                                label: 'Key'
+                            };
+                            oauth.username = {
+                                value: sessionData.username,
+                                label: 'Username'
+                            };
+
+                            _config.update({
+                                data: oauth,
+                                type: 'settings.oauth'
+                            }, function () {
+                                res.redirect('/#/');
+                            });
+                        });
+
                         break;
                     case 'moves':
 
@@ -332,10 +449,8 @@ module.exports = function (app) {
                             client_secret: oauth.api_secret.value,
                             redirect_uri: oauth.redirect_uri.value
                         });
+                        moves.token(req.query.code, function (error, response, body) {
 
-                        moves.token(req.query.code, function(error, response, body) {
-                            //console.log(response);
-                            console.log(JSON.parse(body));
                             var data = JSON.parse(body);
 
                             oauth.access_token = {
@@ -354,13 +469,49 @@ module.exports = function (app) {
                             _config.update({
                                 data: oauth,
                                 type: 'settings.oauth'
-                            }, function() {
+                            }, function () {
                                 res.redirect('/#/');
                             });
                         });
 
+                        break;
+                    case 'fitbit':
 
-                    break;
+                        var FitbitApiClient = require("fitbit-node");
+                        var fitbitApi = new FitbitApiClient({
+                            clientID: oauth.api_key.value,
+                            clientSecret: oauth.api_secret.value
+                        });
+
+                        fitbitApi.getAccessToken({
+                            code: req.query.code,
+                            redirectUrl: oauth.redirect_uri.value
+                        }, function (error, response, body) {
+
+                            var data = JSON.parse(body);
+
+                            oauth.access_token = {
+                                value: data.access_token,
+                                label: 'Access Token'
+                            };
+                            oauth.expires_in = {
+                                value: data.expires_in,
+                                label: 'Expires in'
+                            };
+                            oauth.refresh_token = {
+                                value: data.refresh_token,
+                                label: 'Refresh Token'
+                            };
+
+                            _config.update({
+                                data: oauth,
+                                type: 'settings.oauth'
+                            }, function () {
+                                res.redirect('/#/');
+                            });
+                        });
+
+                        break;
 
                     default:
 
@@ -372,52 +523,6 @@ module.exports = function (app) {
         //console.log('>> /@end');
     });
 
-
-    // var cookieParser = require('cookie-parser');    //
-    // var session = require('express-session'); //
-    // app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }, resave: true, saveUninitialized: true }))
-    // app.use(fbgraph.auth( {
-    //         appId : process.env.FACEBOOK_API_KEY,
-    //         appSecret : process.env.FACEBOOK_API_SECRET,
-    //         redirectUri : "http://datawhore.erratik.ca:3000/facebook",
-    //         scope: 'public_profile, email, user_about_me, user_actions.news, user_photos, user_posts, user_status, user_tagged_places, user_likes, user_location, user_hometown, user_events, user_birthday, user_friends',
-    //         apiVersion: "v2.2"
-    //     }));
-
-    app.get('/api/facebook', function (req, res) {
-        if (!req.hasOwnProperty('facebook')) {
-            console.log('You are not logged in');
-            return res.redirect('/');
-        }
-
-
-        fs.appendFile('.env', 'FACEBOOK_ACCESS_TOKEN=' + req.facebook._accessToken + ' \n', encoding = 'utf8', function (err) {
-            if (err) throw err;
-        });
-
-
-        Settings.findOne({
-            name: 'settings'
-        }, function (err, settings) {
-            if (err) res.send(err);
-
-            settings.networks.facebook.connected = true;
-            Settings.update({
-                networks: settings.networks,
-                last_modified: Date.now() / 1000 | 0
-            }, function (err, settings) {
-                Settings.findOne({
-                    name: 'settings'
-                }, function (err, settings) {
-                    if (err) console.log(err);
-                    console.log(settings.networks.facebook);
-                });
-            });
-            res.redirect('/#/settings');
-
-        });
-
-    });
 
 
 };

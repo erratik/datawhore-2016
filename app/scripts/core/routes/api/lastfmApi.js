@@ -1,43 +1,100 @@
-
-var Settings = require('../../models/Core');
-var Profile = require('../../models/Profile');
+var Config = require('../../models/Config');
+var Drop = require('../../models/Drop');
 
 var mongoose = require('mongoose');
 var namespace = 'lastfm';
-var LastFmNode = require('lastfm').LastFmNode;
-var client = new LastFmNode({
-    api_key: process.env.LASTFM_API_KEY,
-    secret: process.env.LASTFM_API_SECRET
+
+var oauth;
+Config.getOauthSettings(namespace, function (err, data) {
+    oauth = data[0].settings.oauth;
 });
 // expose the routes to our app with module.exports
-module.exports = function(app) {
-    app.post('/api/' + namespace + '/profile', function(req, res) {
-        // //console.log(req.body);
-            //console.log('getInfo for ' + process.env.LASTFM_USERNAME);
-            client.request("user.getInfo", {
-                user: process.env.LASTFM_USERNAME,
-                handlers: {
-                    success: function(data) {
-                        // //console.log("Success: " + data);
-                        var avatar = data.user.image;
-                        for (var i = 0; i < avatar.length; i++) {
-                            if (avatar[i].size == 'extralarge') data.avatar = avatar[i]['#text'];
-                        }
-                        Profile.updateProfile({
-                            namespace: namespace,
-                            avatar: data.avatar,
-                            username: process.env.LASTFM_USERNAME,
-                            profile: data.user
-                        }, function(data) {
-                            // //console.log(data);
-                            res.json(data);
-                        });
-                    },
-                    error: function(error) {
-                        //console.log("Error: " + error.message);
-                    }
+module.exports = function (app) {
+
+    app.get('/api/' + namespace + '/fetch/:type', function (req, res) {
+
+        // console.log(oauth);
+        var _config = new Config({name: namespace}); // instantiated Config
+        var LastfmAPI = require('lastfmapi');
+
+        // Create a new instance
+        var lfm = new LastfmAPI({
+            api_key: oauth.api_key.value,    // sign-up for a key at http://www.last.fm/api
+            secret: oauth.api_secret.value
+        });
+
+        lfm.setSessionCredentials(oauth.username.value, oauth.key.value);
+
+        if (req.params.type == 'profile') {
+            lfm.user.getInfo(oauth.username.value, function (err, info) {
+                // console.log(info);
+
+                _config.resetConfig({
+                    type: req.params.type,
+                    data: info
+                }, function (boom) {
+                    res.json(boom);
+                });
+            });
+        } else {
+
+            lfm.user.getRecentTracks({
+                user: oauth.username.value,
+                limit: 1
+            }, function (err, tracks) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    // res.json(tracks);
+
+                    _config.resetConfig({
+                        type: req.params.type,
+                        data: tracks.track[0]
+                    }, function (boom) {
+                        res.json(boom);
+                    });
                 }
             });
+        }
 
+    });
+    
+
+    //GET POSTS
+    app.post('/api/' + namespace + '/fetch/posts/:count/:sample', function(req, res) {
+        //console.log(req.body);
+
+        // console.log(oauth);
+        var _config = new Config({name: namespace}); // instantiated Config
+        var LastfmAPI = require('lastfmapi');
+
+        // Create a new instance
+        var lfm = new LastfmAPI({
+            api_key: oauth.api_key.value,    // sign-up for a key at http://www.last.fm/api
+            secret: oauth.api_secret.value
+        });
+
+        lfm.setSessionCredentials(oauth.username.value, oauth.key.value);
+
+        lfm.user.getRecentTracks({
+            user: oauth.username.value,
+            limit: req.params.count
+        }, function (err, scrobbles) {
+            if (err) {
+                console.log(err);
+            } else {
+                // console.log(scrobbles.track);
+
+                Drop.storeRain({
+                    namespace: namespace,
+                    posts: scrobbles.track,
+                    sample: req.params.sample
+                }, function(drops) {
+
+                    res.json(drops);
+
+                });
+            }
+        });
     });
 };
