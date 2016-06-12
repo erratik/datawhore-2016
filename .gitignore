@@ -1,5 +1,6 @@
 sh_*
 *.log
+*.diff
 
 bower_components
 node_modules
