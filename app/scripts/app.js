@@ -5,28 +5,40 @@
 require([
     'angular',
     'jquery',
-    'uiRouter',
+    'angular-ui-router',
+    //'angular-lodash',
     'moment',
     'angular-moment',
-    'angular-semantic',
-    //'angular-lodash',
+    'angular-semantic-ui',
     'angular-filter',
+    './routes',
     './controllers/index',
     './directives/index',
     './filters/index',
     './services/index'
-], function (ng) {
+], function (angular) {
     'use strict';
+    console.log(angular);
 
-    return ng.module('app', [
+    /*
+     * place operations that need to initialize prior to app start here
+     * using the `run` function on the top-level module
+     */
+    //
+    angular.bootstrap(document, ['app']);
+    //require(['domReady!'], function (document) {
+    return angular.module('app', [
         'app.services',
         'app.controllers',
         'app.filters',
         'app.directives',
+        //'angular-lodash',
         'angularMoment',
         'angular.filter',
         'angularify.semantic',
-        //'angular-lodash',
         'ui.router'
     ]);
+    //})();
+
+
 });

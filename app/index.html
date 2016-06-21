@@ -29,10 +29,10 @@
           <i class="settings icon"></i> admin
           <i class="dropdown icon"></i>
           <div class="menu">
-            <a class="item" ui-sref="networks">
+            <a class="item" ui-sref="profiles">
               <i class="users icon"></i> profiles
             </a>
-            <a class="item" ui-sref="settings">
+            <a class="item" ui-sref="/">
               <i class="setting horizontal icon"></i> settings
             </a>
           </div>
@@ -44,16 +44,11 @@
 
   <div class="ui container">
 
-    <ul class="menu">
-      <li><a ui-sref="view1">view1</a></li>
-      <li><a ui-sref="view2">view2</a></li>
-      <li><a ui-sref="networks">networks</a></li>
-    </ul>
-
     <div ui-view></div>
 
   </div>
 
 </body>
-<script src="/bower_components/requirejs/require.js" data-main="scripts/main.js"></script>
+<script src="datawhore.bundle.js" type="text/javascript"></script>
+<!--<script src="/bower_components/requirejs/require.js" data-main="scripts/main.js"></script>-->
 </html>
