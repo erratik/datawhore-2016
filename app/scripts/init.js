@@ -6,7 +6,7 @@ var $ = require('jquery');
 var _ = require('lodash');
 
 /* angular modules -----------------------------------*/
-require('../styles/css/main.css');
+// require('../styles/css/main.css');
 
 /* angular modules -----------------------------------*/
 require('angular-ui-router');

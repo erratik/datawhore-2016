@@ -3,7 +3,11 @@ var webpack = require('webpack');
 
 module.exports = {
     context: __dirname + '/app',
-    entry: './scripts/init.js',
+    devtool: 'eval-source-map',
+    entry: {
+        app: './scripts/init.js',
+        vendor: ['jquery', 'lodash']
+    },
     output: {
         path: __dirname + '/app',
         filename: 'datawhore.bundle.js'
@@ -13,8 +17,8 @@ module.exports = {
     },
     module: {
         loaders: [
-            {test: /\.js$/, exclude: [/node_modules/, /bower_components/], loader: 'babel', query: {compact: false}},
-            {test: /\.html$/, exclude: [/node_modules/, /bower_components/], loader: 'html', query: {compact: false}},
+            {test: /\.js$/, exclude: [/node_modules/, /bower_components/], loader: 'babel', query: {compact: true}},
+            {test: /\.html$/, exclude: [/node_modules/, /bower_components/], loader: 'html', query: {compact: true}},
             {test: /\.css$/, exclude: [/node_modules/, /bower_components/], loader: 'style!css'},
             // {test: /\.less/, exclude: [/node_modules/, /bower_components/], loader: 'style!css!less'},
             // {
@@ -27,15 +31,8 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            },
-            output: {
-                comments: false
-            }
-        }),
-        new webpack.OldWatchingPlugin()
-    ],
-    devtool: 'eval-source-map'
+        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.OldWatchingPlugin(),
+        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js")
+    ]
 };

@@ -9,6 +9,14 @@ var watchLess = require('gulp-watch-less');
 var less = require('gulp-less');
 var $ = require('gulp-load-plugins')();
 
+var webpack = require('webpack-stream');
+gulp.task('webpackin', function () {
+    return gulp.src('app/scripts/init.js')
+        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(gulp.dest('app/'));
+    // .pipe(gulp.dest('dist/'));
+});
+
 gulp.task('styles', ['less'], function () {
     return gulp.src('app/styles/main.css')
         .pipe($.postcss([
@@ -156,17 +164,18 @@ gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
 
 gulp.task('watch', function () {
     // $.livereload.listen();
-    gulp.watch([
-        'app/**/*.html',
-        '.tmp/styles/**/*.css',
-        'app/styles/**/*.less',
-        'app/datawhore.bundle.js',
-        // 'app/scripts/**/*.js',
-        'app/images/**/*'
-    ]);
+    // gulp.watch([
+    //     'app/**/*.html',
+    //     '.tmp/styles/**/*.css',
+    //     'app/styles/**/*.less',
+    //     'app/datawhore.bundle.js',
+    //     'app/scripts/**/*.js',
+    //     'app/images/**/*'
+    // ]);
 
     gulp.watch('app/styles/**/*.less', ['less']);
     gulp.watch('app/styles/**/*.css', ['styles']);
+    gulp.watch(['webpack.config.js', 'app/scripts/**/*.js', 'app/templates/*.html'], ['webpackin']);
     //gulp.watch('app/templates/{**/}*.html', ['styles']);
     gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -179,7 +188,7 @@ gulp.task('default', ['clean', 'browser-sync'], function () {
     gulp.start('build');
 });
 
-gulp.task('datawhore', ['browser-sync', 'watch'], function () {
+gulp.task('datawhore', ['webpackin', 'browser-sync', 'watch'], function () {
     console.log('--------------------------------------------------------------------------------------------------');
     console.log('');
     console.log('                             listening on server.js on http://localhost/:         ');
