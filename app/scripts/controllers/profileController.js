@@ -1,9 +1,6 @@
-
-define([
-    './module'
-], function (controllers) {
-    'use strict';
-    controllers.controller('profilesController', ['$scope', '$http', 'ProfileService', 'configs', 'profiles', function profilesController($scope, $http, ProfileService, configs, profiles) {
+module.exports = function (app) {
+    app
+        .controller('profilesController', ['$scope', '$http', 'ProfileService', 'configs', 'profiles', function profilesController($scope, $http, ProfileService, configs, profiles) {
 
         $scope.configs = configs;
         $scope.profiles = profiles;
@@ -17,7 +14,7 @@ define([
         //    });
         //};
 
-    }])
+        }])
         .controller('profileController', ['$scope', '$http', '$stateParams', 'ProfileService', 'profile', 'config',
             function profileController($scope, $http, $stateParams, ProfileService, profile, config) {
                 // Setting up the scope's data -------------------------------------------------------*/
@@ -37,4 +34,4 @@ define([
             }
         ]);
 
-});
+};

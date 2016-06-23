@@ -1,11 +1,5 @@
-/**
- * The angular tabs module
- * @author: nerv
- * @version: 0.2.5, 2012-08-25
- */
-define(['./module'], function (directives) {
-    'use strict';
-    directives
+module.exports = function (app) {
+    app
         .directive('ngTabs', ngTabsDirective)
         .directive('ngTabHead', ngTabHeadDirective)
         .directive('ngTabBody', ngTabBodyDirective);
@@ -37,7 +31,6 @@ define(['./module'], function (directives) {
     }
 
     ngTabsController.$inject = ['$scope'];
-
 
 
     function ngTabHeadDirective() {
@@ -80,4 +73,4 @@ define(['./module'], function (directives) {
         };
     }
 
-});
+};

@@ -1,12 +1,6 @@
-/** attach controllers to this module 
- * if you get 'unknown {x}Provider' errors from angular, be sure they are
- * properly referenced in one of the module dependencies in the array.
- * below, you can see we bring in our services and constants modules 
- * which avails each controller of, for example, the `config` constants object.
- **/
-define([
-    './configController',
-    './profileController',
-    './networkController',
-    './coreController'
-], function () {});
+module.exports = function (app) {
+    require('./configController')(app);
+    require('./profileController')(app);
+    // require('./networkController')(app);
+    require('./coreController')(app);
+};

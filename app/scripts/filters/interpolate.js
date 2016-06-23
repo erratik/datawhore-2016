@@ -1,7 +1,5 @@
-define(['./module'], function (filters) {
-    'use strict';
-
-    return filters
+module.exports = function (app) {
+    app
         .filter('interpolate', ['version', function (version) {
             return function (text) {
                 return String(text).replace(/\%VERSION\%/mg, version);
@@ -41,4 +39,4 @@ define(['./module'], function (filters) {
             };
         });
 
-});
+};

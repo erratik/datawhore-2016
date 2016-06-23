@@ -1,6 +1,6 @@
-define(['./module'], function (services) {
-    'use strict';
-    services.service('CoreService', function ($http, $q) {
+module.exports = function (app) {
+    app
+        .service('CoreService', function ($http, $q) {
         var CoreService = {};
 
 
@@ -74,4 +74,4 @@ define(['./module'], function (services) {
         return CoreService;
     });
 
-});
+};

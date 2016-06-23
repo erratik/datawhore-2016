@@ -1,11 +1,7 @@
-define([
-    './module'
-], function (controllers) {
-    'use strict';
-    controllers
+module.exports = function (app) {
+    app
         .controller('networksController', ['$scope', '$http', '$log', 'CoreService', 'networks',
             function networksController($scope, $http, $log, CoreService, networks) {
-                ////console.log($scope);
 
                 $scope.networks = networks;
                 //$scope.configs = configs;
@@ -13,7 +9,6 @@ define([
 
             }
         ])
-
         .controller('configController', ['$scope', '$http', '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config',
             function configController($scope, $http, $stateParams, ConfigService, ProfileService, profile, config) {
                 console.debug(config)
@@ -110,7 +105,6 @@ define([
 
             }
         ]);
-
-});
+};
 
 

@@ -102,7 +102,7 @@ gulp.task('nodemon', function (cb) {
         script: 'server/server.js',
 
         // watch core server file(s) that require server restart on change
-        watch: ['*.js', 'app/styles/less/*.less']
+        watch: ['app/datawhore.bundle.js', 'app/styles/less/*.less']
     })
     .on('start', function onStart() {
             // ensure start only got called once
@@ -129,7 +129,8 @@ gulp.task('browser-sync', ['nodemon'], function () {
         // watch the following files; changes will be injected (css & images) or cause browser to refresh
         files: [
             //'app/{**/}*.{.js,.html,.css}',
-            'app/scripts/{**/}*.js',
+            // 'app/scripts/{**/}*.js',
+            'app/datawhore.bundle.js',
             'app/templates/{**/}*.html',
             'app/styles/css/*.css'
 
@@ -155,7 +156,8 @@ gulp.task('watch', function () {
         'app/**/*.html',
         '.tmp/styles/**/*.css',
         'app/styles/**/*.less',
-        'app/scripts/**/*.js',
+        'app/datawhore.bundle.js',
+        // 'app/scripts/**/*.js',
         'app/images/**/*'
     ]);
 

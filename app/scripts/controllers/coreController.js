@@ -1,9 +1,5 @@
-define([
-    './module', 'lodash'
-], function (controllers) {
-    'use strict';
-
-    controllers
+module.exports = function (app) {
+    app
         .controller('coreController', ['$scope', '$http',  'CoreService', 'networks',
             function coreController($scope, $http, CoreService, networks) {
 
@@ -23,4 +19,4 @@ define([
                     console.log('Error: ' + data);
                 });
         }]);
-});
+};

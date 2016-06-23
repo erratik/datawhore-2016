@@ -1,6 +1,5 @@
-define(['./module'], function (directives) {
-    'use strict';
-    directives
+module.exports = function (app) {
+    app
         .directive('profileAvatar', function () {
             return {
                 restrict: 'E',
@@ -136,4 +135,4 @@ define(['./module'], function (directives) {
         });
 
 
-});
+};

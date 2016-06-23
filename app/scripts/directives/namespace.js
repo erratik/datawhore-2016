@@ -1,7 +1,5 @@
-define(['./module'], function (directives) {
-    'use strict';
-    var tpl_folder = 'templates/directives/';
-    directives
+module.exports = function (app, tpl_folder) {
+    app
         .directive('namespaceToggle', function () {
             return {
                 restrict: 'E',
@@ -197,4 +195,4 @@ define(['./module'], function (directives) {
             };
         }]);
 
-});
+};

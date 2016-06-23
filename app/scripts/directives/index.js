@@ -1,12 +1,7 @@
-/**
- * attach directives to this module
- * if you get 'unknown {x}Provider' errors from angular, be sure they are
- * properly referenced in one of the module dependencies in the array.
- **/
-define([
-    './app-version',
-    './namespace',
-    './posts',
-    './profile',
-    './tabs'
-], function () {});
+module.exports = function (app) {
+    // require('./app-version')(app);
+    require('./namespace')(app, './templates/directives/');
+    require('./posts')(app);
+    require('./profile')(app);
+    require('./tabs')(app);
+};

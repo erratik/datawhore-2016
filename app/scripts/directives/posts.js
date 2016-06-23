@@ -1,6 +1,6 @@
-define(['./module'], function (directives) {
-    'use strict';
-    directives.directive('postConfig', function () {
+module.exports = function (app) {
+    app
+        .directive('postConfig', function () {
         return {
             restrict: 'E',
             scope: true,
@@ -13,8 +13,7 @@ define(['./module'], function (directives) {
      //        	}
             }
         };
-    });    
+    });
 
 
-
-});
+};

@@ -1,6 +1,6 @@
-define(['./module'], function (services) {
-    'use strict';
-    services.service('ConfigService', ['$http', '$q', '$log', function ($http, $q, $log) {
+module.exports = function (app) {
+    app
+        .service('ConfigService', ['$http', '$q', '$log', function ($http, $q, $log) {
         var ConfigService = {};
 
         ConfigService.getConfig = function (name) {
@@ -64,4 +64,4 @@ define(['./module'], function (services) {
         return ConfigService;
     }]);
 
-});
+};
