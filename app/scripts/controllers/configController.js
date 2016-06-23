@@ -11,7 +11,10 @@ module.exports = function (app) {
         ])
         .controller('configController', ['$scope', '$http', '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config',
             function configController($scope, $http, $stateParams, ConfigService, ProfileService, profile, config) {
-                console.debug(config)
+
+                console.debug(config);
+                console.debug(profile);
+
                 $scope.profileInfo = {
                     last_modified: config.last_modified,
                     name: $stateParams.namespace
@@ -36,6 +39,7 @@ module.exports = function (app) {
                 });
 
                 console.log($scope);
+
 
                 $scope.updateConfig = function (type) {
                     var config =  $scope.formData[type+'Config'];
@@ -102,7 +106,6 @@ module.exports = function (app) {
                 $scope.open_modal = function () {
                     $scope.show_modal = true;
                 };
-
             }
         ]);
 };

@@ -1,18 +1,21 @@
-/*--------------------------------------------------------------------------*
+/*-----------------------------------------------------*
  * APP SETUP
- *--------------------------------------------------------------------------*/
+ *-----------------------------------------------------*/
 var angular = require('angular');
 var $ = require('jquery');
 var _ = require('lodash');
 
+/* angular modules -----------------------------------*/
+require('../styles/css/main.css');
+
+/* angular modules -----------------------------------*/
 require('angular-ui-router');
 require('moment');
 require('angular-moment');
 require('angular-semantic-ui');
 require('angular-filter');
 
-
-// datawhore app
+/*  datawhore app with module dependencies  ----------*/
 var datawhore = angular.module('app', [
     'ui.router',
     'angularMoment',
@@ -20,14 +23,14 @@ var datawhore = angular.module('app', [
     'angularSemanticUi'
 ]);
 
-
-// app routes
+/* app routes -----------------------------------------*/
 require('./routes')(datawhore);
 
+/* app ... stuff --------------------------------------*/
 require('./services')(datawhore);
 require('./controllers')(datawhore);
-require('./filters')(datawhore);
 require('./directives')(datawhore);
+require('./filters')(datawhore);
 
-// bootstrapping (maybe i should use jquery?)
+// bootstrapping datawhore (maybe i should use jquery?)
 require('./bootstrap')(angular);

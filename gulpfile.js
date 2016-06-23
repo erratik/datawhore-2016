@@ -24,8 +24,12 @@ gulp.task('less', function () {
         .pipe(gulp.dest('app/styles/css'));
 });
 
-gulp.task('semantic', function () {
+gulp.task('semanticThemes', function () {
     return gulp.src('bower_components/semantic/dist/themes/**/**/**')
+        .pipe(gulp.dest('app/styles/semantic/themes'));
+});
+gulp.task('semanticStyle', function () {
+    return gulp.src('bower_components/semantic/dist/*.*')
         .pipe(gulp.dest('app/styles/semantic'));
 });
 

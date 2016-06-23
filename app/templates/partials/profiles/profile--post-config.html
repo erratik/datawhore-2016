@@ -5,7 +5,7 @@
 
     <table class="ui compact celled definition table">
         <tbody>
-        <tr ng-repeat="(label, attribute) in formData.postConfig | orderBy:sortType:sortReverse">
+        <tr ng-repeat="(label, attribute) in formData.postConfig ">
             <td colspan="3">
                 <profile-row
                         data="formData.postConfig[label].content"

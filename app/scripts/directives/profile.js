@@ -1,4 +1,4 @@
-module.exports = function (app) {
+module.exports = function (app, tpl_folder) {
     app
         .directive('profileAvatar', function () {
             return {
@@ -8,7 +8,7 @@ module.exports = function (app) {
                     profile: "=",
                     classes: "@"
                 },
-                templateUrl: 'templates/directives/profile--avatar.html'
+                templateUrl: tpl_folder + 'profile--avatar.html'
             };
         })
         .directive('profileCard', function () {
@@ -19,9 +19,8 @@ module.exports = function (app) {
                     configs: "=",
                     networks: "="
                 },
-                templateUrl: 'templates/directives/profile--card.html',
+                templateUrl: tpl_folder + 'profile--card.html',
                 link: function (scope, element, attrs) {
-                    console.log('hello');
                     // element.prepend('<tr><th id="par" class="span" colspan="5" scope="colgroup">Attribute</th></tr>');
                 }
             };
@@ -82,7 +81,7 @@ module.exports = function (app) {
                 controller: function ($scope) {
                     //console.log($scope.parent);
                 },
-                templateUrl: 'templates/directives/profile--single-row.html',
+                templateUrl: tpl_folder + '/profile--single-row.html',
                 link: function (scope, element, attrs) {
                     if (typeof scope.entityName == 'string') {
                         //console.log(scope.entityName);

@@ -7,6 +7,7 @@ module.exports = function (app) {
 
             return $http.get('/api/profile/config/' + name).
                 then(function (response) {
+                console.log(response);
                     var data = response.data;
                     //console.debug('[ConfigService] getConfig (' + name + ') ');
                     //console.info(data);
