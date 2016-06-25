@@ -1,67 +1,8 @@
 module.exports = function (app, tpl_folder) {
     app
-        .directive('namespaceToggle', function () {
-            return {
-                restrict: 'E',
-                scope: "&",
-                controller: function ($scope) {
-                    console.log($scope);
-                },
-                template: '',
-                link: function (scope, element, attrs) {
-                    if (scope.network.namespace.configured) {
-                        element.html('<div class="right floated compact ui button" ng-click="deleteNetworkNamespace(\'{{network.namespace}}\')">Remove</div>');
-                    } else {
-                        element.html('<div class="right floated compact ui button" ng-click="">Configure</div>');
-                    }
+    // todo: remove a network config (probably just move the schema to a trash bin)
 
-                }
-            };
-        })
-        .directive('disconnectNamespace', function () {
-            return {
-                restrict: 'E',
-                template: '<div class="ui negative mini button negative"><i class="exchange icon"></i></div>',
-                link: function (scope, element, attrs) {
-                    element.on('click', function () {
-                        scope.disconnectNetwork(scope.network.namespace);
-                    });
-                }
-            };
-        })
-        .directive('connectNamespace', function () {
-            return {
-                restrict: 'E',
-                scope: {
-                    connect: "&",
-                    classes: '@',
-                    namespace: '='
-                },
-                controller: function ($scope) {
-                    $scope.fn = function () {
-                        $scope.connect({namespace: $scope.namespace});
-                    };
-                },
-                template: '<button class="{{classes}}" ng-click="fn()"><i class="exchange icon"></i></button>',
-                link: function (scope, element, attrs) {
-                    element.on('click', function () {
-                        scope.connectNetwork(scope.namespace);
-                    });
-                }
-            };
-        })
-        .directive('removeNamespace', function () {
-            return {
-                restrict: 'E',
-                template: '<div class="ui negative mini button">Remove</div>',
-                link: function (scope, element, attrs) {
-                    element.on('click', function () {
-                        scope.deleteNetworkNamespace(scope.network.namespace);
-                    });
-                }
-            };
-        })
-        .directive('addNamespace', ['CoreService', function (CoreService) {
+        .directive('addNamespace', ['NetworkService', 'CoreService', function (NetworkService, CoreService) {
             return {
                 restrict: 'E',
                 templateUrl: tpl_folder + 'network--add.html',
@@ -70,7 +11,7 @@ module.exports = function (app, tpl_folder) {
                     $scope.type = '';
                     $scope.addNetwork = function() {
 
-                        CoreService.addNetwork($scope.namespace, $scope.type).then(function (data) {
+                        NetworkService.addNetwork($scope.namespace, $scope.type).then(function (data) {
                             CoreService.getNetworks({namespace: false}).then(function(networks){
                                 //console.log($scope.$parent);
                                 $scope.$parent.networks = networks;
@@ -79,29 +20,11 @@ module.exports = function (app, tpl_folder) {
                     };
 
 
-                },
-                link: function (scope, element, attrs) {
-                    //element.on('click', function () {
-                    //    scope.configureNetwork(scope.network.name);
-                    //});
                 }
             };
         }])
-        .directive('detailsNamespace', function () {
-            return {
-                restrict: 'E',
-                scope: "&",
 
-                templateUrl: tpl_folder + 'network-details.html',
-                controller: function ($scope, $compile) {
-
-                },
-                link: function (scope, element, attrs) {
-                    console.log(element);
-                }
-            };
-        })
-        .directive('oauthParameters', ['CoreService', function (CoreService) {
+        .directive('oauthParameters', ['NetworkService', function (NetworkService) {
             return {
                 restrict: 'E',
                 transclude: true,
@@ -159,7 +82,7 @@ module.exports = function (app, tpl_folder) {
 
                     // Add/update or a network ----------------------------------*/
                     $scope.updateNetwork = function () {
-                        CoreService.updateNetwork($scope.namespace, {oauth: $scope.data[$scope.namespace]}).then(function (data) {
+                        NetworkService.updateNetwork($scope.namespace, {oauth: $scope.data[$scope.namespace]}).then(function (data) {
                             console.info(data);
                             $scope.currentSettings = data.settings.oauth;
                             $scope.addSettings = false;
@@ -169,13 +92,12 @@ module.exports = function (app, tpl_folder) {
                     // Add/update or a network ----------------------------------*/
                     $scope.connectNetwork = function () {
                         console.debug($scope.currentSettings);
-                        CoreService.connectNetwork($scope.namespace, $scope.currentSettings);
+                        NetworkService.connectNetwork($scope.namespace, $scope.currentSettings);
                     };
 
                     $scope.removeNetwork = function () {
-                        CoreService.removeNetwork($scope.namespace, $scope.currentSettings).then(function (data) {
+                        NetworkService.removeNetwork($scope.namespace, $scope.currentSettings).then(function (data) {
                             console.info(data);
-
                         });
                     };
 
@@ -193,6 +115,57 @@ module.exports = function (app, tpl_folder) {
 
                 }
             };
-        }]);
+        }])
+
+        .directive('profileRow', function () {
+            return {
+                replace: true,
+                restrict: 'E',
+                scope: {
+                    data: "=",
+                    grouped: '=',
+                    checkboxes: '@',
+                    values: '@',
+                    label: '@',
+                    entityName: "@",
+                    groupedParent: "@",
+                    model: '=',
+                    isChild: "=",
+                    prefix: "@"
+                },
+                controller: function ($scope) {
+                    //console.log($scope.parent);
+                },
+                templateUrl: tpl_folder + '/profile--single-row.html',
+                link: function (scope, element, attrs) {
+                    if (typeof scope.entityName == 'string') {
+                        //console.log(scope.entityName);
+                        //scope.label = scope.entityName;
+                    }
+                    // attrs.$observe('checkboxes', function() {
+
+                    //     scope.checkboxes = scope.$eval(attrs.checkboxes);
+                    // });
+
+                }
+            };
+        })
+        .directive('configFetch', function () {
+            return {
+                restrict: 'E',
+                replace: true,
+                scope: {
+                    fetch: "&",
+                    namespace: "@",
+                    text: '@'
+                },
+                controller: function ($scope) {
+                    $scope.fn = function () {
+                        $scope.fetch({namespace: $scope.namespace});
+                    };
+                },
+                template: '<div class="right mini ui button trigger" ng-click="fn()"><img src="/images/settings/{{namespace}}.png" class="micro">{{text}}</div>'
+            };
+        });
 
 };

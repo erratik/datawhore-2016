@@ -52,14 +52,6 @@ module.exports = function (app) {
         //    });
         //};
 
-        ConfigService.delete = function (namespace) {
-            return $http.delete('/api/configs/' + namespace).
-                then(function (response) {
-                    // //console.log(response.data); //I get the correct items, all seems ok here
-                    return (response.data);
-                    // //console.log(profileService);
-                });
-        };
 
 
         return ConfigService;

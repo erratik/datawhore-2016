@@ -4,11 +4,12 @@
     <div class="ui accordion content">
         <div class="item">
             <a class="title">
-            <!-- <i class="dropdown icon"></i> -->
-            
+                <!-- <i class="dropdown icon"></i> -->
             <div class="header">
-                <profile-avatar namespace="network.name" profile="network.profileInfo" classes="ui left floated small avatar"></profile-avatar>
-                <profile-username namespace="network.name" username="network.username" profile="network.profileInfo" header="true"></profile-username>
+                <profile-asset namespace="network.name" profile="network.profileProperties" type="avatar"
+                               classes="ui left floated small avatar"></profile-asset>
+                <span><profile-asset namespace="network.name" username="network.profileProperties.username"
+                                     header="true"></profile-asset></span>
             </div>
             <div class="meta">
 
@@ -35,8 +36,8 @@
         </div>
     </div>
     <div class="extra content">
-    
-        <a class="ui button mini" ui-sref="config({namespace: network.name})"><i class="icon edit"></i> Edit</a>
+
+        <a class="ui button mini" ui-sref="core.config({namespace: network.name})"><i class="icon edit"></i> Edit</a>
 
         <!-- <a class="ui button mini" ui-sref="configs.namespace({namespace: namespace})"><i class="icon edit"></i> Edit</a> -->
     </div>

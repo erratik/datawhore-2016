@@ -2,8 +2,6 @@
  * APP SETUP
  *-----------------------------------------------------*/
 var angular = require('angular');
-var $ = require('jquery');
-var _ = require('lodash');
 
 /* angular modules -----------------------------------*/
 // require('../styles/css/main.css');
@@ -28,6 +26,7 @@ require('./routes')(datawhore);
 
 /* app ... stuff --------------------------------------*/
 require('./services')(datawhore);
+
 require('./controllers')(datawhore);
 require('./directives')(datawhore);
 require('./filters')(datawhore);

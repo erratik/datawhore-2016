@@ -1,19 +1,11 @@
 module.exports = function (app) {
+
+    //directives needed
+    require('../directives/adminDirectives')(app, './templates/directives/');
+
     app
-        .controller('networksController', ['$scope', '$http', '$log', 'CoreService', 'networks',
-            function networksController($scope, $http, $log, CoreService, networks) {
-
-                $scope.networks = networks;
-                //$scope.configs = configs;
-                console.info($scope);
-
-            }
-        ])
         .controller('configController', ['$scope', '$http', '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config',
             function configController($scope, $http, $stateParams, ConfigService, ProfileService, profile, config) {
-
-                console.debug(config);
-                console.debug(profile);
 
                 $scope.profileInfo = {
                     last_modified: config.last_modified,
@@ -38,9 +30,6 @@ module.exports = function (app) {
                     $scope.post = response;
                 });
 
-                console.log($scope);
-
-
                 $scope.updateConfig = function (type) {
                     var config =  $scope.formData[type+'Config'];
                     ConfigService.update($scope.profileInfo.name, type, config).then(function (data) {
@@ -52,8 +41,7 @@ module.exports = function (app) {
                 $scope.updateProperties = function (type) {
                     //console.log($scope.formData);
                     ProfileService.update($scope.profileInfo.name, $scope.formData[type + 'Properties'], type).then(function (data) {
-                        //console.info(data);
-                        // $scope.formData[type + 'Properties'] = data;
+
                         config[type + 'Properties'] = data;
                     });
                 };

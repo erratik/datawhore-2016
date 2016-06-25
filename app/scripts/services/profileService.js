@@ -36,14 +36,6 @@ module.exports = function (app) {
 
             };
 
-            this.delete = function (namespace) {
-                return $http.delete('/api/profiles/' + namespace).then(function (response) {
-                    // //console.log(response.data); //I get the correct items, all seems ok here
-                    return (response.data);
-                    // //console.log(profileService);
-                });
-            };
-
             return this;
         }]);
 

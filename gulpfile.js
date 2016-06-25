@@ -175,7 +175,7 @@ gulp.task('watch', function () {
 
     gulp.watch('app/styles/**/*.less', ['less']);
     gulp.watch('app/styles/**/*.css', ['styles']);
-    gulp.watch(['webpack.config.js', 'app/scripts/**/*.js', 'app/templates/*.html'], ['webpackin']);
+    // gulp.watch(['webpack.config.js', 'app/scripts/**/*.js', 'app/templates/*.html'], ['webpackin']);
     //gulp.watch('app/templates/{**/}*.html', ['styles']);
     gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
@@ -188,7 +188,7 @@ gulp.task('default', ['clean', 'browser-sync'], function () {
     gulp.start('build');
 });
 
-gulp.task('datawhore', ['webpackin', 'browser-sync', 'watch'], function () {
+gulp.task('datawhore', ['browser-sync', 'watch'], function () {
     console.log('--------------------------------------------------------------------------------------------------');
     console.log('');
     console.log('                             listening on server.js on http://localhost/:         ');

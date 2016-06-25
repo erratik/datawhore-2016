@@ -2,6 +2,7 @@
  * Defines the main routes in the application.
  * The routes you see here will be anchors '#/' unless specifically configured otherwise.
  */
+
 module.exports = function (app) {
     'use strict';
 
@@ -10,9 +11,6 @@ module.exports = function (app) {
     //     preprocess: 'unix' // optional
     // })
         .constant('_', window._).config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
-
-
-            console.log($urlRouterProvider);
 
             $urlRouterProvider.when('', '/');
 
@@ -29,8 +27,8 @@ module.exports = function (app) {
                         }]
                     }
                 }).state('profiles', {
-                    url: '/profiles',
-                    controller: 'networksController',
+                    url: '/config/profiles',
+                    controller: 'coreController',
                     template: require('../templates/tpl--profiles.html'),
                     resolve: {
                         networks: ['CoreService', function (CoreService) {
@@ -41,7 +39,7 @@ module.exports = function (app) {
                     }
                 })
                 .state('config', {
-                    url: '/config/:namespace',
+                    url: 'config/profiles/:namespace',
                     controller: 'configController',
                     template: require('../templates/tpl--profile.html'),
                     resolve: {

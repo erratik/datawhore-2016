@@ -1,3 +1,4 @@
-
-<img src="{{profile.avatar}}" class="{{classes}} image" ng-if="profile.avatar.length">
-<img src="/images/settings/{{namespace}}.png" class="{{classes}} image" ng-if="!profile.avatar.length">
+<div ng-switch="profile.avatar.length">
+    <img src="{{profile.avatar}}" class="{{classes}} image" ng-switch-when="true">
+    <img src="/images/settings/{{namespace}}.png" class="{{classes}} image" ng-switch-when="undefined">
+</div>

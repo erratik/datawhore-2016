@@ -1,19 +1,26 @@
 var path = require('path');
 var webpack = require('webpack');
+var CommonsChunkPlugin = require("./node_modules/webpack/lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
     context: __dirname + '/app',
-    devtool: 'eval-source-map',
+    devtool: 'eval',
     entry: {
-        app: './scripts/init.js',
-        vendor: ['jquery', 'lodash']
+        datawhore: './scripts/init.js',
+        // admin: './scripts/admin.js',
+        vendor: ['jquery', 'lodash', 'angular']
     },
     output: {
         path: __dirname + '/app',
-        filename: 'datawhore.bundle.js'
+        filename: '[name].bundle.js'
+        // chunkFilename: '[id].chunk.js'
     },
     resolve: {
-        modulesDirectories: ['node_modules', 'bower_components']
+        modulesDirectories: ['node_modules', 'bower_components'],
+        alias: {
+            homeDir: './',
+            servicesDir: '/scripts/services'
+        }
     },
     module: {
         loaders: [
@@ -33,6 +40,10 @@ module.exports = {
     plugins: [
         new webpack.optimize.UglifyJsPlugin(),
         new webpack.OldWatchingPlugin(),
-        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js")
+        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js"),
+        new CommonsChunkPlugin({
+            filename: "commons.js",
+            name: "commons"
+        })
     ]
 };
