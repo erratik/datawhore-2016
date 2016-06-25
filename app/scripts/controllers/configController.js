@@ -1,8 +1,4 @@
 module.exports = function (app) {
-
-    //directives needed
-    require('../directives/adminDirectives')(app, './templates/directives/');
-
     app
         .controller('configController', ['$scope', '$http', '$stateParams', 'ConfigService', 'ProfileService', 'profile', 'config',
             function configController($scope, $http, $stateParams, ConfigService, ProfileService, profile, config) {

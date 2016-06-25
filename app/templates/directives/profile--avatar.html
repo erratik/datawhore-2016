@@ -1,4 +1,4 @@
-<div ng-switch="profile.avatar.length">
-    <img src="{{profile.avatar}}" class="{{classes}} image" ng-switch-when="true">
-    <img src="/images/settings/{{namespace}}.png" class="{{classes}} image" ng-switch-when="undefined">
+<div ng-switch="profile.avatar">
+    <img ng-switch-when="undefined" ng-src="/images/settings/{{namespace}}.png" class="{{classes}} image"/>
+    <img ng-switch-when="!undefined" ng-src="{{profile.avatar}}" class="{{classes}} image"/>
 </div>

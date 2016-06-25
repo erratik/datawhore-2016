@@ -1,8 +1,5 @@
 module.exports = function (app) {
 
-    //directives needed
-    require('../directives/adminDirectives')(app, './templates/directives/');
-
     app
         .controller('coreController', ['$scope', '$http',  'CoreService', 'networks',
             function coreController($scope, $http, CoreService, networks) {

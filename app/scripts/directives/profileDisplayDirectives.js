@@ -13,9 +13,9 @@ module.exports = function (app, tpl_folder) {
                 templateUrl: tpl_folder + 'profile--avatar.html',
                 link: function (scope, element, attrs) {
                     if (scope.type != 'avatar' && scope.username != undefined) {
-                        element.find('span').html('@' + scope.username + '');
+                        element.html('@' + scope.username + '');
                     } else if (scope.type != 'avatar' && scope.username == undefined) {
-                        element.find('span').html(scope.namespace);
+                        element.html(scope.namespace);
                     }
                 }
             };
