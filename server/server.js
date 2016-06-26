@@ -13,6 +13,7 @@
     // var serveIndex = require('serve-index');
     var moment = require('moment');
 
+
     //*****************************************************************/
     //    Configuration
     //*****************************************************************/
@@ -43,19 +44,9 @@
 
     // routes ======================================================================
 
-    require('../app/scripts/core/routes/configApi')(app);
-    require('../app/scripts/core/routes/profileApi')(app);
-    require('../app/scripts/core/routes/coreApi')(app);
-    require('../app/scripts/core/routes/connectApi')(app);
-    //require('../app/scripts/core/routes/app/scripts/routes/connectApi')(app);
+    require('./core/routes')(app);
 
-    // TODO: Tay - require-directory?
-    require('../app/scripts/core/routes/api/facebookApi')(app);
-    require('../app/scripts/core/routes/api/twitterApi')(app);
-    require('../app/scripts/core/routes/api/lastfmApi')(app);
-    require('../app/scripts/core/routes/api/instagramApi')(app);
-    require('../app/scripts/core/routes/api/swarmApi')(app);
-    require('../app/scripts/core/routes/api/spotifyApi')(app);
+
 
     // listen (start app with node server.js) ======================================
     app.listen(port);

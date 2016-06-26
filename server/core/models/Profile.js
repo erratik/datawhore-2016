@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('lodash');
 
-var writeProperties = require('../../custom-packages/prioritize').writeProperties;
+var writeProperties = require('../../../app/scripts/custom-packages/prioritize').writeProperties;
 
 // bootstrap mongoose, because syntax.
 mongoose.createModel = function(name, options) {

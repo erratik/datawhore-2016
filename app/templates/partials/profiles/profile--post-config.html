@@ -1,11 +1,11 @@
 
 <div class="ui segment">
     <div class="header ui"><i class="icon settings outline"></i>Post Configuration
-        <config-fetch namespace="{{name}}" fetch="cleanConfig('post')" style="float: right" text="Clean Post"></config-fetch></div>
+        <config-fetch namespace="{{profileInfo.name}}" fetch="cleanConfig('post')" style="float: right" text="Clean Post"></config-fetch></div>
 
-    <table class="ui compact celled definition table">
+    <table class="ui compact table">
         <tbody>
-        <tr ng-repeat="(label, attribute) in formData.postConfig ">
+        <tr ng-repeat="(label, attribute) in formData.postConfig" ng-if="(attribute.content!=undefined)">
             <td colspan="3">
                 <profile-row
                         data="formData.postConfig[label].content"

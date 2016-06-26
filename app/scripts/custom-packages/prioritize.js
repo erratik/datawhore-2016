@@ -92,6 +92,7 @@ function makeData(val, label) {
         obj.content = _.first(val);
         obj.content = assignValues(obj.content);
         obj.grouped = true;
+        obj.is_arr = true;
     } else {
 
         obj.grouped = false;

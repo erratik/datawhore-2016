@@ -1,9 +1,9 @@
 
 <accordion>
 	<accordion-group title="{{label}}">
-        <button class="ui basic button mini" create="createEntity(entityName)">
+        <button ng-if="data" class="ui basic button mini" create="createEntity(label)">
             <i class="icon external square"></i>
-            Create <strong>{{entityName}}</strong> entity
+            Create <strong>{{label}}</strong> entity
         </button>
 		<!--<i class="icon folder"></i>{{label}}-->
 		<div ng-repeat="(lbl, attribute) in data">
@@ -16,7 +16,7 @@
                     label="{{label}}"
                     grouped="attribute.grouped"
                     ng-if="!attribute.grouped"></profile-row>
-
+            <!--<pre>{{data}}</pre>-->
 
             <profile-row
                     data="attribute.content"
@@ -25,7 +25,7 @@
                     entity-name="{{attribute.label}}"
                     label="{{attribute.label}}"
                     grouped="attribute.grouped"
-                    ng-if="attribute.grouped"></profile-row>
+                    ng-if="attribute.grouped&&data!=undefined"></profile-row>
 
 		</div>
 	</accordion-group>

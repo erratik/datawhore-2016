@@ -8,7 +8,7 @@ var schema = new mongoose.Schema({
 });
 schema.statics = {
     updateConfig: function(configs, callback) {
-        Core.update({
+        Core.updateConfigModel({
             configs: configs,
             last_modified: Date.now() / 1000 | 0
         }, function(err, core) {
@@ -37,7 +37,7 @@ schema.statics = {
             };
 
 
-            Core.update(updatedCore, function(err, core) {
+            Core.updateConfigModel(updatedCore, function(err, core) {
                 Core.findOne({
                     name: 'core'
                 }, function(err, core) {

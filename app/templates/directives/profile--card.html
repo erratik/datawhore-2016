@@ -1,38 +1,35 @@
-
 <div class="card" ng-repeat="network in networks">
 
     <div class="ui accordion content">
         <div class="item">
             <a class="title">
                 <!-- <i class="dropdown icon"></i> -->
-            <div class="header">
-                <profile-asset namespace="network.name" profile="network.profileProperties" type="avatar"
-                               classes="ui left floated small avatar"></profile-asset>
-                <profile-asset namespace="network.name" username="network.profileProperties.username"
-                               header="true"></profile-asset>
-            </div>
-            <div class="meta">
-
-                <profile-updated date="network.last_modified"></profile-updated>
-                
-
-            </div>
-
+                <div class="header">
+                    <profile-asset namespace="network.name" profile="network.profileProperties" type="avatar"
+                                   classes="ui left floated small avatar"></profile-asset>
+                    <profile-asset namespace="network.name" username="network.profileProperties.username"
+                                   header="true"></profile-asset>
+                </div>
+                <div class="meta">
+                    <profile-updated date="network.last_modified"></profile-updated>
+                </div>
             </a>
 
-                <div class="ui list tiny" ng-if="network.connected">
-                  <div class="item">
-                    <i class="icon" ng-class="{'check green': network.profileConfig, 'help gray': !network.profileConfig}"></i>
+            <div class="ui list tiny" ng-if="network.connected">
+                <div class="item">
+                    <i class="icon"
+                       ng-class="{'check green': network.profileConfig, 'help gray': !network.profileConfig}"></i>
                     Profile configured
-                  </div>
-                  <div class="item">
-                    <i class="icon" ng-class="{'check green': network.postConfig, 'help gray': !network.postConfig}"></i>
-                    Post configured
-                  </div>
                 </div>
+                <div class="item">
+                    <i class="icon"
+                       ng-class="{'check green': network.postConfig, 'help gray': !network.postConfig}"></i>
+                    Post configured
+                </div>
+            </div>
             <div class="ui list tiny" ng-if="!network.connected">
                 Network not connected.
-                </div>
+            </div>
         </div>
     </div>
     <div class="extra content">

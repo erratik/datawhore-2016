@@ -10,8 +10,13 @@ module.exports = function (app) {
     //     .constant('angularMomentConfig', {
     //     preprocess: 'unix' // optional
     // })
-        .constant('_', window._).config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
+        .constant('_', window._)
+        .config(['$urlRouterProvider', '$stateProvider',
+            function ($urlRouterProvider, $stateProvider) {
 
+            // use the HTML5 History API
+            // $locationProvider.html5Mode(true);
+            // $locationProvider.hashPrefix('!');
             $urlRouterProvider.when('', '/');
 
             $stateProvider
@@ -21,9 +26,7 @@ module.exports = function (app) {
                     template: require('../templates/tpl--settings.html'),
                     resolve: {
                         networks: ['CoreService', function (CoreService) {
-                            ////console.log(CoreService.getNetworkConfigs({namespace: false}));
                             return CoreService.getNetworks({namespace: false});
-                            // return ConfigService.load($stateParams.namespace);
                         }]
                     }
                 }).state('profiles', {
@@ -32,25 +35,21 @@ module.exports = function (app) {
                     template: require('../templates/tpl--profiles.html'),
                     resolve: {
                         networks: ['CoreService', function (CoreService) {
-                            ////console.log(CoreService.getNetworkConfigs({namespace: false}));
                             return CoreService.getNetworks({namespace: false});
-                            // return ConfigService.load($stateParams.namespace);
                         }]
                     }
                 })
                 .state('config', {
-                    url: 'config/profiles/:namespace',
+                    url: '/config/profiles/:namespace',
                     controller: 'configController',
                     template: require('../templates/tpl--profile.html'),
                     resolve: {
                         config: ['ConfigService', '$stateParams', function (ConfigService, $stateParams) {
-                            ////console.log(ConfigService.getNetworkConfig({namespace: $stateParams.namespace, loadConfig: true}));
+                            console.log($stateParams);
                             return ConfigService.getConfig($stateParams.namespace);
-                            // return ConfigService.load($stateParams.namespace);
                         }],
                         profile: ['ProfileService', '$stateParams', function (ProfileService, $stateParams) {
                             return ProfileService.getProfile($stateParams.namespace);
-                            // return ConfigService.load($stateParams.namespace);
                         }]
                     }
                 });

@@ -7,7 +7,7 @@ var Config = require('../../models/Config');
 var Drop = require('../../models/Drop');
 
 // custom packages
-var assignValues = require('../../../custom-packages/prioritize').assignValues;
+var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;
 
 // route config
 var namespace = 'instagram';
@@ -45,7 +45,7 @@ module.exports = function(app) {
                     //console.log( assignValues(medias[4]) );
                     //res.json(config);
 
-                    resetConfig(req.params.type, medias[4], function(boom){
+                    resetConfig(req.params.type, medias[3], function(boom){
                         res.json(boom);
                     });
                 }
@@ -91,7 +91,7 @@ module.exports = function(app) {
 
         var _config = new Config({name: namespace}); // instantiated Config
 
-        _config.update({
+        _config.updateConfigModel({
             data: update,
             type: type,
             reset: true

@@ -125,6 +125,7 @@ module.exports = function (app, tpl_folder) {
                     data: "=",
                     grouped: '=',
                     checkboxes: '@',
+                    renameable: '=',
                     values: '@',
                     label: '@',
                     entityName: "@",

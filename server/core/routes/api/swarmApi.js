@@ -7,7 +7,7 @@ var _ = require('lodash');
 
 var namespace = 'swarm';
 
-var assignValues = require('../../../custom-packages/prioritize').assignValues;
+var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;
 
 var swarmConfig = {
     'secrets' : {
@@ -82,7 +82,7 @@ module.exports = function(app) {
 
         var _config = new Config({name: namespace}); // instantiated Config
 
-        _config.update({
+        _config.updateConfigModel({
             data: update,
             type: type,
             reset: true

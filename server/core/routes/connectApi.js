@@ -282,7 +282,7 @@ module.exports = function (app) {
                                         label: 'Access Token'
                                     };
 
-                                    _config.update({
+                                    _config.updateConfigModel({
                                         data: oauth,
                                         type: 'settings.oauth'
                                     }, function () {
@@ -312,7 +312,7 @@ module.exports = function (app) {
                                         label: 'Access Token'
                                     };
 
-                                    _config.update({
+                                    _config.updateConfigModel({
                                         data: oauth,
                                         type: 'settings.oauth'
                                     }, function () {
@@ -346,7 +346,7 @@ module.exports = function (app) {
                                 label: 'Expires in'
                             };
 
-                            _config.update({
+                            _config.updateConfigModel({
                                 data: oauth,
                                 type: 'settings.oauth'
                             }, function () {
@@ -397,7 +397,7 @@ module.exports = function (app) {
                                         label: 'Refresh Token'
                                     };
 
-                                    _config.update({
+                                    _config.updateConfigModel({
                                         data: oauth,
                                         type: 'settings.oauth'
                                     }, function () {
@@ -432,7 +432,7 @@ module.exports = function (app) {
                                 label: 'Username'
                             };
 
-                            _config.update({
+                            _config.updateConfigModel({
                                 data: oauth,
                                 type: 'settings.oauth'
                             }, function () {
@@ -466,7 +466,7 @@ module.exports = function (app) {
                                 label: 'Refresh Token'
                             };
 
-                            _config.update({
+                            _config.updateConfigModel({
                                 data: oauth,
                                 type: 'settings.oauth'
                             }, function () {
@@ -503,7 +503,7 @@ module.exports = function (app) {
                                 label: 'Refresh Token'
                             };
 
-                            _config.update({
+                            _config.updateConfigModel({
                                 data: oauth,
                                 type: 'settings.oauth'
                             }, function () {

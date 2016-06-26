@@ -5,7 +5,7 @@ var Drop = require('../../models/Drop');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 
-var assignValues = require('../../../custom-packages/prioritize').assignValues;
+var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;
 
 var namespace = 'facebook';
 

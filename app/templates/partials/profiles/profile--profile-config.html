@@ -4,11 +4,11 @@
         <config-fetch namespace="{{profileInfo.name}}" fetch="cleanConfig('profile')" style="float: right" text="Clean profile"></config-fetch>
     </div>
 
-    <table class="ui compact celled definition table">
+    <table class="ui compact table">
         <tbody>
-        <tr ng-repeat="(label, attribute) in formData.profileConfig">
+        <tr ng-repeat="(label, attribute) in formData.profileConfig" id="formData.profileConfig[label].label">
             <td colspan="3">
-                <profile-row data="formData.profileConfig[label].content" grouped="attribute.grouped" checkboxes="true" values="true" label="{{label}}" model="formData.profileConfig"></profile-row>
+                <profile-row data="formData.profileConfig[label].content" grouped="attribute.grouped" rename="false" checkboxes="false" values="true" label="{{label}}" model="formData.profileConfig"></profile-row>
             </td>
 
         </tr>

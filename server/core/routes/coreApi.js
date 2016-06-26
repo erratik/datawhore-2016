@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
 
-var defaultCore = require('../../../../config');
+
 var Core = require('../models/Core');
 var Config = require('../models/Config');
 
@@ -24,7 +24,7 @@ module.exports = function(app) {
         var _config = new Config({name: req.params.namespace}); // instantiated Config
         //console.log(_config);
 
-        _config.update({
+        _config.updateConfigModel({
             type: 'network'
         }, function(config) {
             //console.log(config);
@@ -37,7 +37,7 @@ module.exports = function(app) {
     app.post('/api/core/update/:namespace', function(req, res) {
         var _config = new Config({name: req.params.namespace}); // instantiated Config
         //console.log(req.body);
-        _config.update({
+        _config.updateConfigModel({
             data: req.body,
             type: 'core'
         }, function(config) {

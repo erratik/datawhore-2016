@@ -11,13 +11,11 @@ var $ = require('gulp-load-plugins')();
 var webpack = require('webpack-stream');
 
 
-gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
 gulp.task('webpackin', function () {
     return gulp.src('app/scripts/init.js')
         .pipe(webpack(require('./webpack.config.js')))
         .pipe(gulp.dest('app/'));
 });
-
 
 gulp.task('watch', function () {
 
@@ -29,7 +27,7 @@ gulp.task('watch', function () {
 });
 
 
-// PRODUCTION TOOLS -----------------------------------------------------------------------*/
+// PRODUCTION TASKS -----------------------------------------------------------------------*/
 
 gulp.task('build', ['webpackin'], function () {
     return gulp.src('app/{templates,styles}/**/{**,**/**}.{css,js,html}')
@@ -41,12 +39,18 @@ gulp.task('build', ['webpackin'], function () {
         .pipe($.size({title: 'build', gzip: true}));
 });
 
+gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
+
 gulp.task('default', ['clean'], function () {
     gulp.start('build');
 });
 
 
-// DEV TOOLS -----------------------------------------------------------------------*/
+// DEV TASKS -----------------------------------------------------------------------*/
+
+// we'd need a slight delay to reload browsers
+// connected to browser-sync after restarting nodemon
+var BROWSER_SYNC_RELOAD_DELAY = 1000;
 
 gulp.task('datawhore', ['browser-sync', 'watch'], function () {
     console.log('--------------------------------------------------------------------------------------------------');
@@ -76,9 +80,6 @@ gulp.task('datawhore', ['browser-sync', 'watch'], function () {
     console.log('');
     console.log('--------------------------------------------------------------------------------------------------');
 });
-// we'd need a slight delay to reload browsers
-// connected to browser-sync after restarting nodemon
-var BROWSER_SYNC_RELOAD_DELAY = 1000;
 
 gulp.task('nodemon', function (cb) {
     var called = false;
@@ -88,7 +89,7 @@ gulp.task('nodemon', function (cb) {
         script: 'server/server.js',
 
         // watch core server file(s) that require server restart on change
-        watch: ['server/server.js']
+        watch: ['server/**/*.js']
     })
         .on('start', function onStart() {
             // ensure start only got called once
@@ -99,11 +100,11 @@ gulp.task('nodemon', function (cb) {
         })
         .on('restart', function onRestart() {
             // reload connected browsers after a slight delay
-            setTimeout(function reload() {
-                browserSync.reload({
-                    stream: false   //
-                });
-            }, BROWSER_SYNC_RELOAD_DELAY);
+            // setTimeout(function  reload() {
+            //     browserSync.reload({
+            //         stream: false   //
+            //     });
+            // }, BROWSER_SYNC_RELOAD_DELAY);
         });
 });
 
@@ -136,7 +137,7 @@ gulp.task('browser-sync', ['nodemon'], function () {
 });
 
 
-// TESTING TOOLS -----------------------------------------------------------------------*/
+// TESTING TASKS -----------------------------------------------------------------------*/
 
 /*
  gulp.task('webdriver', $.protractor.webdriver_standalone);
@@ -202,8 +203,7 @@ gulp.task('browser-sync', ['nodemon'], function () {
 
  */
 
-// STYLES  -----------------------------------------------------------------------*/
-
+// STYLING TASKS -----------------------------------------------------------------------*/
 
 gulp.task('styles', ['less'], function () {
     return gulp.src('app/styles/main.css')
@@ -224,6 +224,7 @@ gulp.task('semanticThemes', function () {
     return gulp.src('bower_components/semantic/dist/themes/**/**/**')
         .pipe(gulp.dest('app/styles/semantic/themes'));
 });
+
 gulp.task('semanticStyle', function () {
     return gulp.src('bower_components/semantic/dist/*.*')
         .pipe(gulp.dest('app/styles/semantic'));

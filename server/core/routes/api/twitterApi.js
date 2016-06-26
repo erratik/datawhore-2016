@@ -5,7 +5,7 @@ var Drop = require('../../models/Drop');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 
-var assignValues = require('../../../custom-packages/prioritize').assignValues;
+var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;
 
 // network config
 var namespace = 'twitter';
@@ -88,7 +88,7 @@ module.exports = function(app) {
 
         var _config = new Config({name: namespace}); // instantiated Config
 
-        _config.update({
+        _config.updateConfigModel({
             data: update,
             type: type,
             reset: true
