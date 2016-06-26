@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 var _ = require('lodash');
 
 // models
-var Config = require('../../models/Config');
-var Drop = require('../../models/Drop');
+var Config = require('../../models/configModel');
+var Drop = require('../../models/dropModel');
 
 // custom packages
 var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;

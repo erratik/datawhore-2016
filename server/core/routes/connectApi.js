@@ -1,4 +1,4 @@
-var Config = require('../models/Config');
+var Config = require('../models/configModel');
 
 var mongoose = require('mongoose');
 // var oauthSignature = require('oauth-signature');

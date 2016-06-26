@@ -2,22 +2,8 @@ var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('lodash');
 
-// bootstrap mongoose, because syntax.
-mongoose.createModel = function(name, options) {
-    var schema = new mongoose.Schema(options.schema);
-    for (key in options.self) {
-        if (typeof options.self[key] !== 'function') continue;
-        schema.statics[key] = options.self[key];
-    }
-    for (key in options) {
-        if (typeof options[key] !== 'function') continue;
-        schema.methods[key] = options[key];
-    }
-    return mongoose.model(name, schema);
-};
-
 // Define the model w/ pretty syntax!
-var Profile = mongoose.createModel('Profile', {
+var ProfileSchema = {
     schema: {
         name: String,
         last_modified: Number,
@@ -72,14 +58,14 @@ var Profile = mongoose.createModel('Profile', {
                 });
             }
             update[options.type+'Properties'] = options.data;
-            // console.log('updating properties');
-            // console.log(update);
 
             that.update(query, update, opts, callback);
         });
 
     }
 
-});
+};
+
+var Profile = require('./createModel')(mongoose, 'Profile', ProfileSchema);
 
 module.exports = Profile;

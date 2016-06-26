@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 var moment = require('moment');
 
-var Settings = require('../models/Core');
-var Config = require('../models/Config');
-var Profile = require('../models/Profile');
+var Settings = require('../models/coreModel');
+var Config = require('../models/configModel');
+var Profile = require('../models/profileModel');
 
 // expose the routes to our app with module.exports
 

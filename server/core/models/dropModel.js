@@ -2,27 +2,12 @@ var mongoose = require('mongoose');
 var _ = require('lodash');
 
 // models
-var Profile = require('./Profile');
+var Profile = require('./profileModel');
 
 // custom packages
 var findValues = require('../../../app/scripts/custom-packages/prioritize').findValues;
 
-// bootstrap mongoose, because syntax.
-mongoose.createModel = function(name, options) {
-    var schema = new mongoose.Schema(options.schema);
-    for (key in options.self) {
-        if (typeof options.self[key] !== 'function') continue;
-        schema.statics[key] = options.self[key];
-    }
-    for (key in options) {
-        if (typeof options[key] !== 'function') continue;
-        schema.methods[key] = options[key];
-    }
-    return mongoose.model(name, schema);
-};
-
-// Define the model w/ pretty syntax!
-var Drop = mongoose.createModel('Drop', {
+var DropSchema =  {
     schema: {
         type: {type: String, index: true},
         last_modified: Number,
@@ -89,8 +74,9 @@ var Drop = mongoose.createModel('Drop', {
         }
 
     }
-});
+};
 
+var Drop = require('./createModel')(mongoose, 'Drop', DropSchema);
 module.exports = Drop;
 
 

@@ -1,5 +1,5 @@
-var Config = require('../../models/Config');
-var Drop = require('../../models/Drop');
+var Config = require('../../models/configModel');
+var Drop = require('../../models/dropModel');
 
 var mongoose = require('mongoose');
 var namespace = 'lastfm';

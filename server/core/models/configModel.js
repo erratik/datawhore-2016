@@ -5,26 +5,10 @@ var _ = require('lodash');
 var assignValues = require('../../../app/scripts/custom-packages/prioritize').assignValues;
 var writeProperties = require('../../../app/scripts/custom-packages/prioritize').writeProperties;
 
-var Profile = require('./Profile');
-
-
-// bootstrap mongoose, because syntax.
-mongoose.createModel = function (name, options) {
-    var schema = new mongoose.Schema(options.schema);
-    for (key in options.self) {
-        if (typeof options.self[key] !== 'function') continue;
-        schema.statics[key] = options.self[key];
-    }
-    for (key in options) {
-        if (typeof options[key] !== 'function') continue;
-        schema.methods[key] = options[key];
-    }
-    return mongoose.model(name, schema);
-};
-
+var Profile = require('./profileModel');
 
 // Define the model w/ pretty syntax!
-var Config = mongoose.createModel('Config', {
+var ConfigSchema =  {
     schema: {
         name: String,
         last_modified: Number,
@@ -218,8 +202,10 @@ var Config = mongoose.createModel('Config', {
         });
 
     }
-});
-
+};
 
 Profile = mongoose.model('Profile', Profile);
+
+var Config = require('./createModel')(mongoose, 'Config', ConfigSchema);
+
 module.exports = Config;

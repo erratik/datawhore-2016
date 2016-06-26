@@ -1,5 +1,5 @@
-var Settings = require('../models/Core');
-var Profile = require('../models/Profile');
+var Settings = require('../models/coreModel');
+var Profile = require('../models/profileModel');
 
 var mongoose = require('mongoose');
 var moment = require('moment');

@@ -6,7 +6,8 @@ var schema = new mongoose.Schema({
     virgin: Number,
     networks: {}
 });
-schema.statics = {
+
+var CoreSchema =  {
     updateConfig: function(configs, callback) {
         Core.updateConfigModel({
             configs: configs,
@@ -76,4 +77,6 @@ schema.statics = {
             
     }
 };
-module.exports = Core = mongoose.model('Core', schema);
+
+var Core = require('./createModel')(mongoose, 'Core', CoreSchema);
+module.exports = Core;
