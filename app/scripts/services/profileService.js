@@ -1,8 +1,9 @@
 module.exports = function (app) {
     app
         .service('ProfileService', ['$http', '$log', function ($http, $log) {
+            var ProfileService = {};
 
-            this.getProfile = function (name) {
+            ProfileService.getProfile = function (name) {
 
                 return $http.get('/api/profile/properties/' + name).then(function (response) {
                     var data = response.data;
@@ -12,7 +13,7 @@ module.exports = function (app) {
                 });
             };
 
-            this.getPosts = function (options, sample) {
+            ProfileService.getPosts = function (options, sample) {
                 sample = (sample !== undefined) ? true : false;
                 var params = {
                     namespace: options.namespace,
@@ -25,18 +26,18 @@ module.exports = function (app) {
                 });
             };
 
-            this.update = function (namespace, formData, type) {
+            ProfileService.update = function (namespace, formData, type) {
                 console.log(formData);
                 return $http.post('/api/profile/update/' + namespace + '/' + type, formData).then(function (response) {
                     var data = response.data;
-                    //console.debug('[ProfileService] update (' + namespace + ') ');
-                    //console.info(data);
+                    // console.debug('[ProfileService] update (' + namespace + ') ');
+                    // console.info(data);
                     return data;
                 });
 
             };
 
-            return this;
+            return ProfileService;
         }]);
 
 };

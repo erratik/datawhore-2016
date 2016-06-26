@@ -18,26 +18,20 @@ module.exports = function (app) {
                 $scope.sortType = 'data.label';
                 $scope.sortReverse = false;
 
-                var loadSample = function () {
-                    return ProfileService.getPosts({namespace: $stateParams.namespace, count: 1}, true);
-                };
-
-                loadSample().then(function (response) {
+                ProfileService.getPosts({namespace: $stateParams.namespace, count: 1}, true).then(function (response) {
                     $scope.post = response;
                 });
 
                 $scope.updateConfig = function (type) {
                     var config =  $scope.formData[type+'Config'];
                     ConfigService.update($scope.profileInfo.name, type, config).then(function (data) {
-                        $scope.formData.profileConfig = data.config;
-                        $scope.formData.profileProperties = data.properties;
+                        $scope.formData[type+'Config'] = data.config;
+                        $scope.formData[type+'Properties'] = data.properties;
                     });
                 };
 
                 $scope.updateProperties = function (type) {
-                    //console.log($scope.formData);
                     ProfileService.update($scope.profileInfo.name, $scope.formData[type + 'Properties'], type).then(function (data) {
-
                         config[type + 'Properties'] = data;
                     });
                 };
@@ -63,7 +57,11 @@ module.exports = function (app) {
                 // when submitting the add form, send the text to the node API
                 $scope.cleanPost = function (namespace) {
                     ConfigService.cleanPost({namespace: namespace}).then(function (data) {
-                        updatedConfigs(data);
+
+                        $scope.formData.profileConfig = data.profileConfig;
+                        $scope.formData.postConfig = data.postConfig;
+                        $scope.formData.profileProperties = data.profileProperties;
+                        $scope.formData.postProperties = data.postProperties;
                     });
                 };
                 //
@@ -71,15 +69,6 @@ module.exports = function (app) {
                     //console.log('createEntity?');
                     //console.log(label);
                 };
-
-                function updatedConfigs(data) {
-                    $scope.formData.profileConfig = data.profileConfig;
-                    $scope.formData.postConfig = data.postConfig;
-                    $scope.formData.profileProperties = data.profileProperties;
-                    $scope.formData.postProperties = data.postProperties;
-                    ////console.log(data.profileProperties);
-
-                }
 
                 $scope.show_modal = false;
 

@@ -1,60 +1,57 @@
 module.exports = function (app) {
     app
         .service('ConfigService', ['$http', '$q', '$log', function ($http, $q, $log) {
-        var ConfigService = {};
+            var ConfigService = {};
 
-        ConfigService.getConfig = function (name) {
+            ConfigService.getConfig = function (name) {
 
-            return $http.get('/api/profile/config/' + name).
-                then(function (response) {
-                console.log(response);
+                return $http.get('/api/profile/config/' + name).then(function (response) {
+                    console.log(response);
                     var data = response.data;
                     //console.debug('[ConfigService] getConfig (' + name + ') ');
                     //console.info(data);
                     return data;
                 });
-        };
+            };
 
 
-        ConfigService.cleanConfig = function (options) {
-            //console.log(options);
-            return $http.get('/api/' + options.namespace + '/fetch/' + options.type).
-                then(function (response) {
+            ConfigService.cleanConfig = function (options) {
+                //console.log(options);
+                return $http.get('/api/' + options.namespace + '/fetch/' + options.type).then(function (response) {
                     var data = response.data;
                     console.info(data);
                     return data;
                 });
-        };
+            };
 
-        ConfigService.update = function (namespace, type, config) {
+            ConfigService.update = function (namespace, type, config) {
 
-            return $http.post('/api/config/update/' + namespace + '/' + type, config).
-                then(function (response) {
+                return $http.post('/api/config/update/' + namespace + '/' + type, config).then(function (response) {
                     var data = response.data;
+                    console.info(data);
                     return data;
                 });
-            //return formData;
+                //return formData;
 
-        };
+            };
 
-        //ConfigService.getPosts = function(options){
-        //    var params = {
-        //        namespace: options.namespace,
-        //        count: options.count
-        //    };
-        //    // //console.log(params);
-        //    return $http.post('/api/' + params.namespace + '/posts/'+ params.count, params).
-        //    then(function(response) {
-        //
-        //        var postConfig = makeParent(response.data.posts[0], {});
-        //
-        //        return postConfig;
-        //    });
-        //};
+            //ConfigService.getPosts = function(options){
+            //    var params = {
+            //        namespace: options.namespace,
+            //        count: options.count
+            //    };
+            //    // //console.log(params);
+            //    return $http.post('/api/' + params.namespace + '/posts/'+ params.count, params).
+            //    then(function(response) {
+            //
+            //        var postConfig = makeParent(response.data.posts[0], {});
+            //
+            //        return postConfig;
+            //    });
+            //};
 
 
-
-        return ConfigService;
-    }]);
+            return ConfigService;
+        }]);
 
 };

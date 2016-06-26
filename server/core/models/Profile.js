@@ -2,8 +2,6 @@ var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('lodash');
 
-var writeProperties = require('../../../app/scripts/custom-packages/prioritize').writeProperties;
-
 // bootstrap mongoose, because syntax.
 mongoose.createModel = function(name, options) {
     var schema = new mongoose.Schema(options.schema);
@@ -49,31 +47,36 @@ var Profile = mongoose.createModel('Profile', {
             update = {last_modified : moment().format('X')},
             opts = {multi: false, upsert: true};
 
-        /*
-        var updateFromConfig = typeof options.wipe == 'boolean';
+        var that = this.model('Profile');
 
-        console.log(updateFromConfig);
-        if (updateFromConfig) {
-            _.forEach(options.data, function (prop, key) {
-                console.log(key.indexOf(prop.friendlyName));
-                console.log(key, prop.friendlyName);
+        this.model('Profile').findOne({name: query.name}, function (err, currentProperties) {
 
-                if (key.indexOf(prop.friendlyName) == -1) {
-                    delete options.data[key];
-                    console.log(key + 'won\'t be saved');
-                }
-            });
-        }
-        */
+            // console.log('------------ current (raw) ---------------');
+            var properties = currentProperties[options.type+'Properties'];
+            // console.log(properties);
+            // console.log('------------ saving (raw) ---------------');
+            // console.log(options.data);
 
-        update[options.type+'Properties'] = options.data;
-        // console.log('updating properties');
-        // console.log(update);
-        
-        
-        
+            if (options.updateFromConfig) {
+                // console.log('updating from config!');
+                _.forEach(options.data, function (prop, key) {
+                    if (!_.isNil(properties[key])) {
+                        // if the drop property has been saved already (friendlyName is not
+                        // the same as the pathName key), don't overwrite
+                        // console.log('$ ', key, ': ', properties[key]);
+                        if (key != properties[key].friendlyName) {
+                            options.data[key] = properties[key];
+                            // console.log('* * * ', key + ' will be saved from current properties', options.data[key]);
+                        }
+                    }
+                });
+            }
+            update[options.type+'Properties'] = options.data;
+            // console.log('updating properties');
+            // console.log(update);
 
-        this.model('Profile').update(query, update, opts, callback);
+            that.update(query, update, opts, callback);
+        });
 
     }
 

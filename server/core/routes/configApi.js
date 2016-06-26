@@ -31,7 +31,7 @@ module.exports = function(app) {
     // add/updateConfigModel network config -------------------------------------------------------*/
     app.post('/api/config/update/:namespace/:type', function(req, res) {
 
-        //console.log('>> @start Config.updateConfigModel({namespace: '+req.params.namespace+'})');
+        console.log('>> @start Config.updateConfigModel({namespace: '+req.params.namespace+'})');
         var _config = new Config({name: req.params.namespace}); // instantiated Config
 
         _config.updateConfigModel({

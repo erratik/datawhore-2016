@@ -102,7 +102,7 @@ var Config = mongoose.createModel('Config', {
             _.merge(update, updatedObj);
         }
 
-        console.log('-> going to update config entry with:');
+        // console.log('-> going to update config entry with:');
         // console.log(update);
         // cb(update);
 
@@ -153,11 +153,6 @@ var Config = mongoose.createModel('Config', {
                 });
             }
 
-            /*console.log('-------- (ö.o - current enabled attributes: raw) -----------');
-            console.log(enabledAttributes);
-            console.log('-------- (ø.o - current enabled attributes: truthy) -----------');
-            console.log(writeProperties(enabledAttributes));*/
-
 
             if (_.size(data)) {
 
@@ -170,17 +165,13 @@ var Config = mongoose.createModel('Config', {
                 var existingKeys = _.keys(enabledAttributes);
                 // console.log('---------- result if the attributes are already enabled ---------');
                 var _update = _.merge(enabledAttributes, _.omit(currentConfig[options.type + 'Config'], existingKeys));
-                /*console.log('-------- (new raw) -----------');
-                console.log(_update);
-                console.log('-------- (new truthy) -----------');
-                console.log(writeProperties(_update));
-                console.log('-------------------');*/
+
                 update[options.type + 'Config'] = _update;
                 data = writeProperties(_update);
 
             }
 
-            // cb({config: update[options.type + 'Config'], properties: data});
+
             that.update(query, update, opts, function (err, modelUpdated) {
                 if (modelUpdated) {
 
@@ -191,7 +182,7 @@ var Config = mongoose.createModel('Config', {
                         _profile.update({
                             data: data,
                             type: options.type,
-                            wipe: true
+                            updateFromConfig: true
                         }, function (err, profileSaved) {
                             if (profileSaved) cb({config: update[options.type + 'Config'], properties: data});
                         });
@@ -206,7 +197,7 @@ var Config = mongoose.createModel('Config', {
                 }
             });
         });
-        
+
     },
     connect: function (cb) {
 
