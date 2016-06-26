@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 var moment = require('moment');
 var _ = require('lodash');
 
-var assignValues = require('../../../app/scripts/custom-packages/prioritize').assignValues;
-var writeProperties = require('../../../app/scripts/custom-packages/prioritize').writeProperties;
+var assignValues = require('../../utils/prioritize').assignValues;
+var writeProperties = require('../../utils/prioritize').writeProperties;
 
 var Profile = require('./profileModel');
 

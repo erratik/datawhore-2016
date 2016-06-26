@@ -5,7 +5,7 @@ var Drop = require('../../models/dropModel');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 
-var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;
+var assignValues = require('../../../utils/prioritize').assignValues;
 
 // network config
 var namespace = 'twitter';

@@ -5,7 +5,7 @@ var _ = require('lodash');
 var Profile = require('./profileModel');
 
 // custom packages
-var findValues = require('../../../app/scripts/custom-packages/prioritize').findValues;
+var findValues = require('../../utils/prioritize').findValues;
 
 var DropSchema =  {
     schema: {

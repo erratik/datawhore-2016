@@ -7,7 +7,7 @@ var Config = require('../../models/configModel');
 var Drop = require('../../models/dropModel');
 
 // custom packages
-var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;
+var assignValues = require('../../../utils/prioritize').assignValues;
 
 // route config
 var namespace = 'instagram';

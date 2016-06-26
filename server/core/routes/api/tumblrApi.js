@@ -7,7 +7,7 @@ var _ = require('lodash');
 
 var namespace = 'tumblr';
 
-var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;
+var assignValues = require('../../../utils/prioritize').assignValues;
 
 var swarmConfig = {
     'secrets' : {

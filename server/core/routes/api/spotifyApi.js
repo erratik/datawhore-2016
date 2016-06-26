@@ -7,7 +7,7 @@ var _ = require('lodash');
 
 var namespace = 'swarm';
 
-var assignValues = require('../../../../app/scripts/custom-packages/prioritize').assignValues;
+var assignValues = require('../../../utils/prioritize').assignValues;
 
 var SpotifyWebApi = require('spotify-web-api-node');
 
