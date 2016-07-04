@@ -4,6 +4,7 @@ var _ = require('lodash');
 
 var assignValues = require('../../utils/prioritize').assignValues;
 var writeProperties = require('../../utils/prioritize').writeProperties;
+var util = require('../../utils/util');
 
 var Profile = require('./profileModel');
 
@@ -33,11 +34,30 @@ var ConfigSchema =  {
         }
     },
     resetConfig: function (options, cb) {
-        console.log('resetting ' + options.type + ' config');
-        console.log(options);
+
+        console.log('<------- resetting ' + options.type + ' config ------->');
+
+        var data = util.mapProperties(options.data);
+
+
+        // testing
+        var entities = _.filter(data, 'entity');
+        console.log(':: ', entities);
+        _.forEach(entities, function (entity) {
+            console.log('');
+            console.log(_.filter(entity.attributes, 'entity'));
+            _.forEach(_.filter(entity.attributes, 'entity'), function (attribute, key) {
+                console.log(attribute.label, '^', attribute.attributes);
+            });
+            // console.log('^',_.filter(entity.content, 'entity'));
+        });
+
+
+        console.log('data? ', data);
+
 
         this.updateConfigModel({
-            data: options.data,
+            data: data,
             type: options.type,
             reset: true
         }, function (config) {
@@ -55,12 +75,15 @@ var ConfigSchema =  {
         var that = this.model('Config');
         var updateFetchedProperties = options.reset;
 
+        // console.log('what?!', updateFetchedProperties);
+
         if (isConfig) {
             // I don't want the "reset" to be used yet, I'lls end it as an option or something.
             // so for now, "updateFetchedProperties (reset)" => "update fetched properties"
-            update[options.type + 'Config'] = (updateFetchedProperties) ? assignValues(options.data) : options.data;
+            update[options.type + 'Config'] = (updateFetchedProperties) ? options.data : options.data;
 
         } else if (options.type == 'core') {
+            // console.log();
             update.settings = {};
             _.each(options.data, function (obj, key) {
                 update.settings[key] = {};
@@ -83,6 +106,7 @@ var ConfigSchema =  {
             var data = [];
             data.push(options.data);
             var updatedObj = _.zipObjectDeep([options.type], data);
+            if ('settings.oauth') update.connected = true;
             _.merge(update, updatedObj);
         }
 
@@ -91,8 +115,8 @@ var ConfigSchema =  {
         // cb(update);
 
         this.model('Config').findOne({name: query.name}, function (err, currentConfig) {
-            var data = writeProperties(options.data);
 
+            var data = writeProperties(options.data);
             /*console.log('-------- (current raw) -----------');
             console.log(currentConfig[options.type + 'Config']);
             console.log('-------- (current truthy) -----------');
@@ -122,14 +146,17 @@ var ConfigSchema =  {
                             // newNestedObj => { enabled: true, value: 5, label: 'count'  }
                             // console.log(content, newNestedObj);
                             _.filter(content, function (childAttr, k) {
-                                if (_.isBoolean(newNestedObj[k].grouped)) {
-                                    // todo: this is super untested, haha
-                                    // console.log('this should be a recursive...');
-                                    // console.log(key,'=>', k, ':', childAttr);
-                                    recur(childAttr.content, newNestedObj[k].content);
-                                } else if (childAttr.enabled) {
+                                // todo: this is super untested, haha
+                                // console.log(key,' is a grouped item!');
+                                if (!_.isNil(newNestedObj[k])) {
+                                    // console.log('newNestedObj is', k, ' =>', newNestedObj[k]);
                                     newObj[key] = {content: {}, grouped: true};
-                                    newObj[key].content[k] = newNestedObj[k];
+                                    if (_.isBoolean(newNestedObj[k].grouped)) {
+                                        // console.log(key,'=>', k, ':', childAttr);
+                                        recur(childAttr.content, newObj[key].content);
+                                    } else if (childAttr.enabled) {
+                                        newObj[key].content[k] = newNestedObj[k];
+                                    }
                                 }
                             });
                         };
@@ -147,39 +174,54 @@ var ConfigSchema =  {
                 console.log('---> no data to enable in this update ');
 
                 var existingKeys = _.keys(enabledAttributes);
+                var saveData = options.data;
                 // console.log('---------- result if the attributes are already enabled ---------');
-                var _update = _.merge(enabledAttributes, _.omit(currentConfig[options.type + 'Config'], existingKeys));
-
+                var _update = _.merge(enabledAttributes, _.omit(saveData, existingKeys));
+                _.forEach(_update, function (attribute, key) {
+                    if (_.size(attribute.content) != _.size(saveData[key].content)) {
+                        console.log('attribute size: ', _.size(attribute.content), ' | ', 'saveData key (' + key + ') size:', _.size(saveData[key].content));
+                        console.log(_.merge(attribute.content, saveData[key].content));
+                    }
+                });
                 update[options.type + 'Config'] = _update;
                 data = writeProperties(_update);
+                // console.log('-----------------------------');
+                // console.log(_update);
+                // console.log('-----------------------------');
+                // console.log(data);
+                // console.log('-----------------------------');
+                // console.log(saveData);
+                // console.log('-----------------------------');
+
 
             }
 
+            cb({config: options.data, properties: data});
 
-            that.update(query, update, opts, function (err, modelUpdated) {
-                if (modelUpdated) {
-
-                    // check to see if this data is a config for post or profile
-                    if (isConfig) {
-                        // if it's a config, update the profile model too
-                        var _profile = new Profile({name: query.name}); // instantiated Profile
-                        _profile.update({
-                            data: data,
-                            type: options.type,
-                            updateFromConfig: true
-                        }, function (err, profileSaved) {
-                            if (profileSaved) cb({config: update[options.type + 'Config'], properties: data});
-                        });
-                    } else if (!isConfig && modelUpdated) {
-                        cb(update);
-                    } else if (err || modelUpdated) {
-                        var msg = err ? err : modelUpdated;
-                        cb(msg);
-                    }
-                } else {
-                    cb(err);
-                }
-            });
+            // that.update(query, update, opts, function (err, modelUpdated) {
+            //     if (modelUpdated) {
+            //
+            //         // check to see if this data is a config for post or profile
+            //         if (isConfig) {
+            //             // if it's a config, update the profile model too
+            //             var _profile = new Profile({name: query.name}); // instantiated Profile
+            //             _profile.update({
+            //                 data: data,
+            //                 type: options.type,
+            //                 updateFromConfig: true
+            //             }, function (err, profileSaved) {
+            //                 if (profileSaved) cb({config: update[options.type + 'Config'], properties: data});
+            //             });
+            //         } else if (!isConfig && modelUpdated) {
+            //             cb(update);
+            //         } else if (err || modelUpdated) {
+            //             var msg = err ? err : modelUpdated;
+            //             cb(msg);
+            //         }
+            //     } else {
+            //         cb(err);
+            //     }
+            // });
         });
 
     },
@@ -187,18 +229,22 @@ var ConfigSchema =  {
 
         var query = {name: this.name},
             update = {
-                last_modified: moment().format('X')
+                last_modified: moment().format('X'),
+                connected: false
             },
             opts = {multi: false, upsert: true};
 
-        this.model('Config').updateConfigModel(query, update, opts, function (err, saved) {
-            console.log(update);
 
-            if (saved) {
+        this.model('Config').update(query, update, opts, function (err, modelUpdated) {
+
+            console.log('update: ', update);
+
+            if (modelUpdated) {
                 cb(update);
             } else if (err) {
                 cb(err);
             }
+
         });
 
     }

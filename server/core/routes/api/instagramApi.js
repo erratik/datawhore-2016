@@ -8,20 +8,31 @@ var Drop = require('../../models/dropModel');
 
 // custom packages
 var assignValues = require('../../../utils/prioritize').assignValues;
+var util = require('../../models/dropModel');
+
 
 // route config
 var namespace = 'instagram';
 var client = require('instagram-node').instagram();
-client.use({
-    client_id: process.env.INSTAGRAM_API_KEY,
-    client_secret: process.env.INSTAGRAM_API_SECRET,
-    access_token: process.env.INSTAGRAM_API_ACCESS_TOKEN
-});
-// expose the routes to our app with module.exports
 
 module.exports = function(app) {
 
+
+    var oauth;
+    Config.getOauthSettings(namespace, function (err, data) {
+        // console.log(data[0]);
+        oauth = data[0].settings.oauth;
+        // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+        client.use({
+            client_id: oauth.api_key.value,
+            client_secret: oauth.api_secret.value,
+            access_token: oauth.access_token.value
+        });
+    });
+
     app.get('/api/' + namespace + '/fetch/:type', function(req, res) {
+
+        var _config = new Config({name: namespace}); // instantiated Config
 
         if (req.params.type == 'profile') {
 
@@ -30,7 +41,10 @@ module.exports = function(app) {
                     console.log(err);
                 } else {
 
-                    resetConfig(req.params.type, result, function(boom){
+                    _config.resetConfig({
+                        type: req.params.type,
+                        data: result
+                    }, function (boom) {
                         res.json(boom);
                     });
 
@@ -42,10 +56,10 @@ module.exports = function(app) {
                 if (err) {
                     console.log(err);
                 } else {
-                    //console.log( assignValues(medias[4]) );
-                    //res.json(config);
-
-                    resetConfig(req.params.type, medias[3], function(boom){
+                    _config.resetConfig({
+                        type: req.params.type,
+                        data: medias[4]
+                    }, function (boom) {
                         res.json(boom);
                     });
                 }
@@ -54,9 +68,6 @@ module.exports = function(app) {
 
             
     });
-
-
-
 
     app.post('/api/' + namespace + '/fetch/posts/:count/:sample', function(req, res) {
         // //console.log(req.params);
@@ -87,20 +98,6 @@ module.exports = function(app) {
 
     });
 
-    var resetConfig = function(type, update, cb) {
-
-        var _config = new Config({name: namespace}); // instantiated Config
-
-        _config.updateConfigModel({
-            data: update,
-            type: type,
-            reset: true
-        }, function(config) {
-                cb(config);
-
-            //});
-        });
-    };
 
 };
 

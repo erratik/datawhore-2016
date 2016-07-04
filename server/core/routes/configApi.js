@@ -55,9 +55,9 @@ module.exports = function(app) {
     app.get('/api/profile/config/:namespace', function(req, res) {
 
         Config.findByName(req.params.namespace, function(err, config) {
-            //console.log('>> @start Profile.get({namespace: '+req.params.namespace+'})');
-            //console.log('static: '+config[0]); // ruff
-            //console.log('>> /@end /api/config/profile/:'+req.params.namespace);
+            console.log('>> @start Config.get({namespace: ' + req.params.namespace + '})');
+            console.log('static: ' + config[0]); // ruff
+            console.log('>> /@end /api/profile/config/:' + req.params.namespace);
 
             res.json(config[0]);
         });

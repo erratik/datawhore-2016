@@ -58,7 +58,7 @@ var ProfileSchema = {
                 });
             }
             update[options.type+'Properties'] = options.data;
-
+            // callback();
             that.update(query, update, opts, callback);
         });
 

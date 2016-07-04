@@ -139,9 +139,12 @@ module.exports = function (app, tpl_folder) {
                 },
                 templateUrl: tpl_folder + '/profile--single-row.html',
                 link: function (scope, element, attrs) {
+                    scope.data = typeof scope.data.attributes != 'undefined' ? scope.data.attributes : scope.data;
+
+
+                    //console.log(scope.entityName);
+                    //scope.label = scope.entityName;
                     if (typeof scope.entityName == 'string') {
-                        //console.log(scope.entityName);
-                        //scope.label = scope.entityName;
                     }
                     // attrs.$observe('checkboxes', function() {
 

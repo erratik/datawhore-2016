@@ -243,16 +243,14 @@ module.exports = function (app) {
                                 consumerKey: oauth.api_key.value,
                                 consumerSecret: oauth.api_secret.value,
                                 callbackURL: oauth.redirect_uri.value
-                            },
-                            function (token, tokenSecret, profile, done) {
+                            }, function (token, tokenSecret, profile, done) {
                                 User.findOrCreate({tumblrId: profile.id}, function (err, user) {
                                     return done(err, user);
                                 });
                             }
                         ));
 
-                        passport.authenticate('tumblr', {failureRedirect: '/login'},
-                            function (req, res) {
+                        passport.authenticate('tumblr', {failureRedirect: '/login'}, function (req, res) {
                                 // Successful authentication, redirect home.
                                 res.redirect('/');
                             });
@@ -294,12 +292,14 @@ module.exports = function (app) {
                         break;
 
                     case 'instagram':
+                        console.log(config);
 
                         var api = require('instagram-node').instagram();
                         api.use({
                             client_id: oauth.api_key.value,
                             client_secret: oauth.api_secret.value
                         });
+                        console.log(req.query.code);
                         api.authorize_user(req.query.code, oauth.redirect_uri.value,
                             function (err, result) {
                                 if (err) {

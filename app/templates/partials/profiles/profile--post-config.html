@@ -8,7 +8,7 @@
         <tr ng-repeat="(label, attribute) in formData.postConfig" ng-if="(attribute.content!=undefined)">
             <td colspan="3">
                 <profile-row
-                        data="formData.postConfig[label].content"
+                        data="formData.postConfig[label]"
                         grouped="attribute.grouped"
                         checkboxes="true"
                         values="true"
