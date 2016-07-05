@@ -1,12 +1,15 @@
 var Config = require('../../models/configModel');
 var Drop = require('../../models/dropModel');
+var _ = require('lodash');
 
 var mongoose = require('mongoose');
 var namespace = 'lastfm';
 
 var oauth;
 Config.getOauthSettings(namespace, function (err, data) {
-    oauth = data[0].settings.oauth;
+    //if (!_.isNil(data[0].settings)) {
+    //    oauth = data[0].settings.oauth;
+    //}
 });
 // expose the routes to our app with module.exports
 module.exports = function (app) {

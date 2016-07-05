@@ -17,14 +17,16 @@ module.exports = function(app) {
     var oauth, spotifyApi;
     Config.getOauthSettings('spotify', function(err, data){
         // console.log(data[0]);
-        oauth = data[0].settings.oauth;
-        // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
-        spotifyApi =  new SpotifyWebApi({
-            redirectUri: oauth.redirect_uri.value,
-            clientId: oauth.api_key.value,
-            clientSecret: oauth.api_secret.value
-        });
-        spotifyApi.setAccessToken(oauth.access_token.value);
+        if (!_.isNil(data[0])) {
+            oauth = data[0].settings.oauth;
+            // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+            spotifyApi = new SpotifyWebApi({
+                redirectUri: oauth.redirect_uri.value,
+                clientId: oauth.api_key.value,
+                clientSecret: oauth.api_secret.value
+            });
+            spotifyApi.setAccessToken(oauth.access_token.value);
+        }
     });
 
     app.get('/api/:namespace/fetch/:type', function(req, res) {

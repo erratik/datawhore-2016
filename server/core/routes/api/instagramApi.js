@@ -21,13 +21,15 @@ module.exports = function(app) {
     var oauth;
     Config.getOauthSettings(namespace, function (err, data) {
         // console.log(data[0]);
-        oauth = data[0].settings.oauth;
-        // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
-        client.use({
-            client_id: oauth.api_key.value,
-            client_secret: oauth.api_secret.value,
-            access_token: oauth.access_token.value
-        });
+        //if (!_.isNil(data[0].settings)) {
+        //    oauth = data[0].settings.oauth;
+        //    // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
+        //    client.use({
+        //        client_id: oauth.api_key.value,
+        //        client_secret: oauth.api_secret.value,
+        //        access_token: oauth.access_token.value
+        //    });
+        //}
     });
 
     app.get('/api/' + namespace + '/fetch/:type', function(req, res) {

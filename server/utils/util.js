@@ -1,6 +1,24 @@
 var Config = require('../core/models/configModel');
 var _ = require('lodash');
 
+module.exports = {
+    /*  MAP PROPERTIES
+     *  Takes an object and recursively sets each property with:
+     *  { [String propertyKey] : {grouped: Boolean, content: {data: [propertyValue], label: String, enabled: Boolean} } }
+     *  @usage: this is so the properties can be gathered as enabled with another util to gather recursively truthy properties
+     * ------------ ------------------------------------------------------------------------------------------------------------ */
+    mapProperties: function (properties) {
+        var _properties = {};
+        _.forEach(properties, function (propertyObject, propertyKey) {
+
+            _properties[propertyKey] = makeData(propertyObject, propertyKey);
+
+        });
+        return _properties;
+        // console.log(_properties);
+    }
+};
+
 function makeData(val, label, recursive) {
     //console.log('make data running');
     var obj = {};
@@ -28,18 +46,18 @@ function makeData(val, label, recursive) {
 
         if (_.isNil(recursive)) {
 
-            _.forEach(val, function (groupedContent, key) {
+            _.forEach(val, function (content, key) {
 
                 // console.log('$ found a grouped object to run through again ', label);
                 // console.log(label + '.' + key, 'making data....');
-                if (_.isPlainObject(groupedContent)) {
+                if (_.isPlainObject(content)) {
 
-                    _.forEach(groupedContent, function (attribute, k) {
+                    _.forEach(content, function (attribute, k) {
 
-                        // obj.attributes = makeData(val, key, true);
                         obj.attributes[k] = makeData(attribute, k, true);
                         obj.grouped = true;
                         obj.label = label;
+
                     });
                 }
 
@@ -63,22 +81,3 @@ function makeData(val, label, recursive) {
 
     return obj;
 }
-
-module.exports = {
-    /* ASSIGNING VALUES
-     *  Takes an object and recursively sets each property with:
-     *  { [String propertyKey] : {grouped: Boolean, content: {data: [propertyValue], label: String, enabled: Boolean} } }
-     *  @usage: this is so the properties can be gathered as enabled with another util to gather recursively truthy properties
-     * */
-    mapProperties: function (properties) {
-        var _properties = {};
-        _.forEach(properties, function (propertyObject, propertyKey) {
-
-            _properties[propertyKey] = makeData(propertyObject, propertyKey);
-
-        });
-
-        return _properties;
-        // console.log(_properties);
-    }
-};
